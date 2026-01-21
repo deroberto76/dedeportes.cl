@@ -25,59 +25,50 @@ get_header();
                     $post_index++; ?>
 
                     <?php if ($post_index === 1): ?>
-                        <!-- HERO SECTION -->
+                        <!-- HERO SECTION (Typography Focused) -->
                         <article id="post-<?php the_ID(); ?>" <?php post_class('hero-section'); ?>>
                             <div class="hero-background">
-                                <?php
-                                if (has_post_thumbnail()) {
-                                    the_post_thumbnail('full');
-                                } else {
-                                    // Fallback placeholder pattern
-                                    echo '<div style="width:100%;height:100%;background: linear-gradient(45deg, var(--surface), var(--background));"></div>';
-                                }
-                                ?>
+                                <?php if (has_post_thumbnail()): ?>
+                                    <?php the_post_thumbnail('full'); ?>
+                                <?php endif; ?>
                             </div>
+
                             <div class="hero-content">
-                                <span class="hero-cat">
-                                    <?php the_category(', '); ?>
-                                </span>
-                                <h2 class="hero-title"><a href="<?php the_permalink(); ?>" rel="bookmark">
-                                        <?php the_title(); ?>
-                                    </a></h2>
-                                <div class="hero-excerpt">
-                                    <?php the_excerpt(); ?>
-                                </div>
-                                <a href="<?php the_permalink(); ?>" class="btn">Leer más</a>
+                                <span class="hero-cat"><?php the_category(', '); ?></span>
+                                <h2 class="hero-title"><a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
+                                </h2>
+                                <div class="hero-excerpt"><?php the_excerpt(); ?></div>
+                                <a href="<?php the_permalink(); ?>" class="btn">Leer artículo completo</a>
                             </div>
                         </article>
 
                         <div class="posts-grid"> <!-- Start Grid -->
 
                         <?php else: ?>
-                            <!-- REGULAR POST CARD -->
+                            <!-- REGULAR POST CARD (Text Focused) -->
                             <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
-                                <div class="post-thumbnail">
-                                    <a href="<?php the_permalink(); ?>">
-                                        <?php
-                                        if (has_post_thumbnail()) {
-                                            the_post_thumbnail('medium_large');
-                                        } else {
-                                            echo '<div style="width:100%;height:100%;background: var(--surface-hover);"></div>';
-                                        }
-                                        ?>
-                                    </a>
-                                </div>
+
+                                <?php if (has_post_thumbnail()): ?>
+                                    <div class="post-thumbnail">
+                                        <a href="<?php the_permalink(); ?>">
+                                            <?php the_post_thumbnail('medium_large'); ?>
+                                        </a>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="post-visual"></div> <!-- Color strip -->
+                                <?php endif; ?>
+
                                 <div class="post-content">
                                     <div class="post-meta">
-                                        <?php echo get_the_date(); ?> &bull;
-                                        <?php the_category(', '); ?>
+                                        <?php echo get_the_date(); ?> — <?php the_category(', '); ?>
                                     </div>
-                                    <h3 class="post-title"><a href="<?php the_permalink(); ?>">
-                                            <?php the_title(); ?>
-                                        </a></h3>
-                                    <p>
-                                        <?php echo wp_trim_words(get_the_excerpt(), 15); ?>
-                                    </p>
+                                    <h3 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                                    <div class="post-excerpt">
+                                        <?php echo wp_trim_words(get_the_excerpt(), 25); ?>
+                                    </div>
+                                    <div class="post-footer">
+                                        <a href="<?php the_permalink(); ?>" class="btn-link">Leer más &rarr;</a>
+                                    </div>
                                 </div>
                             </article>
 
@@ -91,8 +82,8 @@ get_header();
             <?php
             // Pagination
             the_posts_navigation(array(
-                'prev_text' => '<span class="nav-subtitle">' . esc_html__('Previous:', 'dedeportes-modern') . '</span> <span class="nav-title">%title</span>',
-                'next_text' => '<span class="nav-subtitle">' . esc_html__('Next:', 'dedeportes-modern') . '</span> <span class="nav-title">%title</span>',
+                'prev_text' => '<span class="btn"> &larr; ' . esc_html__('Anteriores', 'dedeportes-modern') . '</span>',
+                'next_text' => '<span class="btn">' . esc_html__('Siguientes', 'dedeportes-modern') . ' &rarr;</span>',
             ));
 
         else:

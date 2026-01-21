@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.0
+Version: 1.1
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -197,7 +197,11 @@ img {
     margin-bottom: 4rem;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    height: 500px;
+    min-height: 400px;
+    background: linear-gradient(135deg, var(--primary), var(--background));
+    /* Default gradient */
+    display: flex;
+    align-items: center;
 }
 
 .hero-background {
@@ -207,57 +211,65 @@ img {
     width: 100%;
     height: 100%;
     z-index: 1;
+    opacity: 0.3;
+    background-image:
+        radial-gradient(circle at 20% 150%, var(--accent) 0%, transparent 50%),
+        radial-gradient(circle at 80% -50%, var(--primary-hover) 0%, transparent 50%);
 }
 
 .hero-background img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0.6;
+    /* Dim image if present */
 }
 
 .hero-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 3rem;
-    background: linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent);
+    position: relative;
+    /* Changed from absolute */
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    padding: 4rem 3rem;
+    width: 100%;
+    max-width: 900px;
 }
 
 .hero-cat {
     display: inline-block;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    padding: 0.25em 0.75em;
+    border-radius: 99px;
     color: var(--accent);
     text-transform: uppercase;
     font-weight: 700;
     font-size: 0.875rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .hero-title {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 3.5rem;
+    /* Larger title */
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    text-shadow: none;
+    /* Clean typography */
 }
 
 .hero-excerpt {
-    font-size: 1.125rem;
-    color: var(--text-muted);
-    max-width: 800px;
-    margin-bottom: 1.5rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    /* Brighter text */
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 700px;
 }
 
 /* Post Grid */
 .posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    /* Slightly wider cards */
     gap: 2rem;
     margin-bottom: 4rem;
 }
@@ -266,8 +278,11 @@ img {
     background-color: var(--surface);
     border-radius: var(--radius-md);
     overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .post-card:hover {
@@ -276,49 +291,80 @@ img {
     border-color: var(--primary);
 }
 
-.post-thumbnail {
-    height: 200px;
-    overflow: hidden;
-}
-
-.post-thumbnail img {
+/* No image by default styling */
+.post-visual {
+    height: 12px;
+    /* Color strip instead of big image area */
+    background: linear-gradient(90deg, var(--primary), var(--accent));
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s;
 }
 
-.post-card:hover .post-thumbnail img {
-    transform: scale(1.05);
+.post-card.has-image .post-thumbnail {
+    height: 200px;
 }
 
 .post-content {
-    padding: 1.5rem;
+    padding: 2rem;
+    /* More padding for text focus */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .post-meta {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
 }
 
 .post-title {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    /* Larger card titles */
+    margin-bottom: 1rem;
+    line-height: 1.3;
 }
 
-.post-title a:hover {
+.post-excerpt {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+    /* Pushes button down */
+}
+
+.post-footer {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+.btn-link {
     color: var(--primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
 }
 
-/* Single Post */
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Single Post refinements for no-image */
 .single-post-header {
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
     text-align: center;
+    padding: 4rem 0;
+    background: radial-gradient(circle at center, var(--surface), var(--background));
+    border-radius: var(--radius-lg);
 }
 
 .single-post-title {
-    font-size: 3.5rem;
+    font-size: 3rem;
+    /* Adjusted for better flow */
     margin-bottom: 1rem;
 }
 
