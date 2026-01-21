@@ -1,56 +1,55 @@
 <?php
 /**
  * Dedeportes Modern functions and definitions
+ *
+ * @package Dedeportes_Modern
  */
 
-if ( ! function_exists( 'dedeportes_modern_setup' ) ) :
-	function dedeportes_modern_setup() {
-		// Add default posts and comments RSS feed links to head.
-		add_theme_support( 'automatic-feed-links' );
+if (!defined('DEDEPORTES_VERSION')) {
+	define('DEDEPORTES_VERSION', '1.1.0');
+}
 
-		// Let WordPress manage the document title.
-		add_theme_support( 'title-tag' );
+/**
+ * Basic Theme Setup
+ */
+function dedeportes_setup()
+{
+	add_theme_support('title-tag');
+	add_theme_support('post-thumbnails');
+	add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
 
-		// Enable support for Post Thumbnails on posts and pages.
-		add_theme_support( 'post-thumbnails' );
-        set_post_thumbnail_size( 1200, 630, true ); // Full HD crop
-
-		// Register Navigation Menus
-		register_nav_menus( array(
-			'primary' => esc_html__( 'Primary Menu', 'dedeportes-modern' ),
-            'footer'  => esc_html__( 'Footer Menu', 'dedeportes-modern' ),
-		) );
-
-		// Html5 support
-		add_theme_support( 'html5', array(
-			'search-form',
-			'comment-form',
-			'comment-list',
-			'gallery',
-			'caption',
-            'style',
-            'script'
-		) );
-	}
-endif;
-add_action( 'after_setup_theme', 'dedeportes_modern_setup' );
+	// Register Menus
+	register_nav_menus(
+		array(
+			'primary' => esc_html__('Primary Menu', 'dedeportes-modern'),
+			'footer' => esc_html__('Footer Menu', 'dedeportes-modern'),
+		)
+	);
+}
+add_action('after_setup_theme', 'dedeportes_setup');
 
 /**
  * Enqueue scripts and styles.
  */
-function dedeportes_modern_scripts() {
-	wp_enqueue_style( 'dedeportes-modern-style', get_stylesheet_uri(), array(), '1.0.0' );
-    
-    // Enqueue Google Fonts (Outfit & Inter)
-    wp_enqueue_style( 'dedeportes-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap', array(), null );
+function dedeportes_scripts()
+{
+	// Enqueue Google Fonts (Outfit & Inter)
+	wp_enqueue_style('dedeportes-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800&display=swap', array(), null);
+
+	// Main Stylesheet
+	wp_enqueue_style('dedeportes-style', get_stylesheet_uri(), array(), DEDEPORTES_VERSION);
 }
-add_action( 'wp_enqueue_scripts', 'dedeportes_modern_scripts' );
+add_action('wp_enqueue_scripts', 'dedeportes_scripts');
 
 /**
- * Custom excerpt length
+ * Modify Main Query for Homepage
+ * Show 8 posts per page.
  */
-function dedeportes_custom_excerpt_length( $length ) {
-    return 20;
+function dedeportes_home_query($query)
+{
+	if ($query->is_home() && $query->is_main_query() && !is_admin()) {
+		$query->set('posts_per_page', 8);
+		$query->set('ignore_sticky_posts', 1);
+	}
 }
-add_filter( 'excerpt_length', 'dedeportes_custom_excerpt_length', 999 );
-?>
+add_action('pre_get_posts', 'dedeportes_home_query');
