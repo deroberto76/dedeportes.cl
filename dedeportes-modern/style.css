@@ -487,6 +487,34 @@ img {
     font-size: 1.125rem;
 }
 
+
 .entry-content p {
     margin-bottom: 1.5rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+        /* Reduced from 3.5rem */
+    }
+
+    .single-post-title {
+        font-size: 1.8rem;
+        /* Reduced from 3rem -> User requested "a bit larger than body" */
+        line-height: 1.2;
+    }
+
+    .post-title {
+        font-size: 1.3rem;
+    }
+
+    .single-post-header {
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
 }
