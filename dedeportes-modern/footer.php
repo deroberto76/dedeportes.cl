@@ -26,43 +26,7 @@
 </footer><!-- #colophon -->
 </div><!-- #page -->
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchToggle = document.getElementById('search-toggle');
-        const searchOverlay = document.getElementById('search-overlay');
-        const searchClose = document.getElementById('search-close');
-        const searchField = document.querySelector('.search-field');
 
-        function openSearch() {
-            searchOverlay.classList.add('active');
-            setTimeout(() => searchField.focus(), 100);
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSearch() {
-            searchOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        if (searchToggle) {
-            searchToggle.addEventListener('click', function (e) {
-                e.preventDefault();
-                openSearch();
-            });
-        }
-
-        if (searchClose) {
-            searchClose.addEventListener('click', closeSearch);
-        }
-
-        // Close on escape key
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
-                closeSearch();
-            }
-        });
-    });
-</script>
 
 <?php wp_footer(); ?>
 
