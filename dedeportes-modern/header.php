@@ -19,16 +19,9 @@
         <header id="masthead" class="site-header">
             <div class="container">
                 <div class="site-branding">
-                    <?php
-                    if (has_custom_logo()):
-                        the_custom_logo();
-                    else:
-                        ?>
-                        <h1 class="site-logo"><a href="<?php echo esc_url(home_url('/')); ?>"
-                                rel="home">De<span>Deportes</span></a></h1>
-                        <?php
-                    endif;
-                    ?>
+                    <h1 class="site-logo">
+                        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">De<span>Deportes</span></a>
+                    </h1>
                 </div><!-- .site-branding -->
 
                 <nav id="site-navigation" class="main-navigation">
