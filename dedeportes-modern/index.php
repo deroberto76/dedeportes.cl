@@ -13,24 +13,24 @@ get_header();
 
         <div class="layout-grid">
 
-            <!-- MAIN CONTENT COLUMN (Destacados) -->
+            <!-- MAIN CONTENT COLUMN (Últimas Entradas) -->
             <div class="layout-main">
-                <h2 class="section-title">Destacados</h2>
+                <h2 class="section-title">Últimas Noticias</h2>
 
                 <?php
-                // Custom Query for 'Destacados'
-                $args_destacados = array(
-                    'category_name' => 'destacados', // Slug de la categoría
-                    'posts_per_page' => 6,
+                // Custom Query for Latest 8 Posts
+                $args_latest = array(
+                    'posts_per_page' => 8,
+                    'ignore_sticky_posts' => 1
                 );
-                $query_destacados = new WP_Query($args_destacados);
+                $query_latest = new WP_Query($args_latest);
                 ?>
 
-                <?php if ($query_destacados->have_posts()): ?>
+                <?php if ($query_latest->have_posts()): ?>
 
                     <div class="posts-grid">
-                        <?php while ($query_destacados->have_posts()):
-                            $query_destacados->the_post(); ?>
+                        <?php while ($query_latest->have_posts()):
+                            $query_latest->the_post(); ?>
 
                             <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
 
@@ -63,16 +63,15 @@ get_header();
 
                     <!-- Botón Ver Más -->
                     <div class="load-more-container">
-                        <a href="<?php echo esc_url(home_url('/category/entradas')); ?>"
-                            class="btn btn-large btn-block">
-                            Ver todas las Entradas
+                        <a href="<?php echo esc_url(home_url('/page/2/')); ?>" class="btn btn-large btn-block">
+                            Ver más noticias
                         </a>
                     </div>
 
                     <?php wp_reset_postdata(); ?>
 
                 <?php else: ?>
-                    <p>No se encontraron noticias destacadas.</p>
+                    <p>No se encontraron noticias.</p>
                 <?php endif; ?>
             </div>
 
