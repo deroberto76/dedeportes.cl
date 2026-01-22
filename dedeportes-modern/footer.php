@@ -30,6 +30,41 @@
 
 <?php wp_footer(); ?>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('Inline Menu Script Running');
+        const menuToggle = document.getElementById('menu-toggle');
+        const mainNavigation = document.getElementById('site-navigation');
+        const body = document.body;
+
+        if (!menuToggle || !mainNavigation) {
+            console.error('Menu elements missing:', { menuToggle, mainNavigation });
+            return;
+        }
+
+        menuToggle.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent any default button behavior
+            console.log('Menu Toggle Clicked');
+
+            // Toggle ARIA
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+
+            // Toggle Classes
+            mainNavigation.classList.toggle('is-open');
+            menuToggle.classList.toggle('is-active');
+            body.classList.toggle('menu-open');
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && mainNavigation.classList.contains('is-open')) {
+                menuToggle.click();
+            }
+        });
+    });
+</script>
+
 </body>
 
 </html>
