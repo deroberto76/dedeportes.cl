@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.7.0');
+	define('DEDEPORTES_VERSION', '1.8.0');
 }
 
 /**
@@ -27,6 +27,25 @@ function dedeportes_setup()
 	);
 }
 add_action('after_setup_theme', 'dedeportes_setup');
+
+/**
+ * Register Widget Area (Sidebar Tenis)
+ */
+function dedeportes_widgets_init()
+{
+	register_sidebar(
+		array(
+			'name' => esc_html__('Sidebar Tenis', 'dedeportes-modern'),
+			'id' => 'sidebar-tenis',
+			'description' => esc_html__('Agrega widgets aquí para la página de Tenis.', 'dedeportes-modern'),
+			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h3 class="widget-title">',
+			'after_title' => '</h3>',
+		)
+	);
+}
+add_action('widgets_init', 'dedeportes_widgets_init');
 
 /**
  * Enqueue scripts and styles.

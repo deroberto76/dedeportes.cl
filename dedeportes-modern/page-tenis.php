@@ -99,76 +99,75 @@ $tenis_query = new WP_Query($args);
 
             <!-- SIDEBAR COLUMN (Tenis Specific) -->
             <aside class="layout-sidebar">
+                <?php if (is_active_sidebar('sidebar-tenis')): ?>
+                    <?php dynamic_sidebar('sidebar-tenis'); ?>
+                <?php else: ?>
+                    <!-- Default/Fallback Content if no widgets are added -->
 
-                <!-- Widget: Ranking Tenistas Chilenos -->
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Ranking ATP Chile</h3>
-                    <div class="widget-content">
-                        <table class="ranking-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Jugador</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>19</td>
-                                    <td>N. Jarry</td>
-                                </tr>
-                                <tr>
-                                    <td>22</td>
-                                    <td>A. Tabilo</td>
-                                </tr>
-                                <tr>
-                                    <td>98</td>
-                                    <td>C. Garín</td>
-                                </tr>
-                                <tr>
-                                    <td>154</td>
-                                    <td>T. Barrios</td>
-                                </tr>
-                                <tr>
-                                    <td>320</td>
-                                    <td>M. Soto</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <!-- Widget: Ranking ATP Chile -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Ranking ATP Chile</h3>
+                        <div class="widget-content">
+                            <table class="ranking-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Jugador</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>19</td>
+                                        <td>N. Jarry</td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>A. Tabilo</td>
+                                    </tr>
+                                    <tr>
+                                        <td>98</td>
+                                        <td>C. Garín</td>
+                                    </tr>
+                                    <tr>
+                                        <td>154</td>
+                                        <td>T. Barrios</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style="text-align:center; margin-top:1rem; font-size:0.8rem; opacity:0.7;">
+                                <em>Agrega un widget "HTML Personalizado" en "Sidebar Tenis" para editar esto.</em>
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Widget: Próximos Partidos -->
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Próximos Partidos</h3>
-                    <div class="widget-content">
-                        <ul class="match-list">
-                            <li class="match-item">
-                                <span class="match-time">Hoy 15:00</span>
-                                <span class="match-versus">Jarry vs Alcaraz</span>
-                            </li>
-                            <li class="match-item">
-                                <span class="match-time">Mañana 11:00</span>
-                                <span class="match-versus">Tabilo vs Ruud</span>
-                            </li>
-                            <li class="match-item">
-                                <span class="match-time">Viernes 20:00</span>
-                                <span class="match-versus">Garín vs Sinner</span>
-                            </li>
-                        </ul>
+                    <!-- Widget: Próximos Partidos -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Próximos Partidos</h3>
+                        <div class="widget-content">
+                            <ul class="match-list">
+                                <li class="match-item">
+                                    <span class="match-time">Hoy 15:00</span>
+                                    <span class="match-versus">Jarry vs Alcaraz</span>
+                                </li>
+                                <li class="match-item">
+                                    <span class="match-time">Mañana 11:00</span>
+                                    <span class="match-versus">Tabilo vs Ruud</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Fallback to general sidebar widgets if needed -->
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Otras Categorías</h3>
-                    <div class="widget-content">
-                        <ul style="list-style: none; padding-left: 0;">
-                            <li style="margin-bottom: 0.5rem;"><a href="/category/futbol">Fútbol</a></li>
-                            <li style="margin-bottom: 0.5rem;"><a href="/category/mercado">Mercado de Pases</a></li>
-                        </ul>
+                    <!-- Widget: Otras Categorías -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Otras Categorías</h3>
+                        <div class="widget-content">
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li style="margin-bottom: 0.5rem;"><a href="/category/futbol">Fútbol</a></li>
+                                <li style="margin-bottom: 0.5rem;"><a href="/category/mercado">Mercado de Pases</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-
+                <?php endif; ?>
             </aside>
 
         </div> <!-- .layout-grid -->
