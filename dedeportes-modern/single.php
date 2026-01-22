@@ -63,31 +63,34 @@ get_header();
 
         </article><!-- #post-<?php the_ID(); ?> -->
 
-        <?php
+        ?>
+
         <div class="container" style="margin-top: 4rem; padding-top: 4rem; border-top: 1px solid var(--border);">
-            <h3 class="section-title" style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Últimas Noticias</h3>
-            
+            <h3 class="section-title" style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Últimas Noticias
+            </h3>
+
             <?php
             $current_id = get_the_ID();
             $args_related = array(
                 'posts_per_page' => 3,
-                'post__not_in'   => array( $current_id ),
+                'post__not_in' => array($current_id),
                 'ignore_sticky_posts' => 1
             );
-            $query_related = new WP_Query( $args_related );
-            
-            if ( $query_related->have_posts() ) : ?>
+            $query_related = new WP_Query($args_related);
+
+            if ($query_related->have_posts()): ?>
                 <div class="posts-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
-                    <?php while ( $query_related->have_posts() ) : $query_related->the_post(); ?>
-                        <article id="post-<?php the_ID(); ?>" <?php post_class( 'post-card' ); ?>>
-                            
-                            <?php if ( has_post_thumbnail() ) : ?>
+                    <?php while ($query_related->have_posts()):
+                        $query_related->the_post(); ?>
+                        <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
+
+                            <?php if (has_post_thumbnail()): ?>
                                 <div class="post-thumbnail">
                                     <a href="<?php the_permalink(); ?>">
-                                        <?php the_post_thumbnail( 'medium_large' ); ?>
+                                        <?php the_post_thumbnail('medium_large'); ?>
                                     </a>
                                 </div>
-                            <?php else : ?>
+                            <?php else: ?>
                                 <div class="post-visual"></div>
                             <?php endif; ?>
 
@@ -95,7 +98,8 @@ get_header();
                                 <div class="post-meta">
                                     <?php echo get_the_date(); ?>
                                 </div>
-                                <h3 class="post-title" style="font-size: 1.25rem;"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                                <h3 class="post-title" style="font-size: 1.25rem;"><a
+                                        href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                                 <div class="post-footer">
                                     <a href="<?php the_permalink(); ?>" class="btn-link">Leer más &rarr;</a>
                                 </div>
@@ -106,6 +110,8 @@ get_header();
                 <?php wp_reset_postdata(); ?>
             <?php endif; ?>
         </div>
+
+        <?php
 
     endwhile; // End of the loop.
     ?>
