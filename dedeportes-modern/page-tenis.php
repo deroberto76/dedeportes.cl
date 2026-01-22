@@ -1,17 +1,33 @@
 <?php
 /**
- * The template for displaying Category: Tenis
+ * Template Name: Plantilla Tenis Custom
+ * Description: Page template for Tennis specific layout. Matches slug "tenis".
  *
  * @package Dedeportes_Modern
  */
 
 get_header();
+
+// Setup Custom Pagination
+$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+if (get_query_var('page')) {
+    $paged = get_query_var('page');
+} // Handle static page pagination quirk
+
+// Custom Query for 'tenis' category
+$args = array(
+    'category_name' => 'tenis',
+    'posts_per_page' => 8,
+    'paged' => $paged
+);
+
+$tenis_query = new WP_Query($args);
 ?>
 
 <main id="primary" class="site-main">
     <div class="container" style="padding-top: 2rem;">
 
-        <!-- Category Title Header -->
+        <!-- Page/Category Title Header -->
         <header class="page-header" style="margin-bottom: 2rem;">
             <h1 class="page-title">Noticias de Tenis</h1>
             <div class="taxonomy-description">Cobertura exclusiva del tenis nacional e internacional.</div>
@@ -22,11 +38,11 @@ get_header();
             <!-- MAIN CONTENT COLUMN -->
             <div class="layout-main">
 
-                <?php if (have_posts()): ?>
+                <?php if ($tenis_query->have_posts()): ?>
 
                     <div class="posts-grid">
-                        <?php while (have_posts()):
-                            the_post(); ?>
+                        <?php while ($tenis_query->have_posts()):
+                            $tenis_query->the_post(); ?>
 
                             <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
 
@@ -44,9 +60,7 @@ get_header();
                                     <div class="post-meta">
                                         <?php echo get_the_date(); ?>
                                     </div>
-                                    <h3 class="post-title"><a href="<?php the_permalink(); ?>">
-                                            <?php the_title(); ?>
-                                        </a></h3>
+                                    <h3 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                                     <div class="post-excerpt">
                                         <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
                                     </div>
@@ -62,11 +76,19 @@ get_header();
                     <!-- Paginación -->
                     <div class="load-more-container">
                         <?php
-                        // Custom text requested by user
-                        $next_link = get_next_posts_link('Ver más noticias de tenis');
+                        // Hack to make pagination work with custom query on top of static page
+                        $temp_query = $wp_query;
+                        $wp_query = $tenis_query;
+
+                        $next_link = get_next_posts_link('Ver más noticias de tenis', $tenis_query->max_num_pages);
+
                         if ($next_link) {
                             echo str_replace('<a', '<a class="btn btn-large btn-block"', $next_link);
                         }
+
+                        // Reset Main Query
+                        $wp_query = $temp_query;
+                        wp_reset_postdata();
                         ?>
                     </div>
 
