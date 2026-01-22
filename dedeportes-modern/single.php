@@ -63,7 +63,7 @@ get_header();
 
         </article><!-- #post-<?php the_ID(); ?> -->
 
-        ?>
+
 
         <div class="container" style="margin-top: 4rem; padding-top: 4rem; border-top: 1px solid var(--border);">
             <h3 class="section-title" style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Últimas Noticias
