@@ -30,7 +30,7 @@ $tenis_query = new WP_Query($args);
         <!-- Page/Category Title Header -->
         <header class="page-header" style="margin-bottom: 2rem;">
             <h1 class="page-title">Noticias de Tenis</h1>
-            <div class="taxonomy-description">Cobertura exclusiva del tenis nacional e internacional.</div>
+            <div class="taxonomy-description">Cobertura de los tenistas chilenos</div>
         </header>
 
         <div class="layout-grid">
