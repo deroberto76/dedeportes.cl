@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.1.0');
+	define('DEDEPORTES_VERSION', '1.2.0');
 }
 
 /**
@@ -38,6 +38,9 @@ function dedeportes_scripts()
 
 	// Main Stylesheet
 	wp_enqueue_style('dedeportes-style', get_stylesheet_uri(), array(), DEDEPORTES_VERSION);
+
+	// Navigation Script
+	wp_enqueue_script('dedeportes-navigation', get_template_directory_uri() . '/js/navigation.js', array(), DEDEPORTES_VERSION, true);
 }
 add_action('wp_enqueue_scripts', 'dedeportes_scripts');
 

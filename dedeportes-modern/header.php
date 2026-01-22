@@ -29,17 +29,26 @@
                     </h1>
                 </div><!-- .site-branding -->
 
+                <button id="menu-toggle" class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">
+                    <span class="screen-reader-text"><?php esc_html_e('Menu', 'dedeportes-modern'); ?></span>
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+
                 <nav id="site-navigation" class="main-navigation">
-                    <?php
-                    wp_nav_menu(
-                        array(
-                            'theme_location' => 'primary',
-                            'menu_id' => 'primary-menu',
-                            'container' => false,
-                            'fallback_cb' => false,
-                        )
-                    );
-                    ?>
+                    <div class="nav-overlay-content">
+                        <?php
+                        wp_nav_menu(
+                            array(
+                                'theme_location' => 'primary',
+                                'menu_id' => 'primary-menu',
+                                'container' => false,
+                                'fallback_cb' => false,
+                            )
+                        );
+                        ?>
+                    </div>
                 </nav><!-- #site-navigation -->
 
 
