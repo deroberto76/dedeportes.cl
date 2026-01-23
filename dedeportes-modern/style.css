@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.12
+Version: 1.14
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -310,6 +310,56 @@ body.menu-open {
     .main-navigation a {
         font-size: 1.75rem;
         gap: 1.5rem;
+    }
+}
+
+
+/* Desktop Navigation (Horizontal) */
+@media (min-width: 1024px) {
+    .menu-toggle {
+        display: none;
+    }
+
+    .main-navigation {
+        position: static;
+        width: auto;
+        height: auto;
+        background-color: transparent;
+        backdrop-filter: none;
+        opacity: 1;
+        visibility: visible;
+        display: block;
+        transform: none;
+        padding: 0;
+    }
+
+    .nav-overlay-content {
+        padding: 0;
+        max-width: none;
+        width: auto;
+        text-align: left;
+    }
+
+    .main-navigation ul {
+        flex-direction: row;
+        gap: 2rem;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+    }
+
+    .main-navigation a {
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-main);
+        display: inline-block;
+    }
+
+    .main-navigation a:hover {
+        transform: translateY(-2px);
+        color: var(--primary);
     }
 }
 
@@ -736,4 +786,21 @@ body.menu-open {
 .match-versus {
     font-weight: 600;
     font-size: 1rem;
+}
+
+/* Utilities */
+.u-pt-2 {
+    padding-top: 2rem;
+}
+
+.u-mb-2 {
+    margin-bottom: 2rem;
+}
+
+.widget-note {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    font-style: italic;
 }

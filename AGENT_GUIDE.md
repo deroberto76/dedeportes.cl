@@ -1,45 +1,47 @@
 # Agent Guide & Development Workflow
 
-This document outlines the standard operating procedures for developing and releasing themes for Dedeportes.cl.
+This document outlines the **Standard Operating Procedure (SOP)** for developing and releasing themes for Dedeportes.cl.
 
-## Core Directives
+## 1. Core Philosophy
+*   **Git is Truth**: All changes must be committed.
+*   **Tags are Releases**: Every functional version must be tagged (e.g., `modern-v1.14`).
+*   **No Binaries**: Do NOT commit `.zip` files to the repository. They bloat coverage. Use `git rm --cached *.zip` if necessary.
 
-1.  **Version Control First**: All changes must be tracked in Git.
-2.  **Semantic Versioning**: Use standard version numbers (v1.0.0, v1.1.0) in both file headers and git tags.
-3.  **Clean Repository**: Binaries (.zip) should not be committed to the repo. Use releases/tags for that.
+## 2. Development Cycle
 
-## Step-by-Step Workflow
+### A. Setup
+1.  Pull latest changes: `git pull origin main`
+2.  Read `task.md` to understand context.
 
-### 1. Creating/Modifying a Theme
-- Navigate to the relevant directory (e.g., `dedeportes-modern`).
-- Ensure `style.css` and `functions.php` have matching version numbers.
-- **Cache Busting**: If changing CSS/JS, ALWAYS increment the version constant in `functions.php` to bypass browser cache.
+### B. Implementation
+1.  Modify files in `dedeportes-modern/`.
+2.  **Bump Version**:
+    *   `style.css`: Update `Version: X.Y` header.
+    *   `functions.php`: Update `define('DEDEPORTES_VERSION', 'X.Y');`.
 
-### 2. Committing Changes
-- Stage changes: `git add .`
-- Commit with a descriptive message:
-    ```bash
-    git commit -m "Feat: Add hamburger menu support"
-    # or
-    git commit -m "Fix: Inline JS logic in footer"
-    ```
+### C. Verification
+1.  Check for lint errors.
+2.  Verify `style.css` is valid.
 
-### 3. Releasing & Tagging
-When a feature set is complete and verified:
+## 3. Deployment & Delivery
 
-1.  **Create a Tag**: Use the pattern `theme-name-vX.Y`.
-    ```bash
-    git tag -a modern-v1.4 -m "Release v1.4: Inline JS fix"
-    ```
-2.  **Push Code & Tags**:
-    ```bash
-    git push origin main --tags
-    ```
+### A. Commit & Push
+```bash
+git add .
+git commit -m "feat: Describe changes clearly"
+git push origin main
+```
 
-### 4. Handoff
-- Always leave the repository in a clean state (`git status` should be clean).
-- Inform the user of the new version tag.
+### B. Tagging (The Release)
+After pushing, create a tag to mark the release version.
+```bash
+git tag -a modern-v1.14 -m "Release v1.14: Navigation refactor"
+git push origin modern-v1.14
+```
 
-## Useful Commands
-- Check status: `git status`
-- View logs: `git log --oneline --graph --decorate --all`
+### C. Generate Artifact
+Only after tagging, generate the zip for the user.
+```powershell
+Compress-Archive -Path dedeportes-modern -DestinationPath dedeportes-modern.zip -Force
+```
+*Notify the user of the zip location.*

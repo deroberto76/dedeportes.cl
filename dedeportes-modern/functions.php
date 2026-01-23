@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.12.0');
+	define('DEDEPORTES_VERSION', '1.14.0');
 }
 
 /**
@@ -50,6 +50,18 @@ function dedeportes_widgets_init()
 			'name' => esc_html__('Sidebar Liga Primera', 'dedeportes-modern'),
 			'id' => 'sidebar-liga',
 			'description' => esc_html__('Agrega widgets aquí para la página de Liga Primera.', 'dedeportes-modern'),
+			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h3 class="widget-title">',
+			'after_title' => '</h3>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name' => esc_html__('Sidebar Liga Ascenso', 'dedeportes-modern'),
+			'id' => 'sidebar-ascenso',
+			'description' => esc_html__('Agrega widgets aquí para la página de Liga de Ascenso.', 'dedeportes-modern'),
 			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
 			'after_widget' => '</div>',
 			'before_title' => '<h3 class="widget-title">',

@@ -1,15 +1,21 @@
-# Dedeportes.cl - WordPress Themes Repository
+# Dedeportes.cl Theme Factory
 
-This repository contains the source code for the custom WordPress themes used in [dedeportes.cl](https://dedeportes.cl).
+This repository is the central workspace for developing and generating WordPress themes for [dedeportes.cl](https://dedeportes.cl). It is designed to be used by AI Agents and developers to iterate rapidly on theme versions.
 
-## Repository Structure
+## 📂 Project Structure
 
-- `dedeportes-modern/`: The current active modern theme codebase.
-- `AGENT_GUIDE.md`: Instructions for AI agents and developers on how to contribute and manage releases.
+- `dedeportes-modern/`: The source code for the "Modern" theme variant.
+- `AGENT_GUIDE.md`: **CRITICAL READING**. The standard operating procedure for agents.
+- `archives/`: (Optional) Storage for past variations if needed, though git tags are preferred.
 
-## Getting Started
+## 🚀 Quick Start for Agents
 
-1.  Clone this repository.
-2.  Navigate to the theme directory you want to work on.
-3.  Make changes, test locally.
-4.  Follow the [AGENT_GUIDE.md](AGENT_GUIDE.md) for versioning and deployment.
+1.  **Read** `AGENT_GUIDE.md` completely.
+2.  **Check** `task.md` for active items.
+3.  **Develop** in `dedeportes-modern/`.
+4.  **Commit & Tag** every release.
+
+## 📦 Deliverables
+
+The output of this project is a ZIP file (e.g., `dedeportes-modern.zip`) which the user uploads to WordPress.
+**Note**: Do not commit zips to the repository history. Use GitHub/GitLab Releases or local generation only.
