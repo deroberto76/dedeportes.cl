@@ -42,6 +42,7 @@ git push origin modern-v1.14
 ### C. Generate Artifact
 Only after tagging, generate the zip for the user.
 ```powershell
-Compress-Archive -Path dedeportes-modern -DestinationPath dedeportes-modern.zip -Force
+tar -a -c -f dedeportes-modern.zip dedeportes-modern
 ```
+**CRITICAL**: Use `tar` instead of PowerShell's `Compress-Archive` to ensure maximum compatibility with WordPress. PowerShell may create structure issues.
 *Notify the user of the zip location.*
