@@ -25,10 +25,10 @@ $copa_chile_query = new WP_Query($args);
 ?>
 
 <main id="primary" class="site-main">
-    <div class="container" style="padding-top: 2rem;">
+    <div class="container u-pt-2">
 
         <!-- Page/Category Title Header -->
-        <header class="page-header" style="margin-bottom: 2rem;">
+        <header class="page-header u-mb-2">
             <h1 class="page-title">Noticias de Copa Chile</h1>
             <div class="taxonomy-description">Todas las novedades de la Copa Chile</div>
         </header>
@@ -108,7 +108,7 @@ $copa_chile_query = new WP_Query($args);
                     <div class="sidebar-widget">
                         <h3 class="widget-title">Tabla de Posiciones</h3>
                         <div class="widget-content">
-                            <table class="ranking-table" style="width: 100%; font-size: 0.9rem;">
+                            <table class="ranking-table">
                                 <thead>
                                     <tr>
                                         <th>Pos</th>
@@ -144,7 +144,7 @@ $copa_chile_query = new WP_Query($args);
                                     </tr>
                                 </tbody>
                             </table>
-                            <p style="text-align:center; margin-top:1rem; font-size:0.8rem; opacity:0.7;">
+                            <p class="widget-note">
                                 <em>Agrega un widget "HTML Personalizado" para editar esto.</em>
                             </p>
                         </div>
@@ -154,7 +154,7 @@ $copa_chile_query = new WP_Query($args);
                     <div class="sidebar-widget">
                         <h3 class="widget-title">Otras Categorías</h3>
                         <div class="widget-content">
-                            <ul style="list-style: none; padding-left: 0;">
+                            <ul class="u-mb-2" style="list-style: none; padding-left: 0;">
                                 <li style="margin-bottom: 0.5rem;"><a href="/category/futbol">Fútbol</a></li>
                                 <li style="margin-bottom: 0.5rem;"><a href="/category/mercado">Mercado de Pases</a></li>
                             </ul>
