@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.17.0');
+	define('DEDEPORTES_VERSION', '1.18.0');
 }
 
 /**
@@ -74,6 +74,18 @@ function dedeportes_widgets_init()
 			'name' => esc_html__('Sidebar Copa Chile', 'dedeportes-modern'),
 			'id' => 'sidebar-copa-chile',
 			'description' => esc_html__('Agrega widgets aquí para la página de Copa Chile.', 'dedeportes-modern'),
+			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h3 class="widget-title">',
+			'after_title' => '</h3>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name' => esc_html__('Sidebar Fútbol', 'dedeportes-modern'),
+			'id' => 'sidebar-futbol',
+			'description' => esc_html__('Agrega widgets aquí para la página de Fútbol.', 'dedeportes-modern'),
 			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
 			'after_widget' => '</div>',
 			'before_title' => '<h3 class="widget-title">',
