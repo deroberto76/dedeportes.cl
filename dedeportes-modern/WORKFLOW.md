@@ -25,7 +25,7 @@ git tag vX.XX.X
 Genera el ZIP usando `git archive` para asegurar que solo empaquetas archivos controlados por git (evitando basura local).
 ```bash
 # Reemplaza vX.XX.X con la versión actual (ej. v1.17.0)
-git archive --format=zip --output=dedeportes-modern-vX.XX.zip --prefix=dedeportes-modern/ vX.XX.X
+git archive --format=zip --output=../dedeportes-modern-vX.XX.zip --prefix=dedeportes-modern/ vX.XX.X
 ```
 
 ## Paso 5: Sincronización
@@ -36,5 +36,5 @@ git push origin main --tags
 ---
 **Nota**: Si el usuario pide un ZIP rápido sin taggear, usa `HEAD` en lugar de la versión:
 ```bash
-git archive --format=zip --output=dedeportes-modern-wip.zip --prefix=dedeportes-modern/ HEAD
+git archive --format=zip --output=../dedeportes-modern-wip.zip --prefix=dedeportes-modern/ HEAD
 ```

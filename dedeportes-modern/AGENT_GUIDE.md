@@ -25,8 +25,9 @@ Para cada solicitud del usuario:
     ```
 6.  **Generar Artefacto**:
     ```bash
-    git archive --format=zip --output=dedeportes-modern-v1.XX.zip --prefix=dedeportes-modern/ v1.XX.X
+    git archive --format=zip --output=../dedeportes-modern-v1.XX.zip --prefix=dedeportes-modern/ v1.XX.X
     ```
+    (Nota: El ZIP se guarda en el directorio padre `../` para no ensuciar el repo).
 7.  **Sincronizar (Push)**:
     ```bash
     git push origin main --tags
