@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.21.0');
+	define('DEDEPORTES_VERSION', '1.22.0');
 }
 
 /**
@@ -106,6 +106,15 @@ function dedeportes_widgets_init()
 	);
 }
 add_action('widgets_init', 'dedeportes_widgets_init');
+
+// Register Custom Widgets
+require_once get_template_directory() . '/inc/class-dedeportes-scoreboard-widget.php';
+
+function dedeportes_register_custom_widgets()
+{
+	register_widget('Dedeportes_Scoreboard_Widget');
+}
+add_action('widgets_init', 'dedeportes_register_custom_widgets');
 
 /**
  * Enqueue scripts and styles.
