@@ -72,34 +72,42 @@ get_header();
             <!-- SIDEBAR COLUMN -->
             <aside class="layout-sidebar">
 
-                <!-- Widget: En vivo -->
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">En vivo</h3>
-                    <div class="widget-content">
-                        <div class="scoreboard-competition">Liga de Primera</div>
-                        <table class="scoreboard-table">
-                            <thead>
-                                <tr>
-                                    <th>Equipo</th>
-                                    <th>Marcador</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Colo-Colo</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>U. de Chile</td>
-                                    <td>0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="scoreboard-footer">
-                            <span class="live-indicator">●</span> Primer Tiempo
+                <?php if (is_active_sidebar('sidebar-home')): ?>
+                    <?php dynamic_sidebar('sidebar-home'); ?>
+                <?php else: ?>
+                    <!-- Default/Fallback Content -->
+                    <!-- Widget: En vivo -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">En vivo</h3>
+                        <div class="widget-content">
+                            <div class="scoreboard-competition">Liga de Primera</div>
+                            <table class="scoreboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>Equipo</th>
+                                        <th>Marcador</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Colo-Colo</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>U. de Chile</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="scoreboard-footer">
+                                <span class="live-indicator">●</span> Primer Tiempo
+                            </div>
+                            <p class="widget-note">
+                                <em>Agrega un widget en "Sidebar Portada" para reemplazar esto.</em>
+                            </p>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
                 <!-- Widget: Tenis -->
                 <div class="sidebar-widget">
