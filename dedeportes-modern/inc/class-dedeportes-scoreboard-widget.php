@@ -94,7 +94,7 @@ class Dedeportes_Scoreboard_Widget extends WP_Widget
                 </tbody>
             </table>
 
-            <?php if (!empty($footer_text)): ?>
+            <?php if (!empty($footer_text) || $is_live): ?>
                 <div class="scoreboard-footer">
                     <?php if ($is_live): ?>
                         <span class="live-indicator">●</span>
