@@ -17,21 +17,22 @@ get_header();
             <!-- MAIN CONTENT COLUMN (Últimas Entradas) -->
             <div class="layout-main">
                 <h2 class="section-title">Últimas Noticias</h2>
-                
-                <?php if ( have_posts() ) : ?>
+
+                <?php if (have_posts()): ?>
 
                     <div class="posts-grid">
-                        <?php while ( have_posts() ) : the_post(); ?>
+                        <?php while (have_posts()):
+                            the_post(); ?>
 
-                            <article id="post-<?php the_ID(); ?>" <?php post_class( 'post-card' ); ?>>
-                                
-                                <?php if ( has_post_thumbnail() ) : ?>
+                            <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
+
+                                <?php if (has_post_thumbnail()): ?>
                                     <div class="post-thumbnail">
                                         <a href="<?php the_permalink(); ?>">
-                                            <?php the_post_thumbnail( 'medium_large' ); ?>
+                                            <?php the_post_thumbnail('medium_large'); ?>
                                         </a>
                                     </div>
-                                <?php else : ?>
+                                <?php else: ?>
                                     <div class="post-visual"></div> <!-- Color strip -->
                                 <?php endif; ?>
 
@@ -41,7 +42,7 @@ get_header();
                                     </div>
                                     <h3 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                                     <div class="post-excerpt">
-                                        <?php echo wp_trim_words( get_the_excerpt(), 20 ); ?>
+                                        <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
                                     </div>
                                     <div class="post-footer">
                                         <a href="<?php the_permalink(); ?>" class="btn-link">Leer más &rarr;</a>
@@ -51,25 +52,54 @@ get_header();
 
                         <?php endwhile; ?>
                     </div>
-                    
+
                     <!-- Paginación -->
                     <div class="load-more-container">
                         <?php
                         // Next Posts Link styled as button
-                        $next_link = get_next_posts_link( 'Ver más noticias' );
-                        if ( $next_link ) {
-                            echo str_replace( '<a', '<a class="btn btn-large btn-block"', $next_link );
+                        $next_link = get_next_posts_link('Ver más noticias');
+                        if ($next_link) {
+                            echo str_replace('<a', '<a class="btn btn-large btn-block"', $next_link);
                         }
                         ?>
                     </div>
 
-                <?php else : ?>
+                <?php else: ?>
                     <p>No se encontraron noticias.</p>
                 <?php endif; ?>
             </div>
 
             <!-- SIDEBAR COLUMN -->
             <aside class="layout-sidebar">
+
+                <!-- Widget: En vivo -->
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">En vivo</h3>
+                    <div class="widget-content">
+                        <div class="scoreboard-competition">Liga de Primera</div>
+                        <table class="scoreboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Equipo</th>
+                                    <th>Marcador</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Colo-Colo</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>U. de Chile</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="scoreboard-footer">
+                            <span class="live-indicator">●</span> Primer Tiempo
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Widget: Tenis -->
                 <div class="sidebar-widget">
@@ -123,31 +153,7 @@ get_header();
                     </div>
                 </div>
 
-                <!-- Widget: Mercado -->
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Mercado</h3>
-                    <div class="widget-content">
-                        <?php
-                        $query_mercado = new WP_Query(array('category_name' => 'mercado', 'posts_per_page' => 4));
-                        if ($query_mercado->have_posts()):
-                            while ($query_mercado->have_posts()):
-                                $query_mercado->the_post();
-                                ?>
-                                <div class="mini-post">
-                                    <a href="<?php the_permalink(); ?>" class="mini-post-link">
-                                        <span class="mini-post-title"><?php the_title(); ?></span>
-                                        <span class="mini-post-date"><?php echo get_the_date('d M'); ?></span>
-                                    </a>
-                                </div>
-                                <?php
-                            endwhile;
-                            wp_reset_postdata();
-                        else:
-                            echo '<p class="text-muted">Sin noticias recientes.</p>';
-                        endif;
-                        ?>
-                    </div>
-                </div>
+
 
             </aside>
 
