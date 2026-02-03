@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.22.2');
+	define('DEDEPORTES_VERSION', '1.23.0');
 }
 
 /**
@@ -98,6 +98,18 @@ function dedeportes_widgets_init()
 			'name' => esc_html__('Sidebar Portada', 'dedeportes-modern'),
 			'id' => 'sidebar-home',
 			'description' => esc_html__('Agrega widgets aquí para la portada (index).', 'dedeportes-modern'),
+			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h3 class="widget-title">',
+			'after_title' => '</h3>',
+		)
+	);
+
+	register_sidebar(
+		array(
+			'name' => esc_html__('Sidebar Sudamericano Sub 20', 'dedeportes-modern'),
+			'id' => 'sidebar-sudamericano-sub-20f',
+			'description' => esc_html__('Agrega widgets aquí para la página de Sudamericano Sub 20 Femenino.', 'dedeportes-modern'),
 			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
 			'after_widget' => '</div>',
 			'before_title' => '<h3 class="widget-title">',
