@@ -97,7 +97,8 @@ class Dedeportes_Scoreboard_Widget extends WP_Widget
             <?php if (!empty($footer_text) || $is_live): ?>
                 <div class="scoreboard-footer">
                     <?php if ($is_live): ?>
-                        <span class="live-indicator">&bull;</span>
+                        <span class="live-indicator" aria-hidden="true"></span>
+                        <span class="live-text"><?php esc_html_e('EN VIVO', 'dedeportes-modern'); ?></span>
                     <?php endif; ?>
                     <?php echo esc_html($footer_text); ?>
                 </div>
@@ -124,7 +125,7 @@ class Dedeportes_Scoreboard_Widget extends WP_Widget
         $team2 = !empty($instance['team2']) ? $instance['team2'] : '';
         $score2 = isset($instance['score2']) ? $instance['score2'] : '';
         $footer_text = !empty($instance['footer_text']) ? $instance['footer_text'] : '';
-        $is_live = !empty($instance['is_live']) ? (bool) $instance['is_live'] : false;
+        $is_live = !empty($instance['is_live']);
         ?>
 
         <!-- Widget Title -->
@@ -207,9 +208,9 @@ class Dedeportes_Scoreboard_Widget extends WP_Widget
 
         <!-- Is Live Checkbox -->
         <p>
-            <input class="checkbox" type="checkbox" <?php checked($is_live); ?> id="
-    <?php echo esc_attr($this->get_field_id('is_live')); ?>" name="
-    <?php echo esc_attr($this->get_field_name('is_live')); ?>" />
+            <input class="checkbox" type="checkbox" <?php checked($is_live); ?>
+                id="<?php echo esc_attr($this->get_field_id('is_live')); ?>"
+                name="<?php echo esc_attr($this->get_field_name('is_live')); ?>" />
             <label for="<?php echo esc_attr($this->get_field_id('is_live')); ?>">
                 <?php esc_html_e('Mostrar indicador "En Vivo" (Punto Rojo)', 'dedeportes-modern'); ?>
             </label>
@@ -242,7 +243,7 @@ class Dedeportes_Scoreboard_Widget extends WP_Widget
         $instance['team2'] = (!empty($new_instance['team2'])) ? sanitize_text_field($new_instance['team2']) : '';
         $instance['score2'] = (isset($new_instance['score2'])) ? sanitize_text_field($new_instance['score2']) : '';
         $instance['footer_text'] = (!empty($new_instance['footer_text'])) ? sanitize_text_field($new_instance['footer_text']) : '';
-        $instance['is_live'] = (isset($new_instance['is_live'])) ? (bool) $new_instance['is_live'] : false;
+        $instance['is_live'] = !empty($new_instance['is_live']);
 
         return $instance;
     }
