@@ -128,6 +128,18 @@ function dedeportes_widgets_init()
 			'after_title' => '</h3>',
 		)
 	);
+
+	register_sidebar(
+		array(
+			'name' => esc_html__('Sidebar Copa Davis', 'dedeportes-modern'),
+			'id' => 'sidebar-copa-davis',
+			'description' => esc_html__('Agrega widgets aquí para la página de Copa Davis.', 'dedeportes-modern'),
+			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h3 class="widget-title">',
+			'after_title' => '</h3>',
+		)
+	);
 }
 add_action('widgets_init', 'dedeportes_widgets_init');
 
