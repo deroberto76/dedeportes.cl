@@ -145,10 +145,12 @@ add_action('widgets_init', 'dedeportes_widgets_init');
 
 // Register Custom Widgets
 require_once get_template_directory() . '/inc/class-dedeportes-scoreboard-widget.php';
+require_once get_template_directory() . '/inc/class-dedeportes-tennis-scoreboard-widget.php';
 
 function dedeportes_register_custom_widgets()
 {
 	register_widget('Dedeportes_Scoreboard_Widget');
+	register_widget('Dedeportes_Tennis_Scoreboard_Widget');
 }
 add_action('widgets_init', 'dedeportes_register_custom_widgets');
 
