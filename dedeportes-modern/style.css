@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.30
+Version: 1.31
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -362,11 +362,18 @@ body.menu-open {
         padding: 0;
         max-width: none;
         width: auto;
-        text-align: left;
+        text-align: center;
+        /* Center menu items */
     }
 
     .main-navigation ul {
+        display: flex;
         flex-direction: row;
+        /* Force horizontal */
+        flex-wrap: wrap;
+        /* Allow wrap correctly if needed */
+        justify-content: center;
+        /* Center items horizontally */
         gap: 2rem;
         margin: 0;
         padding: 0;
@@ -380,6 +387,10 @@ body.menu-open {
         letter-spacing: 0.05em;
         color: var(--text-main);
         display: inline-block;
+        padding-bottom: 4px;
+        /* Space for border */
+        border-bottom: 2px solid transparent;
+        /* Reserved space for border */
     }
 
     .main-navigation a:hover {
@@ -389,7 +400,7 @@ body.menu-open {
 
     .main-navigation .current-menu-item>a {
         color: var(--primary);
-        border-bottom: 2px solid var(--primary);
+        border-bottom-color: var(--primary);
     }
 }
 
