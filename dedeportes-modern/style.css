@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.26
+Version: 1.27
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -242,26 +242,52 @@ img {
 }
 
 /* Nav Overlay Styles */
+/* Nav Overlay Styles - Mobile Drawer */
 .main-navigation {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 85%;
+    max-width: 320px;
     height: 100vh;
-    background-color: rgba(15, 23, 42, 0.95);
-    /* Deep dark blue/slate */
+    background-color: rgba(15, 23, 42, 0.98);
+    /* Deep dark blue/slate, less transparent */
     backdrop-filter: blur(16px);
     z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
+    transform: translateX(-100%);
+    /* Moved off-screen */
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+    /* Shadow indicating depth */
+}
+
+/* Overlay background when menu is open */
+body.menu-open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+    /* Behind menu (100) but above content */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+body.menu-open::before {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .main-navigation.is-open {
-    opacity: 1;
+    transform: translateX(0);
     visibility: visible;
 }
 
