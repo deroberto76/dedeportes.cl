@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.28
+Version: 1.29
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -243,100 +243,95 @@ img {
 
 /* Nav Overlay Styles */
 /* Nav Overlay Styles - Mobile Drawer */
-.main-navigation {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 85%;
-    max-width: 320px;
-    height: 100vh;
-    background-color: rgba(15, 23, 42, 0.98);
-    /* Deep dark blue/slate, less transparent */
-    backdrop-filter: blur(16px);
-    z-index: 100;
-    display: flex;
-    align-items: flex-start;
-    /* Allow scrolling from top */
-    padding-top: 80px;
-    /* Space for header/close button */
-    overflow-y: auto;
-    /* Enable vertical scroll */
-}
+/* Default to mobile-first styles, but ensure they don't leak to desktop */
+@media (max-width: 1023px) {
+    .main-navigation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        background-color: rgba(15, 23, 42, 0.98);
+        backdrop-filter: blur(16px);
+        z-index: 100;
+        display: flex;
+        align-items: flex-start;
+        padding-top: 80px;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+    }
 
-/* Overlay background when menu is open */
-body.menu-open::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 90;
-    /* Behind menu (100) but above content */
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
+    .main-navigation.is-open {
+        transform: translateX(0);
+        visibility: visible;
+    }
 
-body.menu-open::before {
-    opacity: 1;
-    pointer-events: auto;
-}
+    .nav-overlay-content {
+        text-align: left;
+        max-width: 100%;
+        width: 100%;
+        padding: 0 2rem 4rem 2rem;
+    }
 
-.main-navigation.is-open {
-    transform: translateX(0);
-    visibility: visible;
-}
+    .main-navigation ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0;
+        margin: 0;
+    }
 
-.nav-overlay-content {
-    text-align: left;
-    /* Align left for drawer feel */
-    max-width: 100%;
-    width: 100%;
-    padding: 0 2rem 4rem 2rem;
-    /* Bottom padding for scroll */
-}
+    .main-navigation a {
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        transition: color 0.3s, transform 0.3s;
+        display: block;
+        padding: 0.5rem 0;
+        text-transform: capitalize;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-.main-navigation ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    /* Reduced gap */
-    padding: 0;
-    margin: 0;
-}
+    .main-navigation a:hover {
+        color: var(--primary);
+        transform: translateX(5px);
+    }
 
-.main-navigation a {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    /* Smaller font size for mobile list */
-    font-weight: 600;
-    color: var(--text-muted);
-    transition: color 0.3s, transform 0.3s;
-    display: block;
-    /* Block for better hit area */
-    padding: 0.5rem 0;
-    text-transform: capitalize;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    /* Subtle separator */
-}
+    .main-navigation .current-menu-item>a {
+        color: var(--text-main);
+        border-bottom-color: var(--primary);
+    }
 
-.main-navigation a:hover {
-    color: var(--primary);
-    transform: translateX(5px);
-    /* Slide right instead of scale */
-}
+    /* Overlay background when menu is open */
+    body.menu-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
 
-.main-navigation .current-menu-item>a {
-    color: var(--text-main);
-    border-bottom-color: var(--primary);
-}
+    body.menu-open::before {
+        opacity: 1;
+        pointer-events: auto;
+    }
 
-/* Prevent scrolling when menu is open */
-body.menu-open {
-    overflow: hidden;
+    /* Prevent scrolling when menu is open */
+    body.menu-open {
+        overflow: hidden;
+    }
 }
 
 /* Mobile Adjustments for Menu Text - Override previous media query */
