@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.27
+Version: 1.28
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -255,14 +255,12 @@ img {
     backdrop-filter: blur(16px);
     z-index: 100;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: translateX(-100%);
-    /* Moved off-screen */
-    visibility: hidden;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
-    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
-    /* Shadow indicating depth */
+    align-items: flex-start;
+    /* Allow scrolling from top */
+    padding-top: 80px;
+    /* Space for header/close button */
+    overflow-y: auto;
+    /* Enable vertical scroll */
 }
 
 /* Overlay background when menu is open */
@@ -292,38 +290,48 @@ body.menu-open::before {
 }
 
 .nav-overlay-content {
-    text-align: center;
-    max-width: 600px;
+    text-align: left;
+    /* Align left for drawer feel */
+    max-width: 100%;
     width: 100%;
-    padding: 2rem;
+    padding: 0 2rem 4rem 2rem;
+    /* Bottom padding for scroll */
 }
 
 .main-navigation ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
+    /* Reduced gap */
     padding: 0;
     margin: 0;
 }
 
 .main-navigation a {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    /* Smaller font size for mobile list */
+    font-weight: 600;
     color: var(--text-muted);
     transition: color 0.3s, transform 0.3s;
-    display: inline-block;
+    display: block;
+    /* Block for better hit area */
+    padding: 0.5rem 0;
     text-transform: capitalize;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Subtle separator */
 }
 
 .main-navigation a:hover {
     color: var(--primary);
-    transform: scale(1.05);
+    transform: translateX(5px);
+    /* Slide right instead of scale */
 }
 
 .main-navigation .current-menu-item>a {
     color: var(--text-main);
+    border-bottom-color: var(--primary);
 }
 
 /* Prevent scrolling when menu is open */
@@ -331,11 +339,12 @@ body.menu-open {
     overflow: hidden;
 }
 
-/* Mobile Adjustments for Menu Text */
+/* Mobile Adjustments for Menu Text - Override previous media query */
 @media (max-width: 768px) {
     .main-navigation a {
-        font-size: 1.75rem;
-        gap: 1.5rem;
+        font-size: 1.1rem;
+        /* Even smaller for small phones if needed */
+        gap: 0;
     }
 }
 
