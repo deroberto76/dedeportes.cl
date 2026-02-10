@@ -177,8 +177,72 @@ function dedeportes_home_query($query)
 	if ($query->is_home() && $query->is_main_query() && !is_admin()) {
 		$query->set('posts_per_page', 8);
 		$query->set('ignore_sticky_posts', 1);
+
+		// Exclude posts marked as "Hide on Home"
+		$meta_query = $query->get('meta_query');
+		if (!is_array($meta_query)) {
+			$meta_query = array();
+		}
+		$meta_query[] = array(
+			'key' => '_dedeportes_hide_home',
+			'compare' => 'NOT EXISTS',
+		);
+		$query->set('meta_query', $meta_query);
 	}
 }
+add_action('pre_get_posts', 'dedeportes_home_query');
+
+/**
+ * Meta Box: Hide on Homepage
+ */
+function dedeportes_add_meta_box()
+{
+	add_meta_box(
+		'dedeportes_hide_home_meta',
+		__('Opciones de Portada', 'dedeportes-modern'),
+		'dedeportes_render_meta_box',
+		'post',
+		'side',
+		'high'
+	);
+}
+add_action('add_meta_boxes', 'dedeportes_add_meta_box');
+
+function dedeportes_render_meta_box($post)
+{
+	$value = get_post_meta($post->ID, '_dedeportes_hide_home', true);
+	wp_nonce_field('dedeportes_save_meta_box', 'dedeportes_meta_box_nonce');
+	?>
+	<p>
+		<label>
+			<input type="checkbox" name="dedeportes_hide_home" value="yes" <?php checked($value, 'yes'); ?> />
+			<strong><?php _e('Ocultar en Portada', 'dedeportes-modern'); ?></strong>
+		</label>
+	</p>
+	<p class="description" style="font-size:0.9em;">
+		<?php _e('Esta entrada no aparecerá en el Home, pero sí en categorías.', 'dedeportes-modern'); ?></p>
+	<?php
+}
+
+function dedeportes_save_meta_box($post_id)
+{
+	if (!isset($_POST['dedeportes_meta_box_nonce']))
+		return;
+	if (!wp_verify_nonce($_POST['dedeportes_meta_box_nonce'], 'dedeportes_save_meta_box'))
+		return;
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+		return;
+	if (!current_user_can('edit_post', $post_id))
+		return;
+
+	if (isset($_POST['dedeportes_hide_home'])) {
+		update_post_meta($post_id, '_dedeportes_hide_home', 'yes');
+	} else {
+		delete_post_meta($post_id, '_dedeportes_hide_home');
+	}
+}
+add_action('save_post', 'dedeportes_save_meta_box');
+
 /**
  * Customizer Layout & SEO Settings
  */
