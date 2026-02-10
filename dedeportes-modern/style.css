@@ -1,10 +1,10 @@
-/*
+﻿/*
 Theme Name: Dedeportes Modern
 Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.31
+Version: 1.33
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -29,7 +29,7 @@ Tags: blog, news, sport, modern, responsive
     /* Slate 400 */
     --border: #334155;
 
-    /* Tipografía */
+    /* TipografÃ­a */
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
 
@@ -47,7 +47,7 @@ Tags: blog, news, sport, modern, responsive
 }
 
 
-/* Reset Básico */
+/* Reset BÃ¡sico */
 *,
 *::before,
 *::after {
@@ -105,7 +105,7 @@ img {
     padding: 0 1.5rem;
 }
 
-/* Utilidades Rápidas */
+/* Utilidades RÃ¡pidas */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -932,47 +932,108 @@ body.menu-open {
     color: var(--accent);
     margin-bottom: 0.5rem;
     font-weight: 700;
-}/ *   T e n n i s   S c o r e b o a r d   S t y l e s   * /  
- . t e n n i s - s c o r e b o a r d - c o n t a i n e r   {  
-         o v e r f l o w - x :   a u t o ;  
-         / *   A l l o w   s c r o l l   o n   s m a l l   s c r e e n s   i f   n e e d e d   * /  
-         m a r g i n - b o t t o m :   1 r e m ;  
- }  
-  
- . t e n n i s - t a b l e   {  
-         w i d t h :   1 0 0 % ;  
-         b o r d e r - c o l l a p s e :   c o l l a p s e ;  
- }  
-  
- . t e n n i s - t a b l e   t h ,  
- . t e n n i s - t a b l e   t d   {  
-         p a d d i n g :   0 . 5 r e m ;  
-         b o r d e r - b o t t o m :   1 p x   s o l i d   v a r ( - - b o r d e r ) ;  
- }  
-  
- . t e n n i s - t a b l e   . p l a y e r - c o l ,  
- . t e n n i s - t a b l e   . p l a y e r - n a m e   {  
-         t e x t - a l i g n :   l e f t ;  
-         w h i t e - s p a c e :   n o w r a p ;  
-         / *   K e e p   n a m e s   o n   o n e   l i n e   i f   p o s s i b l e   * /  
- }  
-  
- . t e n n i s - t a b l e   . s e t - c o l ,  
- . t e n n i s - t a b l e   . s e t - s c o r e   {  
-         t e x t - a l i g n :   c e n t e r ;  
-         w i d t h :   3 0 p x ;  
-         / *   F i x e d   w i d t h   f o r   s e t s   * /  
-         f o n t - v a r i a n t - n u m e r i c :   t a b u l a r - n u m s ;  
- }  
-  
- . t e n n i s - t a b l e   t h   {  
-         f o n t - s i z e :   0 . 7 5 r e m ;  
-         t e x t - t r a n s f o r m :   u p p e r c a s e ;  
-         c o l o r :   v a r ( - - t e x t - m u t e d ) ;  
-         f o n t - w e i g h t :   6 0 0 ;  
- }  
-  
- . t e n n i s - t a b l e   . s e t - s c o r e   {  
-         f o n t - w e i g h t :   7 0 0 ;  
- }  
- 
+}
+/* Tennis Scoreboard Styles */
+.tennis-scoreboard-container {
+    overflow-x: auto;
+    /* Allow scroll on small screens if needed */
+    margin-bottom: 1rem;
+}
+
+.tennis-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tennis-table th,
+.tennis-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.tennis-table .player-col,
+.tennis-table .player-name {
+    text-align: left;
+    white-space: nowrap;
+    /* Keep names on one line if possible */
+}
+
+.tennis-table .set-col,
+.tennis-table .set-score {
+    text-align: center;
+    width: 30px;
+    /* Fixed width for sets */
+    font-variant-numeric: tabular-nums;
+}
+
+.tennis-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.tennis-table .set-score {
+    font-weight: 700;
+}
+/* --- UX/UI Improvements v1.33 --- */
+
+/* Post Card Interactions */
+.post-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.post-thumbnail img {
+    transition: transform 0.5s ease;
+}
+
+.post-card:hover .post-thumbnail img {
+    transform: scale(1.05);
+}
+
+/* Button & Link Interactions */
+.btn,
+.button,
+input[type="submit"],
+input[type="button"] {
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active,
+.button:active,
+input[type="submit"]:active,
+input[type="button"]:active {
+    transform: scale(0.98);
+}
+
+/* Pagination & Links */
+.page-links a,
+.nav-links a {
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Typography & Reading Experience in Single Posts */
+.single .entry-content p {
+    line-height: 1.8;
+    /* Improve readability */
+    margin-bottom: 2rem;
+    /* More breathing room */
+    color: var(--text-color);
+    /* Ensure contrast */
+}
+
+/* Input Fields Focus */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+    /* Soft focus ring if var exists, fallback handled by browser */
+    outline: none;
+}
