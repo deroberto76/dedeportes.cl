@@ -179,4 +179,29 @@ function dedeportes_home_query($query)
 		$query->set('ignore_sticky_posts', 1);
 	}
 }
-add_action('pre_get_posts', 'dedeportes_home_query');
+/**
+ * Customizer Layout & SEO Settings
+ */
+function dedeportes_customize_register($wp_customize)
+{
+	// Section: SEO Options
+	$wp_customize->add_section('dedeportes_seo_options', array(
+		'title' => __('Opciones SEO & Social', 'dedeportes-modern'),
+		'priority' => 120,
+	));
+
+	// Setting: Social Image Fallback
+	$wp_customize->add_setting('dedeportes_social_image', array(
+		'default' => '',
+		'sanitize_callback' => 'esc_url_raw',
+	));
+
+	// Control: Image Upload
+	$wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'dedeportes_social_image', array(
+		'label' => __('Imagen Social por Defecto', 'dedeportes-modern'),
+		'description' => __('Sube una imagen (ej. pantallazo de la portada) para mostrar en redes sociales cuando el contenido no tenga imagen destacada.', 'dedeportes-modern'),
+		'section' => 'dedeportes_seo_options',
+		'settings' => 'dedeportes_social_image',
+	)));
+}
+add_action('customize_register', 'dedeportes_customize_register');

@@ -17,9 +17,13 @@
     $og_title = is_front_page() ? get_bloginfo('name') : get_the_title();
     $og_url = is_front_page() ? home_url('/') : get_permalink();
     $og_type = is_single() ? 'article' : 'website';
-    $og_image = get_template_directory_uri() . '/screenshot.png'; // Fallback
+    $og_image = get_template_directory_uri() . '/screenshot.png'; // Ultimate fallback
+    $custom_social_image = get_theme_mod('dedeportes_social_image');
+
     if (has_post_thumbnail()) {
         $og_image = get_the_post_thumbnail_url(null, 'large');
+    } elseif ($custom_social_image) {
+        $og_image = $custom_social_image;
     }
     $og_description = get_bloginfo('description');
     if (is_single() && has_excerpt()) {
