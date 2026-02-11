@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.36
+Version: 1.37
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -406,6 +406,57 @@ body.menu-open {
     .main-navigation .current-menu-item>a {
         color: var(--primary);
         border-bottom-color: var(--primary);
+    }
+
+    /* Dropdown Menus (Submenus) */
+    .main-navigation ul ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: rgba(15, 23, 42, 0.95);
+        /* Consistent with dark theme */
+        border: 1px solid var(--border);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        min-width: 220px;
+        z-index: 100;
+        flex-direction: column;
+        padding: 0.5rem 0;
+        border-radius: var(--radius-sm);
+        gap: 0;
+        /* No gap in vertical list */
+        text-align: left;
+    }
+
+    .main-navigation li:hover>ul,
+    .main-navigation li:focus-within>ul {
+        display: flex;
+    }
+
+    .main-navigation ul ul li {
+        width: 100%;
+        display: block;
+    }
+
+    .main-navigation ul ul a {
+        display: block;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+        text-transform: none;
+        /* More readable for sub-items */
+        border-bottom: none;
+        color: var(--text-light);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .main-navigation ul ul a:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        transform: none;
+        /* Disable shift for dropdown items */
+        color: var(--primary);
+        padding-left: 1.75rem;
+        /* Slight indent on hover */
     }
 }
 
