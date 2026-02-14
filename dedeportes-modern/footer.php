@@ -5,7 +5,7 @@
             <div class="footer-branding">
                 <h2 class="site-logo"><a href="<?php echo esc_url(home_url('/')); ?>">De<span>Deportes</span></a>
                 </h2>
-                <p>Cobertura de fútbol y tenis chileno</p>
+                <p>Fútbol y tenis chileno, todos los días</p>
             </div>
         </div>
 
