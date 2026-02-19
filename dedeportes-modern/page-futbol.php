@@ -27,11 +27,14 @@ $futbol_query = new WP_Query($args);
 <main id="primary" class="site-main">
     <div class="container u-pt-2">
 
-        <!-- Page/Category Title Header -->
-        <header class="page-header u-mb-2">
-            <h1 class="page-title">Noticias de Fútbol</h1>
-            <div class="taxonomy-description">Toda la actualidad del fútbol nacional e internacional</div>
-        </header>
+        <!-- Page/Category Title Header from Static Page -->
+        <?php while (have_posts()):
+            the_post(); ?>
+            <header class="page-header u-mb-2">
+                <h1 class="page-title"><?php the_title(); ?></h1>
+                <div class="taxonomy-description"><?php the_content(); ?></div>
+            </header>
+        <?php endwhile; ?>
 
         <div class="layout-grid">
 

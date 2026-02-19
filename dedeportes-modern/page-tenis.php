@@ -27,11 +27,14 @@ $tenis_query = new WP_Query($args);
 <main id="primary" class="site-main">
     <div class="container" style="padding-top: 2rem;">
 
-        <!-- Page/Category Title Header -->
-        <header class="page-header" style="margin-bottom: 2rem;">
-            <h1 class="page-title">Noticias de Tenis</h1>
-            <div class="taxonomy-description">Cobertura de los tenistas chilenos</div>
-        </header>
+        <!-- Page/Category Title Header from Static Page -->
+        <?php while (have_posts()):
+            the_post(); ?>
+            <header class="page-header" style="margin-bottom: 2rem;">
+                <h1 class="page-title"><?php the_title(); ?></h1>
+                <div class="taxonomy-description"><?php the_content(); ?></div>
+            </header>
+        <?php endwhile; ?>
 
         <div class="layout-grid">
 
