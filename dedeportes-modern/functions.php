@@ -140,6 +140,18 @@ function dedeportes_widgets_init()
 			'after_title' => '</h3>',
 		)
 	);
+
+	register_sidebar(
+		array(
+			'name' => esc_html__('Sidebar Chile Open', 'dedeportes-modern'),
+			'id' => 'sidebar-chile-open',
+			'description' => esc_html__('Agrega widgets aquí para la página de Chile Open.', 'dedeportes-modern'),
+			'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h3 class="widget-title">',
+			'after_title' => '</h3>',
+		)
+	);
 }
 add_action('widgets_init', 'dedeportes_widgets_init');
 
@@ -220,7 +232,8 @@ function dedeportes_render_meta_box($post)
 		</label>
 	</p>
 	<p class="description" style="font-size:0.9em;">
-		<?php _e('Esta entrada no aparecerá en el Home, pero sí en categorías.', 'dedeportes-modern'); ?></p>
+		<?php _e('Esta entrada no aparecerá en el Home, pero sí en categorías.', 'dedeportes-modern'); ?>
+	</p>
 	<?php
 }
 
