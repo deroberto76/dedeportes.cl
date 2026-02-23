@@ -1,7 +1,7 @@
 <?php
 /**
- * Template Name: Plantilla Sudamericano Sub 20 Femenino
- * Description: Page template for Sudamericano Sub 20 Femenino layout. Matches slug "sudamericano-sub-20-femenino".
+ * Template Name: Plantilla Copa Libertadores
+ * Description: Page template for Copa Libertadores layout. Matches slug "copa-libertadores".
  *
  * @package Dedeportes_Modern
  */
@@ -14,38 +14,35 @@ if (get_query_var('page')) {
     $paged = get_query_var('page');
 }
 
-// Custom Query for 'sudamericano-sub-20f' category
+// Custom Query for 'copa-libertadores' category
 $args = array(
-    'category_name' => 'sudamericano-sub-20f',
+    'category_name' => 'copa-libertadores',
     'posts_per_page' => 8,
     'paged' => $paged
 );
 
-$sudamericano_query = new WP_Query($args);
+$libertadores_query = new WP_Query($args);
 ?>
 
 <main id="primary" class="site-main">
     <div class="container" style="padding-top: 2rem;">
 
         <!-- Page/Category Title Header -->
-        <?php while (have_posts()):
-            the_post(); ?>
-            <header class="page-header" style="margin-bottom: 2rem;">
-                <h1 class="page-title"><?php the_title(); ?></h1>
-                <div class="taxonomy-description"><?php the_content(); ?></div>
-            </header>
-        <?php endwhile; ?>
+        <header class="page-header" style="margin-bottom: 2rem;">
+            <h1 class="page-title">Copa Libertadores</h1>
+            <div class="taxonomy-description">Noticias de la Copa CONMEBOL Libertadores.</div>
+        </header>
 
         <div class="layout-grid">
 
             <!-- MAIN CONTENT COLUMN -->
             <div class="layout-main">
 
-                <?php if ($sudamericano_query->have_posts()): ?>
+                <?php if ($libertadores_query->have_posts()): ?>
 
                     <div class="posts-grid">
-                        <?php while ($sudamericano_query->have_posts()):
-                            $sudamericano_query->the_post(); ?>
+                        <?php while ($libertadores_query->have_posts()):
+                            $libertadores_query->the_post(); ?>
 
                             <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
 
@@ -82,9 +79,9 @@ $sudamericano_query = new WP_Query($args);
                     <div class="load-more-container">
                         <?php
                         $temp_query = $wp_query;
-                        $wp_query = $sudamericano_query;
+                        $wp_query = $libertadores_query;
 
-                        $next_link = get_next_posts_link('Ver más noticias', $sudamericano_query->max_num_pages);
+                        $next_link = get_next_posts_link('Ver más noticias', $libertadores_query->max_num_pages);
 
                         if ($next_link) {
                             echo str_replace('<a', '<a class="btn btn-large btn-block"', $next_link);
@@ -100,14 +97,14 @@ $sudamericano_query = new WP_Query($args);
                 <?php endif; ?>
             </div>
 
-            <!-- SIDEBAR COLUMN (Sudamericano Specific) -->
+            <!-- SIDEBAR COLUMN (Libertadores Specific) -->
             <aside class="layout-sidebar">
-                <?php if (is_active_sidebar('sidebar-sudamericano-sub-20f')): ?>
-                    <?php dynamic_sidebar('sidebar-sudamericano-sub-20f'); ?>
+                <?php if (is_active_sidebar('sidebar-copa-libertadores')): ?>
+                    <?php dynamic_sidebar('sidebar-copa-libertadores'); ?>
                 <?php else: ?>
                     <!-- Default/Fallback Content -->
 
-                    <!-- Widget: Tabla de Posiciones (5 filas) -->
+                    <!-- Widget: Tabla de Posiciones (4 filas) -->
                     <div class="sidebar-widget">
                         <h3 class="widget-title">Tabla de Posiciones</h3>
                         <div class="widget-content">
@@ -123,31 +120,25 @@ $sudamericano_query = new WP_Query($args);
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Chile</td>
+                                        <td>Coquimbo</td>
                                         <td>0</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
-                                        <td>Paraguay</td>
+                                        <td>U. Católica</td>
                                         <td>0</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
-                                        <td>Colombia</td>
+                                        <td>O'Higgins</td>
                                         <td>0</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
-                                        <td>Venezuela</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Uruguay</td>
+                                        <td>Huachipato</td>
                                         <td>0</td>
                                         <td>0</td>
                                     </tr>
@@ -165,12 +156,12 @@ $sudamericano_query = new WP_Query($args);
                         <div class="widget-content">
                             <ul class="match-list">
                                 <li class="match-item">
-                                    <span class="match-time">Mié 4 Feb 18:00</span>
-                                    <span class="match-versus">Paraguay vs Chile</span>
+                                    <span class="match-time">Por definir</span>
+                                    <span class="match-versus">Coquimbo vs Rival</span>
                                 </li>
                                 <li class="match-item">
                                     <span class="match-time">Por definir</span>
-                                    <span class="match-versus">Colombia vs Venezuela</span>
+                                    <span class="match-versus">U. Católica vs Rival</span>
                                 </li>
                             </ul>
                         </div>

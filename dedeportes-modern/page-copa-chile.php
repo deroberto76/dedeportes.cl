@@ -28,10 +28,13 @@ $copa_chile_query = new WP_Query($args);
     <div class="container u-pt-2">
 
         <!-- Page/Category Title Header -->
-        <header class="page-header u-mb-2">
-            <h1 class="page-title">Noticias de Copa Chile</h1>
-            <div class="taxonomy-description">Todas las novedades de la Copa Chile</div>
-        </header>
+        <?php while (have_posts()):
+            the_post(); ?>
+            <header class="page-header u-mb-2">
+                <h1 class="page-title"><?php the_title(); ?></h1>
+                <div class="taxonomy-description"><?php the_content(); ?></div>
+            </header>
+        <?php endwhile; ?>
 
         <div class="layout-grid">
 

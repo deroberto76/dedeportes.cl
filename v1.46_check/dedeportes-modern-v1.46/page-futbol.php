@@ -1,7 +1,7 @@
 <?php
 /**
- * Template Name: Plantilla Copa Libertadores
- * Description: Page template for Copa Libertadores layout. Matches slug "copa-libertadores".
+ * Template Name: Plantilla Futbol Custom
+ * Description: Page template for Futbol specific layout. Matches slug "futbol".
  *
  * @package Dedeportes_Modern
  */
@@ -12,25 +12,25 @@ get_header();
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 if (get_query_var('page')) {
     $paged = get_query_var('page');
-}
+} // Handle static page pagination quirk
 
-// Custom Query for 'copa-libertadores' category
+// Custom Query for 'futbol' category
 $args = array(
-    'category_name' => 'copa-libertadores',
+    'category_name' => 'futbol',
     'posts_per_page' => 8,
     'paged' => $paged
 );
 
-$libertadores_query = new WP_Query($args);
+$futbol_query = new WP_Query($args);
 ?>
 
 <main id="primary" class="site-main">
-    <div class="container" style="padding-top: 2rem;">
+    <div class="container u-pt-2">
 
-        <!-- Page/Category Title Header -->
+        <!-- Page/Category Title Header from Static Page -->
         <?php while (have_posts()):
             the_post(); ?>
-            <header class="page-header" style="margin-bottom: 2rem;">
+            <header class="page-header u-mb-2">
                 <h1 class="page-title"><?php the_title(); ?></h1>
                 <div class="taxonomy-description"><?php the_content(); ?></div>
             </header>
@@ -41,11 +41,11 @@ $libertadores_query = new WP_Query($args);
             <!-- MAIN CONTENT COLUMN -->
             <div class="layout-main">
 
-                <?php if ($libertadores_query->have_posts()): ?>
+                <?php if ($futbol_query->have_posts()): ?>
 
                     <div class="posts-grid">
-                        <?php while ($libertadores_query->have_posts()):
-                            $libertadores_query->the_post(); ?>
+                        <?php while ($futbol_query->have_posts()):
+                            $futbol_query->the_post(); ?>
 
                             <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
 
@@ -81,15 +81,17 @@ $libertadores_query = new WP_Query($args);
                     <!-- Paginación -->
                     <div class="load-more-container">
                         <?php
+                        // Hack to make pagination work with custom query on top of static page
                         $temp_query = $wp_query;
-                        $wp_query = $libertadores_query;
+                        $wp_query = $futbol_query;
 
-                        $next_link = get_next_posts_link('Ver más noticias', $libertadores_query->max_num_pages);
+                        $next_link = get_next_posts_link('Ver más noticias de fútbol', $futbol_query->max_num_pages);
 
                         if ($next_link) {
                             echo str_replace('<a', '<a class="btn btn-large btn-block"', $next_link);
                         }
 
+                        // Reset Main Query
                         $wp_query = $temp_query;
                         wp_reset_postdata();
                         ?>
@@ -100,72 +102,44 @@ $libertadores_query = new WP_Query($args);
                 <?php endif; ?>
             </div>
 
-            <!-- SIDEBAR COLUMN (Libertadores Specific) -->
+            <!-- SIDEBAR COLUMN (Futbol Specific) -->
             <aside class="layout-sidebar">
-                <?php if (is_active_sidebar('sidebar-copa-libertadores')): ?>
-                    <?php dynamic_sidebar('sidebar-copa-libertadores'); ?>
+                <?php if (is_active_sidebar('sidebar-futbol')): ?>
+                    <?php dynamic_sidebar('sidebar-futbol'); ?>
                 <?php else: ?>
-                    <!-- Default/Fallback Content -->
+                    <!-- Default/Fallback Content if no widgets are added -->
 
-                    <!-- Widget: Tabla de Posiciones (4 filas) -->
+                    <!-- Widget: Partidos de la Fecha -->
                     <div class="sidebar-widget">
-                        <h3 class="widget-title">Tabla de Posiciones</h3>
+                        <h3 class="widget-title">Partidos de la Fecha</h3>
                         <div class="widget-content">
-                            <table class="ranking-table">
-                                <thead>
-                                    <tr>
-                                        <th>Pos</th>
-                                        <th>Equipo</th>
-                                        <th>PJ</th>
-                                        <th>Pts</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Coquimbo</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>U. Católica</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>O'Higgins</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Huachipato</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <p style="text-align:center; margin-top:1rem; font-size:0.8rem; opacity:0.7;">
-                                <em>Widget editable desde Admin</em>
+                            <ul class="match-list">
+                                <li class="match-item">
+                                    <span class="match-time">Sábado 18:00</span>
+                                    <span class="match-versus">Colo-Colo vs U. Católica</span>
+                                </li>
+                                <li class="match-item">
+                                    <span class="match-time">Domingo 12:00</span>
+                                    <span class="match-versus">U. de Chile vs Huachipato</span>
+                                </li>
+                                <li class="match-item">
+                                    <span class="match-time">Domingo 17:30</span>
+                                    <span class="match-versus">Cobreloa vs Iquique</span>
+                                </li>
+                            </ul>
+                            <p class="widget-note">
+                                <em>Agrega un widget "HTML Personalizado" en "Sidebar Fútbol" para editar esto.</em>
                             </p>
                         </div>
                     </div>
 
-                    <!-- Widget: Partidos de la Fecha -->
+                    <!-- Widget: Otras Categorías -->
                     <div class="sidebar-widget">
-                        <h3 class="widget-title">Próxima Fecha</h3>
+                        <h3 class="widget-title">Otras Categorías</h3>
                         <div class="widget-content">
-                            <ul class="match-list">
-                                <li class="match-item">
-                                    <span class="match-time">Por definir</span>
-                                    <span class="match-versus">Coquimbo vs Rival</span>
-                                </li>
-                                <li class="match-item">
-                                    <span class="match-time">Por definir</span>
-                                    <span class="match-versus">U. Católica vs Rival</span>
-                                </li>
+                            <ul class="u-mb-2" style="list-style: none; padding-left: 0;">
+                                <li style="margin-bottom: 0.5rem;"><a href="/category/tenis">Tenis</a></li>
+                                <li style="margin-bottom: 0.5rem;"><a href="/category/mercado">Mercado de Pases</a></li>
                             </ul>
                         </div>
                     </div>

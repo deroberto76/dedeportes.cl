@@ -28,10 +28,13 @@ $liga_query = new WP_Query($args);
     <div class="container" style="padding-top: 2rem;">
 
         <!-- Page/Category Title Header -->
-        <header class="page-header" style="margin-bottom: 2rem;">
-            <h1 class="page-title">Liga de Primera División</h1>
-            <div class="taxonomy-description">Todas las noticias del campeonato nacional.</div>
-        </header>
+        <?php while (have_posts()):
+            the_post(); ?>
+            <header class="page-header" style="margin-bottom: 2rem;">
+                <h1 class="page-title"><?php the_title(); ?></h1>
+                <div class="taxonomy-description"><?php the_content(); ?></div>
+            </header>
+        <?php endwhile; ?>
 
         <div class="layout-grid">
 
