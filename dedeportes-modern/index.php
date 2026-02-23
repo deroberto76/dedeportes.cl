@@ -31,12 +31,19 @@ get_header();
 
                 if ($featured_query->have_posts()):
                     while ($featured_query->have_posts()):
-                        $featured_query->the_post(); ?>
+                        $featured_query->the_post();
+                        $categories = get_the_category();
+                        $cat_name = !empty($categories) ? $categories[0]->name : __('Noticias', 'dedeportes-modern');
+                        ?>
                         <article class="featured-story u-mb-4">
                             <div class="post-meta-top">
-                                <span class="cat-label"><?php echo get_the_category()[0]->name; ?></span>
-                                <span
-                                    class="post-time"><?php echo human_time_diff(get_the_time('U'), current_time('timestamp')) . ' ' . __('hace', 'dedeportes-modern'); ?></span>
+                                <span class="cat-label"><?php echo esc_html($cat_name); ?></span>
+                                <span class="post-time">
+                                    <?php
+                                    $time_diff = human_time_diff(get_the_time('U'), current_time('timestamp'));
+                                    echo sprintf(__('%s hace', 'dedeportes-modern'), $time_diff);
+                                    ?>
+                                </span>
                             </div>
                             <h1 class="featured-title">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
@@ -52,39 +59,7 @@ get_header();
                 <hr class="section-divider">
 
                 <?php
-                // HELPER: Function to render a category section
-                function dedeportes_render_cat_section($title, $slug, $color_class)
-                {
-                    $cat_query = new WP_Query(array(
-                        'category_name' => $slug,
-                        'posts_per_page' => 4,
-                        'offset' => 0, // In case we want to avoid duplicates if it was featured
-                    ));
-
-                    if ($cat_query->have_posts()): ?>
-                        <section class="cat-section u-mb-4 <?php echo $color_class; ?>">
-                            <h2 class="cat-section-title"><?php echo esc_html($title); ?></h2>
-                            <div class="cat-posts">
-                                <?php while ($cat_query->have_posts()):
-                                    $cat_query->the_post(); ?>
-                                    <div class="cat-post-item">
-                                        <span
-                                            class="post-time-small"><?php echo human_time_diff(get_the_time('U'), current_time('timestamp')) . ' ' . __('hace', 'dedeportes-modern'); ?></span>
-                                        <h3 class="cat-post-title">
-                                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                        </h3>
-                                        <div class="cat-post-excerpt">
-                                            <?php echo wp_trim_words(get_the_excerpt(), 25); ?>
-                                        </div>
-                                    </div>
-                                <?php endwhile; ?>
-                            </div>
-                        </section>
-                    <?php endif;
-                    wp_reset_postdata();
-                }
-
-                // 2. CATEGORY SECTIONS
+                // 2. CATEGORY SECTIONS (Function moved to functions.php)
                 dedeportes_render_cat_section('FÚTBOL NACIONAL', 'futbol', 'cat-bar-futbol');
                 dedeportes_render_cat_section('TENIS', 'tenis', 'cat-bar-tenis');
                 dedeportes_render_cat_section('TORNEOS INTERNACIONALES', 'torneos-internacionales', 'cat-bar-internacional');

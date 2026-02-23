@@ -282,3 +282,43 @@ function dedeportes_customize_register($wp_customize)
 	)));
 }
 add_action('customize_register', 'dedeportes_customize_register');
+
+/**
+ * Helper: Render a category section for the homepage v1.50
+ */
+if (!function_exists('dedeportes_render_cat_section')) {
+	function dedeportes_render_cat_section($title, $slug, $color_class)
+	{
+		$cat_query = new WP_Query(array(
+			'category_name' => $slug,
+			'posts_per_page' => 4,
+			'ignore_sticky_posts' => 1,
+		));
+
+		if ($cat_query->have_posts()): ?>
+			<section class="cat-section u-mb-4 <?php echo esc_attr($color_class); ?>">
+				<h2 class="cat-section-title"><?php echo esc_html($title); ?></h2>
+				<div class="cat-posts">
+					<?php while ($cat_query->have_posts()):
+						$cat_query->the_post(); ?>
+						<div class="cat-post-item">
+							<span class="post-time-small">
+								<?php
+								$time_diff = human_time_diff(get_the_time('U'), current_time('timestamp'));
+								echo sprintf(__('%s hace', 'dedeportes-modern'), $time_diff);
+								?>
+							</span>
+							<h3 class="cat-post-title">
+								<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+							</h3>
+							<div class="cat-post-excerpt">
+								<?php echo wp_trim_words(get_the_excerpt(), 25); ?>
+							</div>
+						</div>
+					<?php endwhile; ?>
+				</div>
+			</section>
+		<?php endif;
+		wp_reset_postdata();
+	}
+}

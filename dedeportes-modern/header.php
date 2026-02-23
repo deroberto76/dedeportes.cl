@@ -83,6 +83,5 @@
                         ?>
                     </div>
                 </nav><!-- #site-navigation -->
-
-
+            </div><!-- .container -->
         </header><!-- #masthead -->

@@ -396,48 +396,51 @@ body.menu-open {
         white-space: nowrap;
     }
 
-    background-color: #ef4444;
-}
+    /* Category Bar Colors */
+    .cat-bar-futbol::before {
+        background-color: #ef4444;
+    }
 
-/* Red */
-.cat-bar-tenis::before {
-    background-color: #22c55e;
-}
+    /* Red */
+    .cat-bar-tenis::before {
+        background-color: #22c55e;
+    }
 
-/* Green */
-.cat-bar-internacional::before {
-    background-color: #3b82f6;
-}
+    /* Green */
+    .cat-bar-internacional::before {
+        background-color: #3b82f6;
+    }
 
-/* Blue */
-.cat-bar-femenino::before {
-    background-color: #ec4899;
-}
+    /* Blue */
+    .cat-bar-femenino::before {
+        background-color: #ec4899;
+    }
 
-/* Pink */
-.cat-bar-selecciones::before {
-    background-color: #f59e0b;
-}
+    /* Pink */
+    .cat-bar-selecciones::before {
+        background-color: #f59e0b;
+    }
 
-/* Orange */
+    /* Orange */
 
-.cat-post-item {
-    margin-bottom: 2rem;
-}
+    .cat-post-item {
+        margin-bottom: 2rem;
+    }
 
-.cat-post-title {
-    font-size: 1.25rem;
-    margin: 0.5rem 0;
-    line-height: 1.3;
-}
+    .cat-post-title {
+        font-size: 1.25rem;
+        margin: 0.5rem 0;
+        line-height: 1.3;
+    }
 
-.cat-post-excerpt {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-}
+    .cat-post-excerpt {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+    }
 
-.section-divider {
-    border: 0;
-    border-top: 1px solid var(--border);
-    margin: 2rem 0 3rem;
+    .section-divider {
+        border: 0;
+        border-top: 1px solid var(--border);
+        margin: 2rem 0 3rem;
+    }
 }
