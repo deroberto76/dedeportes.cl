@@ -57,9 +57,8 @@
             <div class="container">
                 <div class="site-branding">
                     <h1 class="site-logo">
-                        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">dedeportes.cl</a>
+                        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">De<span>Deportes</span></a>
                     </h1>
-                    <p class="site-slogan">fútbol y tenis chileno</p>
                 </div><!-- .site-branding -->
 
                 <button id="menu-toggle" class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">
@@ -83,5 +82,6 @@
                         ?>
                     </div>
                 </nav><!-- #site-navigation -->
-            </div><!-- .container -->
+
+
         </header><!-- #masthead -->
