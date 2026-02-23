@@ -18,14 +18,10 @@ get_header();
         <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
             <div class="container" style="padding-top: 3rem;">
-                <header class="single-post-header">
-                    <div class="post-meta" style="justify-content: center; display: flex; gap: 1rem; margin-bottom: 1rem;">
-                        <span class="posted-on">
-                            <?php echo get_the_date(); ?>
-                        </span>
-                        <span class="cat-links">
-                            <?php the_category(', '); ?>
-                        </span>
+                <header class="single-post-header u-mb-4">
+                    <div class="post-meta-top">
+                        <span class="cat-label"><?php the_category(', '); ?></span>
+                        <span class="post-time"><?php echo get_the_date(); ?></span>
                     </div>
                     <?php the_title('<h1 class="single-post-title">', '</h1>'); ?>
                 </header>

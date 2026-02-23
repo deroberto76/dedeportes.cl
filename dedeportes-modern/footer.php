@@ -2,10 +2,9 @@
     <div class="container">
         <div class="footer-widgets">
             <!-- In a real theme we would register widget areas here -->
-            <div class="footer-branding">
-                <h2 class="site-logo"><a href="<?php echo esc_url(home_url('/')); ?>">De<span>Deportes</span></a>
-                </h2>
-                <p>Fútbol y tenis chileno, todos los días</p>
+            <div class="footer-branding u-mb-2">
+                <h2 class="site-logo"><a href="<?php echo esc_url(home_url('/')); ?>">dedeportes.cl</a></h2>
+                <p>fútbol y tenis chileno, todos los días</p>
             </div>
         </div>
 
@@ -19,7 +18,7 @@
             <span class="sep"> | </span>
             <?php
             /* translators: 1: Theme name, 2: Theme author. */
-            printf(esc_html__('Theme: %1$s by %2$s.', 'dedeportes-modern'), 'Dedeportes Modern', '<a href="#">Antigravity</a>');
+            printf(esc_html__('Theme: %1$s v1.50.', 'dedeportes-modern'), 'Dedeportes Modern');
             ?>
         </div><!-- .site-info -->
     </div>
