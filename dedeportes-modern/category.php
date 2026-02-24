@@ -26,34 +26,20 @@ get_header();
 
                 <?php if (have_posts()): ?>
 
-                    <div class="posts-grid">
+                    <div class="posts-list">
                         <?php while (have_posts()):
                             the_post(); ?>
 
-                            <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
-
-                                <?php if (has_post_thumbnail()): ?>
-                                    <div class="post-thumbnail">
-                                        <a href="<?php the_permalink(); ?>">
-                                            <?php the_post_thumbnail('medium_large'); ?>
-                                        </a>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="post-visual"></div> <!-- Color strip -->
-                                <?php endif; ?>
-
+                            <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item'); ?>>
                                 <div class="post-content">
                                     <div class="post-meta">
                                         <?php echo get_the_date(); ?>
                                     </div>
-                                    <h3 class="post-title"><a href="<?php the_permalink(); ?>">
-                                            <?php the_title(); ?>
-                                        </a></h3>
+                                    <h3 class="post-title">
+                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                    </h3>
                                     <div class="post-excerpt">
-                                        <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
-                                    </div>
-                                    <div class="post-footer">
-                                        <a href="<?php the_permalink(); ?>" class="btn-link">Leer más &rarr;</a>
+                                        <?php echo wp_trim_words(get_the_excerpt(), 25); ?>
                                     </div>
                                 </div>
                             </article>
