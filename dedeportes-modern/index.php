@@ -16,8 +16,6 @@ get_header();
             <!-- MAIN CONTENT COLUMN (Últimas Entradas) -->
             <!-- MAIN CONTENT COLUMN (Últimas Entradas) -->
             <div class="layout-main">
-                <h2 class="section-title">Últimas Noticias</h2>
-
                 <?php if (have_posts()): ?>
 
                     <div class="posts-list">
