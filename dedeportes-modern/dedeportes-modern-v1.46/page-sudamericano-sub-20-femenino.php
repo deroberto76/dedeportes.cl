@@ -1,7 +1,7 @@
 <?php
 /**
- * Template Name: Plantilla Copa Chile Custom
- * Description: Page template for Copa Chile specific layout. Matches slug "copa-chile".
+ * Template Name: Plantilla Sudamericano Sub 20 Femenino
+ * Description: Page template for Sudamericano Sub 20 Femenino layout. Matches slug "sudamericano-sub-20-femenino".
  *
  * @package Dedeportes_Modern
  */
@@ -12,40 +12,37 @@ get_header();
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 if (get_query_var('page')) {
     $paged = get_query_var('page');
-} // Handle static page pagination quirk
+}
 
-// Custom Query for 'copa-chile' category
+// Custom Query for 'sudamericano-sub-20f' category
 $args = array(
-    'category_name' => 'copa-chile',
+    'category_name' => 'sudamericano-sub-20f',
     'posts_per_page' => 8,
     'paged' => $paged
 );
 
-$copa_chile_query = new WP_Query($args);
+$sudamericano_query = new WP_Query($args);
 ?>
 
 <main id="primary" class="site-main">
-    <div class="container u-pt-2">
+    <div class="container" style="padding-top: 2rem;">
 
         <!-- Page/Category Title Header -->
-        <?php while (have_posts()):
-            the_post(); ?>
-            <header class="page-header u-mb-2">
-                <h1 class="page-title"><?php the_title(); ?></h1>
-                <div class="taxonomy-description"><?php the_content(); ?></div>
-            </header>
-        <?php endwhile; ?>
+        <header class="page-header" style="margin-bottom: 2rem;">
+            <h1 class="page-title">Sudamericano Sub 20 Femenino</h1>
+            <div class="taxonomy-description">Noticias del Sudamericano Sub 20 Femenino.</div>
+        </header>
 
         <div class="layout-grid">
 
             <!-- MAIN CONTENT COLUMN -->
             <div class="layout-main">
 
-                <?php if ($copa_chile_query->have_posts()): ?>
+                <?php if ($sudamericano_query->have_posts()): ?>
 
                     <div class="posts-grid">
-                        <?php while ($copa_chile_query->have_posts()):
-                            $copa_chile_query->the_post(); ?>
+                        <?php while ($sudamericano_query->have_posts()):
+                            $sudamericano_query->the_post(); ?>
 
                             <article id="post-<?php the_ID(); ?>" <?php post_class('post-card'); ?>>
 
@@ -63,7 +60,9 @@ $copa_chile_query = new WP_Query($args);
                                     <div class="post-meta">
                                         <?php echo get_the_date(); ?>
                                     </div>
-                                    <h3 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                                    <h3 class="post-title"><a href="<?php the_permalink(); ?>">
+                                            <?php the_title(); ?>
+                                        </a></h3>
                                     <div class="post-excerpt">
                                         <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
                                     </div>
@@ -79,17 +78,15 @@ $copa_chile_query = new WP_Query($args);
                     <!-- Paginación -->
                     <div class="load-more-container">
                         <?php
-                        // Hack to make pagination work with custom query on top of static page
                         $temp_query = $wp_query;
-                        $wp_query = $copa_chile_query;
+                        $wp_query = $sudamericano_query;
 
-                        $next_link = get_next_posts_link('Ver más noticias de Copa Chile', $copa_chile_query->max_num_pages);
+                        $next_link = get_next_posts_link('Ver más noticias', $sudamericano_query->max_num_pages);
 
                         if ($next_link) {
                             echo str_replace('<a', '<a class="btn btn-large btn-block"', $next_link);
                         }
 
-                        // Reset Main Query
                         $wp_query = $temp_query;
                         wp_reset_postdata();
                         ?>
@@ -100,14 +97,14 @@ $copa_chile_query = new WP_Query($args);
                 <?php endif; ?>
             </div>
 
-            <!-- SIDEBAR COLUMN (Copa Chile Specific) -->
+            <!-- SIDEBAR COLUMN (Sudamericano Specific) -->
             <aside class="layout-sidebar">
-                <?php if (is_active_sidebar('sidebar-copa-chile')): ?>
-                    <?php dynamic_sidebar('sidebar-copa-chile'); ?>
+                <?php if (is_active_sidebar('sidebar-sudamericano-sub-20f')): ?>
+                    <?php dynamic_sidebar('sidebar-sudamericano-sub-20f'); ?>
                 <?php else: ?>
-                    <!-- Default/Fallback Content if no widgets are added -->
+                    <!-- Default/Fallback Content -->
 
-                    <!-- Widget: Tabla de Posiciones -->
+                    <!-- Widget: Tabla de Posiciones (5 filas) -->
                     <div class="sidebar-widget">
                         <h3 class="widget-title">Tabla de Posiciones</h3>
                         <div class="widget-content">
@@ -123,43 +120,55 @@ $copa_chile_query = new WP_Query($args);
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Colo-Colo</td>
-                                        <td>3</td>
-                                        <td>9</td>
+                                        <td>Chile</td>
+                                        <td>0</td>
+                                        <td>0</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
-                                        <td>U. de Chile</td>
-                                        <td>3</td>
-                                        <td>7</td>
+                                        <td>Paraguay</td>
+                                        <td>0</td>
+                                        <td>0</td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
-                                        <td>U. Católica</td>
-                                        <td>3</td>
-                                        <td>6</td>
+                                        <td>Colombia</td>
+                                        <td>0</td>
+                                        <td>0</td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
-                                        <td>Cobreloa</td>
-                                        <td>3</td>
-                                        <td>4</td>
+                                        <td>Venezuela</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Uruguay</td>
+                                        <td>0</td>
+                                        <td>0</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <p class="widget-note">
-                                <em>Agrega un widget "HTML Personalizado" para editar esto.</em>
+                            <p style="text-align:center; margin-top:1rem; font-size:0.8rem; opacity:0.7;">
+                                <em>Widget editable desde Admin</em>
                             </p>
                         </div>
                     </div>
 
-                    <!-- Widget: Otras Categorías -->
+                    <!-- Widget: Partidos de la Fecha -->
                     <div class="sidebar-widget">
-                        <h3 class="widget-title">Otras Categorías</h3>
+                        <h3 class="widget-title">Próxima Fecha</h3>
                         <div class="widget-content">
-                            <ul class="u-mb-2" style="list-style: none; padding-left: 0;">
-                                <li style="margin-bottom: 0.5rem;"><a href="/category/futbol">Fútbol</a></li>
-                                <li style="margin-bottom: 0.5rem;"><a href="/category/mercado">Mercado de Pases</a></li>
+                            <ul class="match-list">
+                                <li class="match-item">
+                                    <span class="match-time">Mié 4 Feb 18:00</span>
+                                    <span class="match-versus">Paraguay vs Chile</span>
+                                </li>
+                                <li class="match-item">
+                                    <span class="match-time">Por definir</span>
+                                    <span class="match-versus">Colombia vs Venezuela</span>
+                                </li>
                             </ul>
                         </div>
                     </div>

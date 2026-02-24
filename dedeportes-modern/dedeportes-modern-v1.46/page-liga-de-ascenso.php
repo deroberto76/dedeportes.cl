@@ -28,13 +28,10 @@ $ascenso_query = new WP_Query($args);
     <div class="container u-pt-2">
 
         <!-- Page/Category Title Header -->
-        <?php while (have_posts()):
-            the_post(); ?>
-            <header class="page-header u-mb-2">
-                <h1 class="page-title"><?php the_title(); ?></h1>
-                <div class="taxonomy-description"><?php the_content(); ?></div>
-            </header>
-        <?php endwhile; ?>
+        <header class="page-header u-mb-2">
+            <h1 class="page-title">Liga de Ascenso</h1>
+            <div class="taxonomy-description">Toda la información del campeonato de Primera B.</div>
+        </header>
 
         <div class="layout-grid">
 
