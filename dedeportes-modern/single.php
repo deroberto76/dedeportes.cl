@@ -17,16 +17,8 @@ get_header();
 
         <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-            <div class="container" style="padding-top: 3rem;">
+            <div class="container" style="padding-top: 1rem;">
                 <header class="single-post-header">
-                    <div class="post-meta" style="justify-content: center; display: flex; gap: 1rem; margin-bottom: 1rem;">
-                        <span class="posted-on">
-                            <?php echo get_the_date(); ?>
-                        </span>
-                        <span class="cat-links">
-                            <?php the_category(', '); ?>
-                        </span>
-                    </div>
                     <?php the_title('<h1 class="single-post-title">', '</h1>'); ?>
                 </header>
 
@@ -51,6 +43,15 @@ get_header();
 
                 <footer class="entry-footer"
                     style="max-width: 800px; margin: 4rem auto 0; border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <div class="post-meta"
+                        style="display: flex; gap: 1rem; margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+                        <span class="posted-on">
+                            <?php echo get_the_date(); ?>
+                        </span>
+                        <span class="cat-links">
+                            <?php the_category(', '); ?>
+                        </span>
+                    </div>
                     <?php
                     // Tags
                     $tags_list = get_the_tag_list('', esc_html__(', ', 'dedeportes-modern'));

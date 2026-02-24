@@ -1,10 +1,10 @@
 ﻿/*
-Theme Name: Dedeportes Modern v1.53
+Theme Name: Dedeportes Modern v1.54
 Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.53
+Version: 1.54
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -706,17 +706,17 @@ body.menu-open {
 
 /* Single Post refinements for no-image */
 .single-post-header {
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     text-align: center;
-    padding: 4rem 0;
+    padding: 2rem 0;
     background: radial-gradient(circle at center, var(--surface), var(--background));
     border-radius: var(--radius-lg);
 }
 
 .single-post-title {
-    font-size: 3rem;
+    font-size: 1.5rem;
     /* Adjusted for better flow */
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .single-post-thumbnail {
