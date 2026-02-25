@@ -46,9 +46,6 @@ $copa_davis_query = new WP_Query($args);
 
                             <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item'); ?>>
                                 <div class="post-content">
-                                    <div class="post-meta">
-                                        <?php echo get_the_date(); ?>
-                                    </div>
                                     <h3 class="post-title">
                                         <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                     </h3>
