@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.59
+Version: 1.60
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -12,22 +12,29 @@ Tags: blog, news, sport, modern, responsive
 */
 
 :root {
-    /* Paleta de Colores - Modo Oscuro Premium */
+    /* Paleta de Colores - Modo Claro Premium */
     --primary: #2563eb;
     /* Royal Blue */
     --primary-hover: #1d4ed8;
     --accent: #f59e0b;
     /* Amber */
-    --background: #0f172a;
-    /* Slate 900 */
-    --surface: #1e293b;
-    /* Slate 800 */
-    --surface-hover: #334155;
-    --text-main: #f8fafc;
+    --background: #ffffff;
+    /* Blanco */
+    --surface: #f8fafc;
     /* Slate 50 */
-    --text-muted: #94a3b8;
-    /* Slate 400 */
-    --border: #334155;
+    --surface-hover: #f1f5f9;
+    /* Slate 100 */
+    --text-main: #1e293b;
+    /* Slate 800 (Gris muy oscuro) */
+    --text-muted: #64748b;
+    /* Slate 500 */
+    --border: #e2e8f0;
+    /* Slate 200 */
+    --card-bg: #ffffff;
+    --header-bg: #0f172a;
+    /* Slate 900 */
+    --footer-bg: #0f172a;
+    /* Slate 900 */
 
     /* TipografÃ­a */
     --font-heading: 'Outfit', sans-serif;
@@ -145,11 +152,12 @@ img {
     top: 0;
     z-index: 50;
     height: var(--header-height);
-    background-color: rgba(15, 23, 42, 0.8);
+    background-color: var(--header-bg);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
+    color: white;
 }
 
 .site-header .container {
@@ -468,10 +476,15 @@ body.menu-open {
 
 /* Footer Styles */
 .site-footer {
-    background-color: var(--surface);
+    background-color: var(--footer-bg);
+    color: #94a3b8;
     padding: 4rem 0;
     margin-top: 4rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.site-footer .site-logo a {
+    color: white;
 }
 
 /* Hero Section */
@@ -537,11 +550,12 @@ body.menu-open {
     line-height: 1.1;
     text-shadow: none;
     /* Clean typography */
+    color: white;
 }
 
 .hero-excerpt {
     font-size: 1.25rem;
-    color: var(--text-main);
+    color: white;
     /* Brighter text */
     margin-bottom: 2rem;
     opacity: 0.9;
@@ -572,7 +586,7 @@ body.menu-open {
     padding: 1.5rem;
     margin-bottom: 2.5rem;
     /* Increased separation */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
 }
 
 .widget-title {
@@ -708,9 +722,10 @@ body.menu-open {
 .single-post-header {
     margin-bottom: 2rem;
     text-align: center;
-    padding: 2rem 0;
-    background: radial-gradient(circle at center, var(--surface), var(--background));
+    padding: 2.5rem 0;
+    background: var(--surface);
     border-radius: var(--radius-lg);
+    border-bottom: 1px solid var(--border);
 }
 
 .single-post-title {
@@ -820,7 +835,7 @@ body.menu-open {
 }
 
 .ranking-table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: var(--surface);
 }
 
 /* Match List */
@@ -1071,6 +1086,7 @@ textarea:focus {
     max-width: 800px;
     line-height: 1.6;
 }
+
 /* Category Sections in Homepage */
 .category-section {
     margin-top: 4rem;
