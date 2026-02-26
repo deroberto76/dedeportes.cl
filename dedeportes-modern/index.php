@@ -13,43 +13,73 @@ get_header();
 
         <div class="layout-grid">
 
-            <!-- MAIN CONTENT COLUMN (Últimas Entradas) -->
-            <!-- MAIN CONTENT COLUMN (Últimas Entradas) -->
+            <!-- MAIN CONTENT COLUMN -->
             <div class="layout-main">
-                <?php if (have_posts()): ?>
+                <?php
+                // 1. Noticia Principal (La más reciente)
+                $main_query = new WP_Query(array(
+                    'posts_per_page' => 1,
+                    'ignore_sticky_posts' => 1
+                ));
 
-                    <div class="posts-list">
-                        <?php while (have_posts()):
-                            the_post(); ?>
-
-                            <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item'); ?>>
-                                <div class="post-content">
-                                    <h3 class="post-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </h3>
-                                    <div class="post-excerpt">
-                                        <?php echo wp_trim_words(get_the_excerpt(), 25); ?>
-                                    </div>
+                if ($main_query->have_posts()):
+                    while ($main_query->have_posts()):
+                        $main_query->the_post(); ?>
+                        <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item main-featured-post'); ?>>
+                            <div class="post-content">
+                                <span class="badge mb-2"><?php the_category(', '); ?></span>
+                                <h2 class="post-title" style="font-size: 2rem;">
+                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                </h2>
+                                <div class="post-excerpt">
+                                    <?php echo wp_trim_words(get_the_excerpt(), 35); ?>
                                 </div>
-                            </article>
+                            </div>
+                        </article>
+                    <?php endwhile;
+                    wp_reset_postdata();
+                endif;
 
-                        <?php endwhile; ?>
-                    </div>
+                // 2. Secciones por Categoría
+                $categories_to_show = array(
+                    'Fútbol nacional' => 'futbol-nacional',
+                    'Tenis' => 'tenis',
+                    'Fútbol internacional' => 'futbol-internacional',
+                    'Fútbol femenino' => 'futbol-femenino',
+                    'Selecciones' => 'selecciones'
+                );
 
-                    <!-- Paginación -->
-                    <div class="load-more-container">
-                        <?php
-                        // Next Posts Link styled as button
-                        $next_link = get_next_posts_link('Ver más noticias');
-                        if ($next_link) {
-                            echo str_replace('<a', '<a class="btn btn-large btn-block"', $next_link);
-                        }
-                        ?>
-                    </div>
+                foreach ($categories_to_show as $title => $slug):
+                    $cat_query = new WP_Query(array(
+                        'category_name' => $slug,
+                        'posts_per_page' => 4,
+                        'post__not_in' => array(get_the_ID()) // Evitar repetir la principal si cae en la misma categoría
+                    ));
 
-                <?php else: ?>
-                    <p>No se encontraron noticias.</p>
-                <?php endif; ?>
+                    if ($cat_query->have_posts()): ?>
+                        <section class="category-section">
+                            <h2 class="section-category-title"><?php echo esc_html($title); ?></h2>
+                            <div class="posts-list">
+                                <?php while ($cat_query->have_posts()):
+                                    $cat_query->the_post(); ?>
+                                    <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item'); ?>>
+                                        <div class="post-content">
+                                            <h3 class="post-title">
+                                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                            </h3>
+                                            <div class="post-excerpt">
+                                                <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
+                                            </div>
+                                        </div>
+                                    </article>
+                                <?php endwhile; ?>
+                            </div>
+                        </section>
+                    <?php
+                    endif;
+                    wp_reset_postdata();
+                endforeach;
+                ?>
             </div>
 
             <!-- SIDEBAR COLUMN -->
