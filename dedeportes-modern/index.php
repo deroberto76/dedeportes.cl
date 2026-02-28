@@ -24,10 +24,31 @@ get_header();
 
                 if ($main_query->have_posts()):
                     while ($main_query->have_posts()):
-                        $main_query->the_post(); ?>
+                        $main_query->the_post();
+
+                        // Obtener Categoría Primaria (Yoast SEO) o la primera disponible
+                        $category_display = '';
+                        if (class_exists('WPSEO_Primary_Term')) {
+                            $wpseo_primary_term = new WPSEO_Primary_Term('category', get_the_ID());
+                            $primary_term_id = $wpseo_primary_term->get_primary_term();
+                            $term = get_term($primary_term_id);
+                            if (!is_wp_error($term) && $term) {
+                                $category_display = $term->name;
+                            }
+                        }
+
+                        if (empty($category_display)) {
+                            $categories = get_the_category();
+                            if (!empty($categories)) {
+                                $category_display = $categories[0]->name;
+                            }
+                        }
+                        ?>
                         <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item main-featured-post'); ?>>
                             <div class="post-content">
-                                <span class="badge mb-2"><?php the_category(', '); ?></span>
+                                <?php if ($category_display): ?>
+                                    <span class="badge mb-2"><?php echo esc_html($category_display); ?></span>
+                                <?php endif; ?>
                                 <h2 class="post-title" style="font-size: 2rem;">
                                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                 </h2>
@@ -57,7 +78,7 @@ get_header();
                     ));
 
                     if ($cat_query->have_posts()): ?>
-                        <section class="category-section">
+                        <section class="category-section section-<?php echo esc_attr($slug); ?>">
                             <h2 class="section-category-title"><?php echo esc_html($title); ?></h2>
                             <div class="posts-list">
                                 <?php while ($cat_query->have_posts()):
@@ -75,7 +96,7 @@ get_header();
                                 <?php endwhile; ?>
                             </div>
                         </section>
-                    <?php
+                        <?php
                     endif;
                     wp_reset_postdata();
                 endforeach;

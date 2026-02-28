@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 1.61
+Version: 1.62
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -1096,7 +1096,7 @@ textarea:focus {
 .section-category-title {
     display: flex;
     align-items: center;
-    font-size: 1.75rem;
+    font-size: 1.45rem;
     margin-bottom: 2rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1106,11 +1106,38 @@ textarea:focus {
     content: '';
     display: inline-block;
     width: 6px;
-    height: 1.75rem;
+    height: 1.45rem;
     background-color: var(--primary);
     margin-right: 15px;
     border-radius: var(--radius-sm);
 }
+
+/* Colores Dinámicos por Categoría */
+.section-futbol-nacional .section-category-title::before {
+    background-color: #22c55e;
+}
+
+/* Verde */
+.section-tenis .section-category-title::before {
+    background-color: #f97316;
+}
+
+/* Naranja */
+.section-futbol-internacional .section-category-title::before {
+    background-color: #eab308;
+}
+
+/* Amarillo */
+.section-futbol-femenino .section-category-title::before {
+    background-color: #a855f7;
+}
+
+/* Morado */
+.section-selecciones .section-category-title::before {
+    background-color: #ef4444;
+}
+
+/* Rojo */
 
 .main-featured-post {
     border-bottom: 2px solid var(--border);
