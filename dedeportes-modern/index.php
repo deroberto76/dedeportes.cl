@@ -24,9 +24,8 @@ get_header();
 
                 try {
                     $pdo_matches = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-                    // Buscamos una cantidad mayor de registros para ordenar en PHP con seguridad.
-                    // Ordenamos por ID descendente para obtener los ingresos más recientes.
-                    $sql_list = "SELECT * FROM partidos ORDER BY id DESC LIMIT 200";
+                    // Buscamos una cantidad mayor de registros.
+                    $sql_list = "SELECT * FROM partidos ORDER BY id DESC LIMIT 300";
                     $stmt_list = $pdo_matches->query($sql_list);
                     $raw_data = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
 
@@ -34,19 +33,30 @@ get_header();
                     $seen_matches = [];
 
                     foreach ($raw_data as $m) {
-                        // Normalizar fecha para obtener un timestamp confiable
-                        $fecha_raw = $m['fecha'];
-                        $fecha_norm = str_replace('/', '-', $fecha_raw);
-
-                        // Intentamos parsear la fecha: DD-MM-YYYY
+                        $fecha_raw = trim($m['fecha']);
                         $timestamp = 0;
-                        if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})/', $fecha_norm, $matches_date)) {
-                            $timestamp = strtotime($matches_date[3] . '-' . $matches_date[2] . '-' . $matches_date[1]);
-                        } else {
+
+                        // Intentamos formatos comunes
+                        $try_formats = ['d/m/Y', 'd-m-Y', 'Y-m-d', 'j/n/Y', 'j-n-Y'];
+                        foreach ($try_formats as $fmt) {
+                            $dt = DateTime::createFromFormat($fmt, $fecha_raw);
+                            if ($dt !== false) {
+                                // Corregir años de 2 dígitos
+                                if ((int) $dt->format('Y') < 100) {
+                                    $dt->setDate(2000 + (int) $dt->format('Y'), (int) $dt->format('m'), (int) $dt->format('d'));
+                                }
+                                $timestamp = $dt->getTimestamp();
+                                break;
+                            }
+                        }
+
+                        // Fallback a strtotime
+                        if (!$timestamp) {
+                            $fecha_norm = str_replace('/', '-', $fecha_raw);
                             $timestamp = strtotime($fecha_norm);
                         }
 
-                        // Clave única para evitar duplicados del mismo partido
+                        // Clave única para evitar duplicados
                         $teams = [$m['equipo'], $m['rival']];
                         sort($teams);
                         $match_key = $fecha_raw . '_' . $teams[0] . '_' . $teams[1];
@@ -55,7 +65,8 @@ get_header();
                             $is_away = (isset($m['condicion']) && (strtolower($m['condicion']) === 'visitante' || strtolower($m['condicion']) === 'v'));
 
                             $matches[] = [
-                                'timestamp' => $timestamp ? $timestamp : 0,
+                                'timestamp' => (int) $timestamp,
+                                'id' => (int) $m['id'],
                                 'fecha' => $fecha_raw,
                                 'torneo' => $m['torneo'],
                                 'local' => $is_away ? $m['rival'] : $m['equipo'],
@@ -67,14 +78,15 @@ get_header();
                         }
                     }
 
-                    // Ordenar por timestamp descendente (más nuevos primero)
+                    // Ordenar: 1º por timestamp DESC, 2º por ID DESC
                     usort($matches, function ($a, $b) {
-                        if ($a['timestamp'] === $b['timestamp'])
-                            return 0;
-                        return ($a['timestamp'] > $b['timestamp']) ? -1 : 1;
+                        if ($a['timestamp'] !== $b['timestamp']) {
+                            return ($b['timestamp'] - $a['timestamp']);
+                        }
+                        return ($b['id'] - $a['id']);
                     });
 
-                    // Limitar a los 20 más recientes después de ordenar
+                    // Limitar a los 20 más recientes
                     $matches = array_slice($matches, 0, 20);
                 } catch (PDOException $e) {
                     $matches_error = $e->getMessage();
