@@ -64,9 +64,7 @@ get_header();
                 // 2. Secciones por Categoría
                 $categories_to_show = array(
                     'Fútbol nacional' => 'futbol-nacional',
-                    'Tenis' => 'tenis',
                     'Fútbol internacional' => 'futbol-internacional',
-                    'Fútbol femenino' => 'futbol-femenino',
                     'Selecciones' => 'selecciones'
                 );
 
@@ -110,31 +108,6 @@ get_header();
                     <?php dynamic_sidebar('sidebar-home'); ?>
                 <?php endif; ?>
 
-                <!-- Widget: Tenis -->
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Tenis</h3>
-                    <div class="widget-content">
-                        <?php
-                        $query_tenis = new WP_Query(array('category_name' => 'tenis', 'posts_per_page' => 4));
-                        if ($query_tenis->have_posts()):
-                            while ($query_tenis->have_posts()):
-                                $query_tenis->the_post();
-                                ?>
-                                <div class="mini-post">
-                                    <a href="<?php the_permalink(); ?>" class="mini-post-link">
-                                        <span class="mini-post-title"><?php the_title(); ?></span>
-                                        <span class="mini-post-date"><?php echo get_the_date('d M'); ?></span>
-                                    </a>
-                                </div>
-                                <?php
-                            endwhile;
-                            wp_reset_postdata();
-                        else:
-                            echo '<p class="text-muted">Sin noticias recientes.</p>';
-                        endif;
-                        ?>
-                    </div>
-                </div>
 
                 <!-- Widget: Fútbol -->
                 <div class="sidebar-widget">
