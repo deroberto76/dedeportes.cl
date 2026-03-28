@@ -6,7 +6,29 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.65');
+	define('DEDEPORTES_VERSION', '1.66');
+}
+
+/**
+ * Helper: Obtener URL del escudo del equipo
+ */
+function dedeportes_get_team_shield($team_name)
+{
+	if (empty($team_name))
+		return '';
+
+	// Normalizar nombre: minúsculas, sin acentos, espacios -> guiones
+	$slug = mb_strtolower(trim($team_name), 'UTF-8');
+	$slug = str_replace(
+		['á', 'é', 'í', 'ó', 'ú', 'ñ', ' '],
+		['a', 'e', 'i', 'o', 'u', 'n', '-'],
+		$slug
+	);
+	// Eliminar caracteres no alfanuméricos excepto guión
+	$slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
+
+	// Las imágenes se asumen en la carpeta /img/ en la raíz del sitio
+	return home_url('/img/' . $slug . '.png');
 }
 
 /**
