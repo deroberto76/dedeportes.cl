@@ -24,59 +24,58 @@ get_header();
 
                 try {
                     $pdo_matches = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-                    // Buscamos los últimos partidos.
-                    // Intentamos ordenar cronológicamente asumiendo formato DD/MM/YYYY o YYYY-MM-DD.
-                    // Probamos primero con una detección de formato en SQL si es posible, o simplemente STR_TO_DATE.
-                    $sql_list = "SELECT * FROM partidos 
-                                 ORDER BY 
-                                    CASE 
-                                        WHEN fecha LIKE '__/__/____' THEN STR_TO_DATE(fecha, '%d/%m/%Y')
-                                        ELSE fecha 
-                                    END DESC 
-                                 LIMIT 100";
-
+                    // Buscamos una cantidad mayor de registros para ordenar en PHP con seguridad.
+                    // Ordenamos por ID descendente para obtener los ingresos más recientes.
+                    $sql_list = "SELECT * FROM partidos ORDER BY id DESC LIMIT 200";
                     $stmt_list = $pdo_matches->query($sql_list);
-                    $raw_matches = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
+                    $raw_data = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
 
                     $matches = [];
                     $seen_matches = [];
 
-                    foreach ($raw_matches as $m) {
-                        // Crear una clave única para el partido basada en la fecha y los equipos involucrados
+                    foreach ($raw_data as $m) {
+                        // Normalizar fecha para obtener un timestamp confiable
+                        $fecha_raw = $m['fecha'];
+                        $fecha_norm = str_replace('/', '-', $fecha_raw);
+
+                        // Intentamos parsear la fecha: DD-MM-YYYY
+                        $timestamp = 0;
+                        if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})/', $fecha_norm, $matches_date)) {
+                            $timestamp = strtotime($matches_date[3] . '-' . $matches_date[2] . '-' . $matches_date[1]);
+                        } else {
+                            $timestamp = strtotime($fecha_norm);
+                        }
+
+                        // Clave única para evitar duplicados del mismo partido
                         $teams = [$m['equipo'], $m['rival']];
                         sort($teams);
-                        $match_key = $m['fecha'] . '_' . $teams[0] . '_' . $teams[1];
+                        $match_key = $fecha_raw . '_' . $teams[0] . '_' . $teams[1];
 
                         if (!isset($seen_matches[$match_key])) {
-                            // Intentamos identificar quién es el local. 
-                            // Si existe la columna 'condicion' y es 'Visitante', invertimos.
-                            // Si no existe, tomamos la fila tal cual.
                             $is_away = (isset($m['condicion']) && (strtolower($m['condicion']) === 'visitante' || strtolower($m['condicion']) === 'v'));
 
-                            if ($is_away) {
-                                $matches[] = [
-                                    'fecha' => $m['fecha'],
-                                    'torneo' => $m['torneo'],
-                                    'local' => $m['rival'],
-                                    'visitante' => $m['equipo'],
-                                    'goles_local' => $m['goles_rival'],
-                                    'goles_visitante' => $m['goles_equipo']
-                                ];
-                            } else {
-                                $matches[] = [
-                                    'fecha' => $m['fecha'],
-                                    'torneo' => $m['torneo'],
-                                    'local' => $m['equipo'],
-                                    'visitante' => $m['rival'],
-                                    'goles_local' => $m['goles_equipo'],
-                                    'goles_visitante' => $m['goles_rival']
-                                ];
-                            }
+                            $matches[] = [
+                                'timestamp' => $timestamp ? $timestamp : 0,
+                                'fecha' => $fecha_raw,
+                                'torneo' => $m['torneo'],
+                                'local' => $is_away ? $m['rival'] : $m['equipo'],
+                                'visitante' => $is_away ? $m['equipo'] : $m['rival'],
+                                'goles_local' => $is_away ? $m['goles_rival'] : $m['goles_equipo'],
+                                'goles_visitante' => $is_away ? $m['goles_equipo'] : $m['goles_rival']
+                            ];
                             $seen_matches[$match_key] = true;
                         }
-                        if (count($matches) >= 20)
-                            break;
                     }
+
+                    // Ordenar por timestamp descendente (más nuevos primero)
+                    usort($matches, function ($a, $b) {
+                        if ($a['timestamp'] === $b['timestamp'])
+                            return 0;
+                        return ($a['timestamp'] > $b['timestamp']) ? -1 : 1;
+                    });
+
+                    // Limitar a los 20 más recientes después de ordenar
+                    $matches = array_slice($matches, 0, 20);
                 } catch (PDOException $e) {
                     $matches_error = $e->getMessage();
                 }
