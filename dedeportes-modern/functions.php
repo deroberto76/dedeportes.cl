@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.64');
+	define('DEDEPORTES_VERSION', '1.65');
 }
 
 /**
@@ -158,12 +158,16 @@ add_action('widgets_init', 'dedeportes_widgets_init');
 // Register Custom Widgets
 $scoreboard_widget = __DIR__ . '/inc/class-dedeportes-scoreboard-widget.php';
 $tennis_widget = __DIR__ . '/inc/class-dedeportes-tennis-scoreboard-widget.php';
+$performance_widget = __DIR__ . '/inc/class-dedeportes-performance-widget.php';
 
 if (file_exists($scoreboard_widget)) {
 	require_once $scoreboard_widget;
 }
 if (file_exists($tennis_widget)) {
 	require_once $tennis_widget;
+}
+if (file_exists($performance_widget)) {
+	require_once $performance_widget;
 }
 
 function dedeportes_register_custom_widgets()
@@ -173,6 +177,9 @@ function dedeportes_register_custom_widgets()
 	}
 	if (class_exists('Dedeportes_Tennis_Scoreboard_Widget')) {
 		register_widget('Dedeportes_Tennis_Scoreboard_Widget');
+	}
+	if (class_exists('Dedeportes_Performance_Widget')) {
+		register_widget('Dedeportes_Performance_Widget');
 	}
 }
 add_action('widgets_init', 'dedeportes_register_custom_widgets');
