@@ -24,11 +24,17 @@ get_header();
 
                 try {
                     $pdo_matches = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-                    $pdo_matches->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
                     // Buscamos los últimos partidos.
-                    // Aumentamos el límite para asegurar que llegamos a fechas anteriores si hay muchos registros.
-                    $sql_list = "SELECT * FROM partidos ORDER BY fecha DESC LIMIT 100";
+                    // Intentamos ordenar cronológicamente asumiendo formato DD/MM/YYYY o YYYY-MM-DD.
+                    // Probamos primero con una detección de formato en SQL si es posible, o simplemente STR_TO_DATE.
+                    $sql_list = "SELECT * FROM partidos 
+                                 ORDER BY 
+                                    CASE 
+                                        WHEN fecha LIKE '__/__/____' THEN STR_TO_DATE(fecha, '%d/%m/%Y')
+                                        ELSE fecha 
+                                    END DESC 
+                                 LIMIT 100";
+
                     $stmt_list = $pdo_matches->query($sql_list);
                     $raw_matches = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
 
@@ -36,24 +42,36 @@ get_header();
                     $seen_matches = [];
 
                     foreach ($raw_matches as $m) {
-                        // Usamos una clave que no dependa del orden de los equipos para evitar duplicados si la tabla es de 2 filas por partido
+                        // Crear una clave única para el partido basada en la fecha y los equipos involucrados
                         $teams = [$m['equipo'], $m['rival']];
                         sort($teams);
                         $match_key = $m['fecha'] . '_' . $teams[0] . '_' . $teams[1];
 
                         if (!isset($seen_matches[$match_key])) {
-                            // Asumimos que la tabla tiene 1 fila por partido donde equipo=Local y rival=Visitante
-                            // Si tuviera columna 'condicion', la lógica anterior servía, pero para asegurar el mostrado
-                            // de "U. de Concepción vs Cobresal" y evitar filtros fallidos (si 'condicion' no existe),
-                            // simplemente tomamos la fila tal cual viene.
-                            $matches[] = [
-                                'fecha' => $m['fecha'],
-                                'torneo' => $m['torneo'],
-                                'local' => $m['equipo'],
-                                'visitante' => $m['rival'],
-                                'goles_local' => $m['goles_equipo'],
-                                'goles_visitante' => $m['goles_rival']
-                            ];
+                            // Intentamos identificar quién es el local. 
+                            // Si existe la columna 'condicion' y es 'Visitante', invertimos.
+                            // Si no existe, tomamos la fila tal cual.
+                            $is_away = (isset($m['condicion']) && (strtolower($m['condicion']) === 'visitante' || strtolower($m['condicion']) === 'v'));
+
+                            if ($is_away) {
+                                $matches[] = [
+                                    'fecha' => $m['fecha'],
+                                    'torneo' => $m['torneo'],
+                                    'local' => $m['rival'],
+                                    'visitante' => $m['equipo'],
+                                    'goles_local' => $m['goles_rival'],
+                                    'goles_visitante' => $m['goles_equipo']
+                                ];
+                            } else {
+                                $matches[] = [
+                                    'fecha' => $m['fecha'],
+                                    'torneo' => $m['torneo'],
+                                    'local' => $m['equipo'],
+                                    'visitante' => $m['rival'],
+                                    'goles_local' => $m['goles_equipo'],
+                                    'goles_visitante' => $m['goles_rival']
+                                ];
+                            }
                             $seen_matches[$match_key] = true;
                         }
                         if (count($matches) >= 20)
