@@ -1153,15 +1153,78 @@ textarea:focus {
     margin-bottom: 0.5rem;
 }
 
-/* Match Table & Shields */
-.match-table th,
-.match-table td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border);
+/* New Match Cards Layout */
+.match-cards-list {
+    display: flex;
+    flex-direction: column;
 }
 
-.match-table tr:hover {
+.match-card {
+    display: grid;
+    grid-template-columns: 100px 1fr 60px;
+    align-items: center;
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--border);
+    gap: 1.5rem;
+    transition: background-color 0.2s;
+}
+
+.match-card:hover {
     background-color: var(--surface-hover);
+}
+
+.match-card:last-child {
+    border-bottom: none;
+}
+
+.match-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.match-card-date {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.match-card-tournament {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.match-card-teams {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.match-card-team {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.match-card-team .team-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.match-card-result {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.match-card-result .score-row {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    min-width: 25px;
+    text-align: center;
 }
 
 .team-shield {
@@ -1171,19 +1234,33 @@ textarea:focus {
     border-radius: 50%;
     background: transparent;
     display: inline-block;
-    vertical-align: middle;
 }
 
-/* Mobile Adjustments for Match Table */
+/* Mobile Adjustments for Match Cards */
 @media (max-width: 768px) {
-
-    .match-table th,
-    .match-table td {
-        padding: 0.75rem 0.5rem !important;
-        font-size: 0.8rem !important;
+    .match-card {
+        grid-template-columns: 85px 1fr 45px;
+        gap: 0.75rem;
+        padding: 1rem 0.75rem;
     }
 
-    .match-table .team-shield {
+    .match-card-date {
+        font-size: 0.85rem;
+    }
+
+    .match-card-tournament {
+        font-size: 0.75rem;
+    }
+
+    .match-card-team .team-name {
+        font-size: 0.95rem;
+    }
+
+    .match-card-result .score-row {
+        font-size: 1.05rem;
+    }
+
+    .team-shield {
         width: 18px;
         height: 18px;
     }

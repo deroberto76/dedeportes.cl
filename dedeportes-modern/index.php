@@ -109,63 +109,38 @@ get_header();
                         <h2 class="section-category-title">Todos los Partidos</h2>
                         <div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
                             <div class="widget-content">
-                                <table class="match-table" style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr style="background: var(--surface); border-bottom: 1px solid var(--border);">
-                                            <th
-                                                style="padding: 1rem; text-align: left; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
-                                                Fecha</th>
-                                            <th style="padding: 1rem; text-align: left; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;"
-                                                class="hide-mobile">Torneo</th>
-                                            <th
-                                                style="padding: 1rem; text-align: right; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
-                                                Local</th>
-                                            <th
-                                                style="padding: 1rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
-                                                Resultado</th>
-                                            <th
-                                                style="padding: 1rem; text-align: left; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
-                                                Visitante</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($matches as $match):
-                                            // Normalizar fecha para strtotime (reemplazar / por - si es necesario)
-                                            $fecha_db = str_replace('/', '-', $match['fecha']);
-                                            $timestamp = strtotime($fecha_db);
-                                            // Fallback si strtotime falla: usar el valor crudo o intentar otro parseo
-                                            $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
-                                            ?>
-                                            <tr style="border-bottom: 1px solid var(--border);">
-                                                <td style="padding: 1rem; font-size: 0.95rem; font-weight: 600;">
-                                                    <?php echo $date_formatted; ?>
-                                                </td>
-                                                <td style="padding: 1rem; font-size: 0.9rem; color: var(--text-muted);"
-                                                    class="hide-mobile"><?php echo esc_html($match['torneo']); ?></td>
-                                                <td style="padding: 1rem; text-align: right; font-weight: 600;">
-                                                    <div
-                                                        style="display: inline-flex; align-items: center; gap: 0.5rem; justify-content: flex-end;">
-                                                        <span><?php echo esc_html($match['local']); ?></span>
-                                                        <img src="<?php echo dedeportes_get_team_shield($match['local']); ?>"
-                                                            class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    </div>
-                                                </td>
-                                                <td
-                                                    style="padding: 1rem; text-align: center; font-weight: 800; font-size: 1.1rem; white-space: nowrap;">
-                                                    <?php echo $match['goles_local']; ?> -
-                                                    <?php echo $match['goles_visitante']; ?>
-                                                </td>
-                                                <td style="padding: 1rem; text-align: left; font-weight: 600;">
-                                                    <div style="display: inline-flex; align-items: center; gap: 0.5rem;">
-                                                        <img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>"
-                                                            class="team-shield" alt="" onerror="this.style.display='none'">
-                                                        <span><?php echo esc_html($match['visitante']); ?></span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                <div class="match-cards-list">
+                                    <?php foreach ($matches as $match):
+                                        // Normalizar fecha para strtotime
+                                        $fecha_db = str_replace('/', '-', $match['fecha']);
+                                        $timestamp = strtotime($fecha_db);
+                                        $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
+                                        ?>
+                                        <div class="match-card">
+                                            <div class="match-card-meta">
+                                                <div class="match-card-date"><?php echo $date_formatted; ?></div>
+                                                <div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?>
+                                                </div>
+                                            </div>
+                                            <div class="match-card-teams">
+                                                <div class="match-card-team local">
+                                                    <img src="<?php echo dedeportes_get_team_shield($match['local']); ?>"
+                                                        class="team-shield" alt="" onerror="this.style.display='none'">
+                                                    <span class="team-name"><?php echo esc_html($match['local']); ?></span>
+                                                </div>
+                                                <div class="match-card-team visitor">
+                                                    <img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>"
+                                                        class="team-shield" alt="" onerror="this.style.display='none'">
+                                                    <span class="team-name"><?php echo esc_html($match['visitante']); ?></span>
+                                                </div>
+                                            </div>
+                                            <div class="match-card-result">
+                                                <div class="score-row"><?php echo $match['goles_local']; ?></div>
+                                                <div class="score-row"><?php echo $match['goles_visitante']; ?></div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
                         </div>
                     </section>
