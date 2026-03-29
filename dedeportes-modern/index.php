@@ -61,20 +61,32 @@ get_header();
                         sort($teams);
                         $match_key = $fecha_raw . '_' . $teams[0] . '_' . $teams[1];
 
-                        if (!isset($seen_matches[$match_key])) {
-                            $is_away = (isset($m['condicion']) && (strtolower($m['condicion']) === 'visitante' || strtolower($m['condicion']) === 'v'));
+                        // Procesar la fila actual
+                        $cond = isset($m['condicion']) ? strtolower(trim($m['condicion'])) : '';
+                        $is_away = in_array($cond, ['visitante', 'v', 'visita', 'visiting']);
+                        $is_local = in_array($cond, ['local', 'l', 'casa', 'home']);
 
-                            $matches[] = [
-                                'timestamp' => (int) $timestamp,
-                                'id' => (int) $m['id'],
-                                'fecha' => $fecha_raw,
-                                'torneo' => $m['torneo'],
-                                'local' => $is_away ? $m['rival'] : $m['equipo'],
-                                'visitante' => $is_away ? $m['equipo'] : $m['rival'],
-                                'goles_local' => $is_away ? $m['goles_rival'] : $m['goles_equipo'],
-                                'goles_visitante' => $is_away ? $m['goles_equipo'] : $m['goles_rival']
-                            ];
-                            $seen_matches[$match_key] = true;
+                        $m_processed = [
+                            'timestamp' => (int) $timestamp,
+                            'id' => (int) $m['id'],
+                            'fecha' => $fecha_raw,
+                            'torneo' => $m['torneo'],
+                            'local' => $is_away ? $m['rival'] : $m['equipo'],
+                            'visitante' => $is_away ? $m['equipo'] : $m['rival'],
+                            'goles_local' => $is_away ? $m['goles_rival'] : $m['goles_equipo'],
+                            'goles_visitante' => $is_away ? $m['goles_equipo'] : $m['goles_rival'],
+                            'is_local_row' => $is_local
+                        ];
+
+                        if (!isset($seen_matches[$match_key])) {
+                            $matches[] = $m_processed;
+                            $seen_matches[$match_key] = count($matches) - 1; // Guardamos el índice
+                        } else {
+                            // Si ya vimos este partido, y esta fila es explícitamente "Local", la preferimos
+                            $idx = $seen_matches[$match_key];
+                            if ($is_local && !$matches[$idx]['is_local_row']) {
+                                $matches[$idx] = $m_processed;
+                            }
                         }
                     }
 
