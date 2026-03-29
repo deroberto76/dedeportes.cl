@@ -126,12 +126,22 @@ get_header();
                                                 <div class="match-card-team local">
                                                     <img src="<?php echo dedeportes_get_team_shield($match['local']); ?>"
                                                         class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name"><?php echo esc_html($match['local']); ?></span>
+                                                    <span class="team-name">
+                                                        <span
+                                                            class="team-name-full"><?php echo esc_html($match['local']); ?></span>
+                                                        <span
+                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
+                                                    </span>
                                                 </div>
                                                 <div class="match-card-team visitor">
                                                     <img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>"
                                                         class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name"><?php echo esc_html($match['visitante']); ?></span>
+                                                    <span class="team-name">
+                                                        <span
+                                                            class="team-name-full"><?php echo esc_html($match['visitante']); ?></span>
+                                                        <span
+                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="match-card-result">

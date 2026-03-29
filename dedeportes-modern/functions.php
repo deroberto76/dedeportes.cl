@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.72');
+	define('DEDEPORTES_VERSION', '1.73');
 }
 
 /**
@@ -29,6 +29,29 @@ function dedeportes_get_team_shield($team_name)
 
 	// Las imágenes se asumen en la carpeta /img/ en la raíz del sitio
 	return home_url('/img/' . $slug . '.png');
+}
+
+/**
+ * Helper: Obtener abreviación del nombre del equipo para móviles
+ */
+function dedeportes_get_team_abbreviation($team_name)
+{
+	if (empty($team_name))
+		return '';
+
+	$abbreviations = [
+		'Unión La Calera' => 'U. La Calera',
+		'Deportes La Serena' => 'La Serena',
+		'Universidad de Concepción' => 'U. de Concepción',
+		'Universidad Católica' => 'U. Católica',
+		'Coquimbo Unido' => 'Coquimbo',
+		'Deportes Concepción' => 'D. Concepción',
+		'Universidad de Chile' => 'U. de Chile',
+		'Deportes Limache' => 'Limache',
+		'Audax Italiano' => 'Audax',
+	];
+
+	return isset($abbreviations[$team_name]) ? $abbreviations[$team_name] : $team_name;
 }
 
 /**
