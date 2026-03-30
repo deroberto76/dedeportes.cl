@@ -27,9 +27,18 @@ $pass = 'n[[cY^7gvog~';
 $matches = [];
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+
+    // Búsqueda robusta (ej: para O'Higgins, busca %Higgins%)
+    $search_name = $team_name_db;
+    if (strpos($search_name, "'") !== false) {
+        $parts = explode("'", $search_name);
+        $search_name = end($parts);
+    }
+    $like_term = '%' . trim($search_name) . '%';
+
     // Buscamos partidos donde el equipo sea local o rival
-    $stmt = $pdo->prepare("SELECT * FROM partidos WHERE equipo = ? OR rival = ? ORDER BY id DESC LIMIT 100");
-    $stmt->execute([$team_name_db, $team_name_db]);
+    $stmt = $pdo->prepare("SELECT * FROM partidos WHERE equipo LIKE ? OR rival LIKE ? ORDER BY id DESC LIMIT 100");
+    $stmt->execute([$like_term, $like_term]);
     $raw_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $seen_matches = [];
