@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.73');
+	define('DEDEPORTES_VERSION', '1.74');
 }
 
 /**
@@ -197,6 +197,40 @@ function dedeportes_widgets_init()
 			'after_title' => '</h3>',
 		)
 	);
+
+	// --- REGISTRO DE SIDEBARS POR EQUIPO (16 Equipos) ---
+	$teams = [
+		'Colo-Colo',
+		'U. de Chile',
+		'Universidad Católica',
+		'Iquique',
+		'O\'Higgins',
+		'Palestino',
+		'Everton',
+		'Cobreloa',
+		'U. Española',
+		'Coquimbo',
+		'Ñublense',
+		'Huachipato',
+		'Audax',
+		'Cobresal',
+		'La Calera',
+		'Copiapó'
+	];
+
+	foreach ($teams as $team) {
+		register_sidebar(
+			array(
+				'name' => esc_html__('Sidebar ' . $team, 'dedeportes-modern'),
+				'id' => 'sidebar-' . sanitize_title($team),
+				'description' => esc_html__('Widgets específicos para la página de ' . $team, 'dedeportes-modern'),
+				'before_widget' => '<div id="%1$s" class="sidebar-widget %2$s">',
+				'after_widget' => '</div>',
+				'before_title' => '<h3 class="widget-title">',
+				'after_title' => '</h3>',
+			)
+		);
+	}
 }
 add_action('widgets_init', 'dedeportes_widgets_init');
 
