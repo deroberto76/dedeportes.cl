@@ -115,16 +115,6 @@ try {
 ?>
 
 <main id="primary" class="site-main team-page">
-    <?php if (isset($_GET['debug_equipo'])): ?>
-        <div class="container" style="background: #fff8f8; padding: 1rem; border: 1px solid red; margin-bottom: 2rem;">
-            <h3>Debug Info:</h3>
-            <p><strong>Keyword buscada:</strong> <?php echo esc_html($keyword); ?></p>
-            <p><strong>LIKE Term:</strong> <?php echo esc_html($like_term); ?></p>
-            <p><strong>Registros encontrados:</strong> <?php echo count($raw_data); ?></p>
-            <p><strong>Error PDO:</strong> <?php echo $matches_error ?? 'Ninguno'; ?></p>
-        </div>
-    <?php endif; ?>
-
     <div class="container" style="padding-top: 2rem;">
         <div class="layout-grid">
 
