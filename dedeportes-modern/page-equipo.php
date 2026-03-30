@@ -9,6 +9,15 @@ get_header();
 $team_name = get_the_title();
 $team_slug = sanitize_title($team_name);
 
+/**
+ * Normalización para la base de datos (Ej: O'Higgins con comilla curva)
+ */
+$team_name_db = str_replace(
+    ['’', '‘', '”', '“'],
+    ["'", "'", '"', '"'],
+    $team_name
+);
+
 // Configuración de la Base de Datos
 $host = 'localhost';
 $dbname = 'pjdmenag_futbol';
@@ -20,7 +29,7 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
     // Buscamos partidos donde el equipo sea local o rival
     $stmt = $pdo->prepare("SELECT * FROM partidos WHERE equipo = ? OR rival = ? ORDER BY id DESC LIMIT 100");
-    $stmt->execute([$team_name, $team_name]);
+    $stmt->execute([$team_name_db, $team_name_db]);
     $raw_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $seen_matches = [];
