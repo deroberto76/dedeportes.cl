@@ -28,16 +28,24 @@ $matches = [];
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
 
-    // Búsqueda robusta (ej: para O'Higgins, busca %Higgins%)
-    $search_name = $team_name_db;
-    if (strpos($search_name, "'") !== false) {
-        $parts = explode("'", $search_name);
-        $search_name = end($parts);
+    // Extracción de palabra clave (ej: de "O'Higgins" saca "Higgins")
+    $search_base = str_replace(['’', '‘', '”', '“', "'", '-', '.'], ' ', $team_name);
+    $parts = explode(' ', $search_base);
+    $keyword = '';
+    foreach ($parts as $p) {
+        $p = trim($p);
+        $common = ['universidad', 'deportes', 'union', 'club', 'social', 'de', 'la', 'el'];
+        if (strlen($p) > 2 && !in_array(strtolower($p), $common)) {
+            $keyword = $p;
+            break;
+        }
     }
-    $like_term = '%' . trim($search_name) . '%';
+    if (!$keyword)
+        $keyword = $team_name;
+    $like_term = '%' . $keyword . '%';
 
-    // Buscamos partidos donde el equipo sea local o rival
-    $stmt = $pdo->prepare("SELECT * FROM partidos WHERE equipo LIKE ? OR rival LIKE ? ORDER BY id DESC LIMIT 100");
+    // Buscamos partidos donde el equipo sea local o rival (Case Insensitive)
+    $stmt = $pdo->prepare("SELECT * FROM partidos WHERE LOWER(equipo) LIKE LOWER(?) OR LOWER(rival) LIKE LOWER(?) ORDER BY id DESC LIMIT 100");
     $stmt->execute([$like_term, $like_term]);
     $raw_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
