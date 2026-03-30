@@ -28,8 +28,8 @@ $matches = [];
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
 
-    // Extracción de palabra clave (ej: de "O'Higgins" saca "Higgins")
-    $search_base = str_replace(['’', '‘', '”', '“', "'", '-', '.'], ' ', $team_name);
+    // Extracción de palabra clave (ej: de "O'Higgins" o "O´higgins" saca "Higgins")
+    $search_base = str_replace(['’', '‘', '”', '“', '´', "'", '-', '.'], ' ', $team_name);
     $parts = explode(' ', $search_base);
     $keyword = '';
     foreach ($parts as $p) {
