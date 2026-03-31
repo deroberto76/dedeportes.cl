@@ -49,9 +49,8 @@ class Dedeportes_Performance_Widget extends WP_Widget
                         ROUND((SUM(CASE WHEN goles_equipo > goles_rival THEN 3 WHEN goles_equipo = goles_rival THEN 1 ELSE 0 END) / (COUNT(*) * 3)) * 100, 1) AS Rendimiento
                     FROM partidos
                     WHERE estado = 'finalizado' 
-                      AND equipo IN ('Colo-Colo', 'U. de Chile', 'Universidad Católica', 'Iquique', 'O''Higgins', 'Palestino', 'Everton', 'Cobreloa', 'U. Española', 'Coquimbo', 'Ñublense', 'Huachipato', 'Audax', 'Cobresal', 'La Calera', 'Copiapó')
+                      AND equipo IN ('Colo-Colo', 'Colo Colo', 'U. de Chile', 'Universidad de Chile', 'Universidad Católica', 'U. Católica', 'Iquique', 'Deportes Iquique', 'O''Higgins', 'O'' Higgins', 'Palestino', 'Everton', 'Cobreloa', 'U. Española', 'Unión Española', 'Coquimbo', 'Coquimbo Unido', 'Ñublense', 'Huachipato', 'Audax', 'Audax Italiano', 'Cobresal', 'La Calera', 'Unión La Calera', 'Copiapó', 'Deportes Copiapó')
                     GROUP BY equipo
-                    HAVING PJ >= 3
                     ORDER BY Rendimiento DESC, Pts DESC
                     LIMIT :limit";
 
@@ -131,7 +130,7 @@ class Dedeportes_Performance_Widget extends WP_Widget
                 <?php esc_attr_e('Cantidad de equipos:', 'dedeportes-modern'); ?>
             </label>
             <input class="tiny-text" id="<?php echo esc_attr($this->get_field_id('limit')); ?>"
-                name="<?php echo esc_attr($this->get_field_name('limit')); ?>" type="number" step="1" min="1" max="15"
+                name="<?php echo esc_attr($this->get_field_name('limit')); ?>" type="number" step="1" min="1" max="25"
                 value="<?php echo esc_attr($limit); ?>" size="3">
         </p>
         <?php
