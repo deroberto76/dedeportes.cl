@@ -48,6 +48,8 @@ class Dedeportes_Performance_Widget extends WP_Widget
                         SUM(CASE WHEN goles_equipo > goles_rival THEN 3 WHEN goles_equipo = goles_rival THEN 1 ELSE 0 END) AS Pts,
                         ROUND((SUM(CASE WHEN goles_equipo > goles_rival THEN 3 WHEN goles_equipo = goles_rival THEN 1 ELSE 0 END) / (COUNT(*) * 3)) * 100, 1) AS Rendimiento
                     FROM partidos
+                    WHERE estado = 'finalizado' 
+                      AND equipo IN ('Colo-Colo', 'U. de Chile', 'Universidad Católica', 'Iquique', 'O''Higgins', 'Palestino', 'Everton', 'Cobreloa', 'U. Española', 'Coquimbo', 'Ñublense', 'Huachipato', 'Audax', 'Cobresal', 'La Calera', 'Copiapó')
                     GROUP BY equipo
                     HAVING PJ >= 3
                     ORDER BY Rendimiento DESC, Pts DESC
