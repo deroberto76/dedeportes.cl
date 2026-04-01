@@ -103,15 +103,15 @@ get_header();
                     $matches_today = [];
                     $matches_completed = [];
 
-                    $today_start = strtotime('today');
-                    $today_end = strtotime('tomorrow') - 1;
+                    // Usar current_time para obtener la fecha de hoy según la zona horaria ajustada en WordPress
+                    $today_str = current_time('Y-m-d');
 
                     foreach ($matches as $match) {
-                        // Construir el timestamp de la fecha del partido
-                        $fecha_db = str_replace('/', '-', $match['fecha']);
-                        $match_timestamp = strtotime($fecha_db);
+                        // Extraer solo Y-m-d de la DB por si viene con horas (ej. 2026-03-31 15:30:00)
+                        $match_date_str = substr($match['fecha'], 0, 10);
 
-                        if ($match['estado'] === 'por jugar' && $match_timestamp >= $today_start && $match_timestamp <= $today_end) {
+                        // Si el partido es hoy, lo agregamos a 'Partidos de hoy' sin importar si ya terminó o no.
+                        if ($match_date_str === $today_str) {
                             $matches_today[] = $match;
                         } elseif ($match['estado'] === 'finalizado') {
                             $matches_completed[] = $match;
