@@ -107,7 +107,11 @@ get_header();
                     $today_end = strtotime('tomorrow') - 1;
 
                     foreach ($matches as $match) {
-                        if ($match['estado'] === 'por jugar' && $match['timestamp'] >= $today_start && $match['timestamp'] <= $today_end) {
+                        // Construir el timestamp de la fecha del partido
+                        $fecha_db = str_replace('/', '-', $match['fecha']);
+                        $match_timestamp = strtotime($fecha_db);
+
+                        if ($match['estado'] === 'por jugar' && $match_timestamp >= $today_start && $match_timestamp <= $today_end) {
                             $matches_today[] = $match;
                         } elseif ($match['estado'] === 'finalizado') {
                             $matches_completed[] = $match;
