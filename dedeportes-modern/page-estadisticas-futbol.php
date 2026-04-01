@@ -34,7 +34,7 @@ try {
                     ELSE 0 
                 END) AS Pts
             FROM partidos
-            WHERE torneo = 'Liga de Primera'
+            WHERE torneo = 'Liga de Primera' AND estado != 'por jugar'
             GROUP BY equipo
             ORDER BY Pts DESC, Dif DESC, GF DESC";
 

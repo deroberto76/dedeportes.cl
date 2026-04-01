@@ -34,6 +34,7 @@ try {
                     ELSE 0 
                 END) AS Pts
             FROM partidos
+            WHERE estado != 'por jugar'
             GROUP BY equipo";
 
     $stmt = $pdo->query($sql);
