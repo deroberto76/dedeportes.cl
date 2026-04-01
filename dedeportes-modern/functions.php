@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.89');
+	define('DEDEPORTES_VERSION', '1.90');
 }
 
 /**
@@ -70,7 +70,11 @@ function dedeportes_get_team_sidebar_id($team_name)
 		'Coquimbo Unido' => 'Coquimbo',
 		'Audax Italiano' => 'Audax',
 		'Unión La Calera' => 'La Calera',
-		'Deportes Copiapó' => 'Copiapó'
+		'Deportes Copiapó' => 'Copiapó',
+		'Deportes Concepción' => 'D. Concepción',
+		'Deportes La Serena' => 'La Serena',
+		'Deportes Limache' => 'Limache',
+		'Universidad de Concepción' => 'U. de Concepción'
 	];
 
 	$sidebar_name = isset($sidebar_names[$team_name]) ? $sidebar_names[$team_name] : $team_name;
@@ -221,7 +225,7 @@ function dedeportes_widgets_init()
 		)
 	);
 
-	// --- REGISTRO DE SIDEBARS POR EQUIPO (16 Equipos) ---
+	// --- REGISTRO DE SIDEBARS POR EQUIPO (20 Equipos) ---
 	$teams = [
 		'Colo-Colo',
 		'U. de Chile',
@@ -238,7 +242,11 @@ function dedeportes_widgets_init()
 		'Audax',
 		'Cobresal',
 		'La Calera',
-		'Copiapó'
+		'Copiapó',
+		'D. Concepción',
+		'La Serena',
+		'Limache',
+		'U. de Concepción'
 	];
 
 	foreach ($teams as $team) {
