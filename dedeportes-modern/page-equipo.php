@@ -195,7 +195,7 @@ try {
 
             <aside class="layout-sidebar">
                 <?php
-                $sidebar_id = 'sidebar-' . $team_slug;
+                $sidebar_id = dedeportes_get_team_sidebar_id($team_name);
                 if (is_active_sidebar($sidebar_id)) {
                     dynamic_sidebar($sidebar_id);
                 } else {

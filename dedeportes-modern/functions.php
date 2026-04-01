@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.88');
+	define('DEDEPORTES_VERSION', '1.89');
 }
 
 /**
@@ -52,6 +52,29 @@ function dedeportes_get_team_abbreviation($team_name)
 	];
 
 	return isset($abbreviations[$team_name]) ? $abbreviations[$team_name] : $team_name;
+}
+
+/**
+ * Helper: Obtener el ID del sidebar para un equipo
+ * Dado que los sidebars se registraron con nombres cortos (e.g. "Coquimbo").
+ */
+function dedeportes_get_team_sidebar_id($team_name)
+{
+	if (empty($team_name))
+		return '';
+
+	$sidebar_names = [
+		'Universidad de Chile' => 'U. de Chile',
+		'Deportes Iquique' => 'Iquique',
+		'Unión Española' => 'U. Española',
+		'Coquimbo Unido' => 'Coquimbo',
+		'Audax Italiano' => 'Audax',
+		'Unión La Calera' => 'La Calera',
+		'Deportes Copiapó' => 'Copiapó'
+	];
+
+	$sidebar_name = isset($sidebar_names[$team_name]) ? $sidebar_names[$team_name] : $team_name;
+	return 'sidebar-' . sanitize_title($sidebar_name);
 }
 
 /**
