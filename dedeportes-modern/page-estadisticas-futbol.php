@@ -51,8 +51,9 @@ try {
 
         <!-- Header de la Página -->
         <header class="page-header" style="margin-bottom: 3rem; text-align: center;">
-            <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Estadísticas en Tiempo Real</h1>
-            <p class="text-muted">Tabla de posiciones actualizada automáticamente desde la base de datos.</p>
+            <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Tabla de Posiciones Liga de Primera
+            </h1>
+            <p class="text-muted">Estadísticas actualizadas.</p>
         </header>
 
         <div class="layout-grid" style="grid-template-columns: 1fr;">
@@ -78,23 +79,41 @@ try {
                             <table class="ranking-table" style="width: 100%; margin-bottom: 0;">
                                 <thead>
                                     <tr>
-                                        <th style="padding: 1rem; text-align: center;">Pos</th>
-                                        <th style="padding: 1rem;">Equipo</th>
-                                        <th style="padding: 1rem; text-align: center;">PJ</th>
-                                        <th style="padding: 1rem; text-align: center;">G</th>
-                                        <th style="padding: 1rem; text-align: center;">E</th>
-                                        <th style="padding: 1rem; text-align: center;">P</th>
-                                        <th style="padding: 1rem; text-align: center;" class="hide-mobile">GF</th>
-                                        <th style="padding: 1rem; text-align: center;" class="hide-mobile">GC</th>
-                                        <th style="padding: 1rem; text-align: center;">Dif</th>
-                                        <th style="padding: 1rem; text-align: center; background: var(--surface);">Pts</th>
+                                        <th style="padding: 1rem; text-align: center;" class="sortable" data-col="0">Pos
+                                            &#x21D5;</th>
+                                        <th style="padding: 1rem;" class="sortable" data-col="1">Equipo &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center;" class="sortable" data-col="2">PJ
+                                            &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center;" class="sortable" data-col="3">G
+                                            &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center;" class="sortable" data-col="4">E
+                                            &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center;" class="sortable" data-col="5">P
+                                            &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center;" class="hide-mobile sortable"
+                                            data-col="6">GF &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center;" class="hide-mobile sortable"
+                                            data-col="7">GC &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center;" class="sortable" data-col="8">Dif
+                                            &#x21D5;</th>
+                                        <th style="padding: 1rem; text-align: center; background: var(--surface);"
+                                            class="sortable" data-col="9">Pts &#x21D5;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $pos = 1;
                                     foreach ($standings as $row):
-                                        $highlight = ($pos <= 4) ? 'style="border-left: 4px solid var(--primary);"' : '';
+                                        $highlight = '';
+                                        if ($pos <= 2) {
+                                            $highlight = 'style="border-left: 4px solid #2563eb;"'; // Azul
+                                        } elseif ($pos == 3) {
+                                            $highlight = 'style="border-left: 4px solid #38bdf8;"'; // Celeste
+                                        } elseif ($pos >= 4 && $pos <= 6) {
+                                            $highlight = 'style="border-left: 4px solid #eab308;"'; // Amarillo
+                                        } elseif ($pos == 15 || $pos == 16) {
+                                            $highlight = 'style="border-left: 4px solid #ef4444;"'; // Rojo
+                                        }
                                         ?>
                                         <tr <?php echo $highlight; ?>>
                                             <td style="text-align: center; font-weight: 700;">
@@ -135,9 +154,28 @@ try {
                         </div>
                     </div>
 
-                    <p style="margin-top: 2rem; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
-                        * Los criterios de desempate son: Puntos > Diferencia de Goles > Goles a Favor.
-                    </p>
+                    <div
+                        style="margin-top: 2rem; font-size: 0.85rem; color: var(--text-muted); text-align: left; background: var(--surface); padding: 1.5rem; border-radius: 8px;">
+                        <p style="font-weight: 600; margin-bottom: 0.5rem; text-align: center;">El sistema de asignación de
+                            cupos para las competencias continentales se distribuye de la siguiente manera:</p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li style="margin-bottom: 1rem;"><strong>Copa Libertadores</strong>
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem; list-style-type: disc;">
+                                    <li>Chile 1: El equipo que resulte campeón del torneo.</li>
+                                    <li>Chile 2: El subcampeón del torneo.</li>
+                                    <li>Chile 4: El ganador del enfrentamiento entre el 3° lugar de la liga y el campeón de
+                                        la Copa Chile 2026.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Copa Sudamericana</strong><br>Los cuatro cupos para este certamen se otorgan a:
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem; list-style-type: disc;">
+                                    <li>Los clubes que finalicen en la 4°, 5° y 6° posición de la tabla general.</li>
+                                    <li>El equipo que resulte perdedor del duelo definitorio entre el 3° de la liga y el
+                                        campeón de la Copa Chile.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
 
                 <?php endif; ?>
 
@@ -160,6 +198,80 @@ try {
         }
     }
 </style>
+
+<style>
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .sortable:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    th.asc::after {
+        content: '';
+    }
+
+    th.desc::after {
+        content: '';
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.querySelector('.ranking-table');
+        if (!table) return;
+        const headers = table.querySelectorAll('th.sortable');
+        const tbody = table.querySelector('tbody');
+
+        headers.forEach(header => {
+            header.addEventListener('click', () => {
+                const colIndex = parseInt(header.getAttribute('data-col'));
+                const isAsc = header.classList.contains('asc');
+
+                headers.forEach(h => { h.classList.remove('asc', 'desc'); });
+                if (isAsc) {
+                    header.classList.add('desc');
+                } else {
+                    header.classList.add('asc');
+                }
+                const direction = isAsc ? -1 : 1;
+
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.sort((a, b) => {
+                    let valA = a.cells[colIndex].textContent.trim();
+                    let valB = b.cells[colIndex].textContent.trim();
+
+                    valA = valA.replace(/\+/g, '');
+                    valB = valB.replace(/\+/g, '');
+
+                    const numA = parseFloat(valA);
+                    const numB = parseFloat(valB);
+
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        return (numA - numB) * direction;
+                    }
+                    return valA.localeCompare(valB) * direction;
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+
+                const newRows = Array.from(tbody.querySelectorAll('tr'));
+                newRows.forEach((row, idx) => {
+                    row.cells[0].textContent = idx + 1;
+                    const pos = idx + 1;
+                    let highlight = 'none';
+                    if (pos <= 2) highlight = '4px solid #2563eb';
+                    else if (pos == 3) highlight = '4px solid #38bdf8';
+                    else if (pos >= 4 && pos <= 6) highlight = '4px solid #eab308';
+                    else if (pos == 15 || pos == 16) highlight = '4px solid #ef4444';
+                    row.style.borderLeft = highlight;
+                });
+            });
+        });
+    });
+</script>
 
 <?php
 get_footer();
