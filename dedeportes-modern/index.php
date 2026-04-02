@@ -76,6 +76,7 @@ get_header();
                             'goles_local' => $is_away ? $m['goles_rival'] : $m['goles_equipo'],
                             'goles_visitante' => $is_away ? $m['goles_equipo'] : $m['goles_rival'],
                             'is_local_row' => $is_local,
+                            'hora' => isset($m['hora']) ? trim($m['hora']) : '',
                             'estado' => isset($m['estado']) ? strtolower(trim($m['estado'])) : ''
                         ];
 
@@ -136,10 +137,11 @@ get_header();
                                         $fecha_db = str_replace('/', '-', $match['fecha']);
                                         $timestamp = strtotime($fecha_db);
                                         $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
+                                        $time_formatted = !empty($match['hora']) ? date('H:i', strtotime($match['hora'])) : $date_formatted;
                                         ?>
                                         <div class="match-card">
                                             <div class="match-card-meta">
-                                                <div class="match-card-date"><?php echo $date_formatted; ?></div>
+                                                <div class="match-card-date"><?php echo esc_html($time_formatted); ?></div>
                                                 <div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?>
                                                 </div>
                                             </div>
@@ -166,8 +168,12 @@ get_header();
                                                 </div>
                                             </div>
                                             <div class="match-card-result">
-                                                <div class="score-row"><?php echo $match['goles_local'] ?: '-'; ?></div>
-                                                <div class="score-row"><?php echo $match['goles_visitante'] ?: '-'; ?></div>
+                                                <div class="score-row">
+                                                    <?php echo ($match['goles_local'] !== '' && $match['goles_local'] !== null) ? esc_html($match['goles_local']) : '-'; ?>
+                                                </div>
+                                                <div class="score-row">
+                                                    <?php echo ($match['goles_visitante'] !== '' && $match['goles_visitante'] !== null) ? esc_html($match['goles_visitante']) : '-'; ?>
+                                                </div>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
