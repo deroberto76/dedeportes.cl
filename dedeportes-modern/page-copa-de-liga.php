@@ -38,10 +38,12 @@ try {
                     ELSE 0 
                 END) AS Pts
             FROM partidos
-            WHERE torneo = 'Copa de Liga' AND grupo = :grupo AND estado != 'por jugar'
+            WHERE torneo LIKE '%Copa de Liga%' 
+              AND TRIM(grupo) LIKE CONCAT('%', :grupo, '%') 
+              AND estado != 'por jugar'
             GROUP BY equipo
             ORDER BY Pts DESC, Dif DESC, GF DESC";
-            
+
     $stmt = $pdo->prepare($sql);
 
     foreach ($grupos as $g) {
@@ -59,7 +61,8 @@ try {
 
         <!-- Header de la Página -->
         <header class="page-header" style="margin-bottom: 3rem; text-align: center;">
-            <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Tabla de Posiciones Copa de Liga</h1>
+            <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Tabla de Posiciones Copa de Liga
+            </h1>
             <p class="text-muted">Estadísticas actualizadas.</p>
         </header>
 
@@ -77,30 +80,42 @@ try {
                 <?php else: ?>
 
                     <?php foreach ($grupos as $g): ?>
-                        <div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border); margin-bottom: 2rem; box-shadow: var(--shadow-sm); border-radius: 8px; background-color: var(--card-bg);">
-                            <h2 style="padding: 1rem 1.5rem; background: var(--surface); margin: 0; font-size: 1.25rem; border-bottom: 1px solid var(--border); color: var(--primary);">
+                        <div class="sidebar-widget"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border); margin-bottom: 2rem; box-shadow: var(--shadow-sm); border-radius: 8px; background-color: var(--card-bg);">
+                            <h2
+                                style="padding: 1rem 1.5rem; background: var(--surface); margin: 0; font-size: 1.25rem; border-bottom: 1px solid var(--border); color: var(--primary);">
                                 Grupo <?php echo $g; ?>
                             </h2>
                             <div class="widget-content">
                                 <table class="ranking-table" style="width: 100%; margin-bottom: 0;">
                                     <thead>
                                         <tr>
-                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="0">Pos &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="0">Pos
+                                                &#x21D5;</th>
                                             <th style="padding: 1rem;" class="sortable" data-col="1">Equipo &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="2">PJ &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="3">G &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="4">E &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="5">P &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center;" class="hide-mobile sortable" data-col="6">GF &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center;" class="hide-mobile sortable" data-col="7">GC &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="8">Dif &#x21D5;</th>
-                                            <th style="padding: 1rem; text-align: center; background: var(--surface);" class="sortable" data-col="9">Pts &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="2">PJ
+                                                &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="3">G
+                                                &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="4">E
+                                                &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="5">P
+                                                &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="hide-mobile sortable"
+                                                data-col="6">GF &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="hide-mobile sortable"
+                                                data-col="7">GC &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center;" class="sortable" data-col="8">Dif
+                                                &#x21D5;</th>
+                                            <th style="padding: 1rem; text-align: center; background: var(--surface);"
+                                                class="sortable" data-col="9">Pts &#x21D5;</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php if (empty($standings_por_grupo[$g])): ?>
                                             <tr>
-                                                <td colspan="10" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                                <td colspan="10"
+                                                    style="text-align: center; padding: 2rem; color: var(--text-muted);">
                                                     Aún no hay datos de partidos registrados para el Grupo <?php echo $g; ?>.
                                                 </td>
                                             </tr>
@@ -135,14 +150,15 @@ try {
                                                     <td style="text-align: center;" class="hide-mobile">
                                                         <?php echo $row['GC']; ?>
                                                     </td>
-                                                    <td style="text-align: center; font-weight: 600; color: <?php echo ($row['Dif'] >= 0) ? '#16a34a' : '#dc2626'; ?>;">
+                                                    <td
+                                                        style="text-align: center; font-weight: 600; color: <?php echo ($row['Dif'] >= 0) ? '#16a34a' : '#dc2626'; ?>;">
                                                         <?php echo ($row['Dif'] > 0) ? '+' . $row['Dif'] : $row['Dif']; ?>
                                                     </td>
                                                     <td style="text-align: center; font-weight: 800; background: var(--surface);">
                                                         <?php echo $row['Pts']; ?>
                                                     </td>
                                                 </tr>
-                                            <?php endforeach; 
+                                            <?php endforeach;
                                         endif; ?>
                                     </tbody>
                                 </table>
@@ -150,8 +166,10 @@ try {
                         </div>
                     <?php endforeach; ?>
 
-                    <div style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-main); text-align: left; background: var(--surface); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
-                        <p style="font-weight: 600; margin-bottom: 0; text-align: center;">El primero de cada grupo avanza a las semifinales. El campeón obtiene clasificación a la Copa Libertadores como Chile 3.</p>
+                    <div
+                        style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-main); text-align: left; background: var(--surface); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <p style="font-weight: 600; margin-bottom: 0; text-align: center;">El primero de cada grupo avanza a
+                            las semifinales. El campeón obtiene clasificación a la Copa Libertadores como Chile 3.</p>
                     </div>
 
                 <?php endif; ?>
@@ -198,16 +216,16 @@ try {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const tables = document.querySelectorAll('.ranking-table');
-        
+
         tables.forEach(table => {
             const headers = table.querySelectorAll('th.sortable');
             const tbody = table.querySelector('tbody');
-            if(!tbody) return;
+            if (!tbody) return;
 
             headers.forEach(header => {
                 header.addEventListener('click', () => {
                     // Check if it's the empty row
-                    if(tbody.querySelector('td[colspan]')) return;
+                    if (tbody.querySelector('td[colspan]')) return;
 
                     const colIndex = parseInt(header.getAttribute('data-col'));
                     const isAsc = header.classList.contains('asc');
