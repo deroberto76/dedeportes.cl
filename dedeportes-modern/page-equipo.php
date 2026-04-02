@@ -77,8 +77,15 @@ try {
         $visitor_goals = $is_away ? (int) $m['goles_equipo'] : (int) $m['goles_rival'];
 
         // Determinar qué goles hizo nuestro equipo actual
-        $team_goals = $is_away ? $visitor_goals : $local_goals;
-        $opponent_goals = $is_away ? $local_goals : $visitor_goals;
+        $is_focal_equipo = (stripos(trim($m['equipo']), $keyword) !== false || stripos(trim($m['equipo']), $team_name) !== false);
+
+        if ($is_focal_equipo) {
+            $team_goals = (int) $m['goles_equipo'];
+            $opponent_goals = (int) $m['goles_rival'];
+        } else {
+            $team_goals = (int) $m['goles_rival'];
+            $opponent_goals = (int) $m['goles_equipo'];
+        }
 
         $pts = 0;
         $r = '';
@@ -160,7 +167,8 @@ $team_rendimiento = $global_stats['PJ'] > 0 ? round(($global_stats['Pts'] / ($gl
             <div>
                 <h1
                     style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin: 0; line-height: 1.2; padding-bottom: 0.25rem;">
-                    <?php echo esc_html($team_name); ?></h1>
+                    <?php echo esc_html($team_name); ?>
+                </h1>
                 <?php if (function_exists('dedeportes_get_team_abbreviation')): ?>
                     <span
                         style="font-size: 1rem; color: #64748b; font-weight: 600; text-transform: uppercase;"><?php echo esc_html(dedeportes_get_team_abbreviation($team_name)); ?></span>
@@ -244,7 +252,8 @@ $team_rendimiento = $global_stats['PJ'] > 0 ? round(($global_stats['Pts'] / ($gl
                             ?>
                             <tr style="border-bottom: 1px solid #e2e8f0;">
                                 <td style="padding: 1.25rem 1.5rem; font-weight: 600; color: #0f172a;">
-                                    <?php echo esc_html($torneo); ?></td>
+                                    <?php echo esc_html($torneo); ?>
+                                </td>
                                 <td style="padding: 1.25rem 1rem; text-align: center;"><?php echo $stats['PJ']; ?></td>
                                 <td style="padding: 1.25rem 1rem; text-align: center;"><?php echo $stats['G']; ?></td>
                                 <td style="padding: 1.25rem 1rem; text-align: center;"><?php echo $stats['E']; ?></td>
@@ -252,9 +261,11 @@ $team_rendimiento = $global_stats['PJ'] > 0 ? round(($global_stats['Pts'] / ($gl
                                 <td style="padding: 1.25rem 1rem; text-align: center;"><?php echo $stats['GF']; ?></td>
                                 <td style="padding: 1.25rem 1rem; text-align: center;"><?php echo $stats['GC']; ?></td>
                                 <td style="padding: 1.25rem 1rem; text-align: center; font-weight: 800; color: #0f172a;">
-                                    <?php echo $stats['Pts']; ?></td>
+                                    <?php echo $stats['Pts']; ?>
+                                </td>
                                 <td style="padding: 1.25rem 1rem; text-align: center; font-weight: 600; color: #475569;">
-                                    <?php echo $rend_t; ?>%</td>
+                                    <?php echo $rend_t; ?>%
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         <?php if (empty($tournament_stats)): ?>
@@ -302,9 +313,11 @@ $team_rendimiento = $global_stats['PJ'] > 0 ? round(($global_stats['Pts'] / ($gl
                             <tr style="border-bottom: 1px solid #e2e8f0;">
                                 <td
                                     style="padding: 1.25rem 1.5rem; color: #475569; font-size: 0.95rem; white-space: nowrap;">
-                                    <?php echo esc_html($match['fecha']); ?></td>
+                                    <?php echo esc_html($match['fecha']); ?>
+                                </td>
                                 <td style="padding: 1.25rem 1rem; color: #475569; font-size: 0.95rem;">
-                                    <?php echo esc_html($match['torneo']); ?></td>
+                                    <?php echo esc_html($match['torneo']); ?>
+                                </td>
 
                                 <!-- Local -->
                                 <td style="padding: 1.25rem 1rem; text-align: right;">
