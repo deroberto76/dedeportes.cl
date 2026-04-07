@@ -76,6 +76,8 @@ get_header();
                             'torneo' => $m['torneo'],
                             'local' => $is_away ? $m['rival'] : $m['equipo'],
                             'visitante' => $is_away ? $m['equipo'] : $m['rival'],
+                            'pais_local' => $is_away ? (isset($m['pais_rival']) ? $m['pais_rival'] : '') : (isset($m['pais_equipo']) ? $m['pais_equipo'] : ''),
+                            'pais_visitante' => $is_away ? (isset($m['pais_equipo']) ? $m['pais_equipo'] : '') : (isset($m['pais_rival']) ? $m['pais_rival'] : ''),
                             'goles_local' => $is_away ? $m['goles_rival'] : $m['goles_equipo'],
                             'goles_visitante' => $is_away ? $m['goles_equipo'] : $m['goles_rival'],
                             'is_local_row' => $is_local,
@@ -122,6 +124,12 @@ get_header();
                         }
                     }
 
+                    usort($matches_today, function ($a, $b) {
+                        $hora_a = !empty($a['hora']) ? $a['hora'] : '23:59:59';
+                        $hora_b = !empty($b['hora']) ? $b['hora'] : '23:59:59';
+                        return strcmp($hora_a, $hora_b);
+                    });
+
                     // Limitar los finalizados a los 20 más recientes
                     $matches_completed = array_slice($matches_completed, 0, 20);
                 } catch (PDOException $e) {
@@ -135,7 +143,21 @@ get_header();
                         <div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
                             <div class="widget-content">
                                 <div class="match-cards-list">
-                                    <?php foreach ($matches_today as $match):
+                                    <?php
+                                    $country_codes = [
+                                        'chile' => 'CHI',
+                                        'argentina' => 'ARG',
+                                        'brasil' => 'BRA',
+                                        'colombia' => 'COL',
+                                        'ecuador' => 'ECU',
+                                        'bolivia' => 'BOL',
+                                        'perú' => 'PER',
+                                        'peru' => 'PER',
+                                        'paraguay' => 'PAR',
+                                        'uruguay' => 'URU',
+                                        'venezuela' => 'VEN'
+                                    ];
+                                    foreach ($matches_today as $match):
                                         // Normalizar fecha para strtotime
                                         $fecha_db = str_replace('/', '-', $match['fecha']);
                                         $timestamp = strtotime($fecha_db);
@@ -157,6 +179,14 @@ get_header();
                                                             class="team-name-full"><?php echo esc_html($match['local']); ?></span>
                                                         <span
                                                             class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
+                                                        <?php
+                                                        $p_l = strtolower(trim($match['pais_local']));
+                                                        if (!empty($p_l)):
+                                                            $p_code = isset($country_codes[$p_l]) ? $country_codes[$p_l] : substr(strtoupper($p_l), 0, 3);
+                                                            ?>
+                                                            <span class="team-country"
+                                                                style="display:block; font-size:0.75rem; color:var(--text-muted); line-height:1; font-weight:700; margin-top:2px;"><?php echo esc_html($p_code); ?></span>
+                                                        <?php endif; ?>
                                                     </span>
                                                 </div>
                                                 <div class="match-card-team visitor">
@@ -167,6 +197,14 @@ get_header();
                                                             class="team-name-full"><?php echo esc_html($match['visitante']); ?></span>
                                                         <span
                                                             class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
+                                                        <?php
+                                                        $p_v = strtolower(trim($match['pais_visitante']));
+                                                        if (!empty($p_v)):
+                                                            $p_code_v = isset($country_codes[$p_v]) ? $country_codes[$p_v] : substr(strtoupper($p_v), 0, 3);
+                                                            ?>
+                                                            <span class="team-country"
+                                                                style="display:block; font-size:0.75rem; color:var(--text-muted); line-height:1; font-weight:700; margin-top:2px;"><?php echo esc_html($p_code_v); ?></span>
+                                                        <?php endif; ?>
                                                     </span>
                                                 </div>
                                             </div>
@@ -285,7 +323,8 @@ get_header();
                                             <td style="font-weight: 600;"><?php echo esc_html($row['Equipo']); ?></td>
                                             <td style="text-align: center; opacity: 0.7;"><?php echo $row['PJ']; ?></td>
                                             <td style="text-align: right; font-weight: 700; color: var(--primary);">
-                                                <?php echo $row['Rendimiento']; ?>%</td>
+                                                <?php echo $row['Rendimiento']; ?>%
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
