@@ -112,173 +112,128 @@ get_header();
                     // Usar current_time para obtener la fecha de hoy según la zona horaria ajustada en WordPress
                     $today_str = current_time('Y-m-d');
 
-                    foreach ($matches as $match) {
-                        // Extraer solo Y-m-d de la DB por si viene con horas (ej. 2026-03-31 15:30:00)
-                        $match_date_str = substr($match['fecha'], 0, 10);
+                    $today_grouped = [];
+                    $completed_grouped = [];
 
-                        // Si el partido es hoy, lo agregamos a 'Partidos de hoy' sin importar si ya terminó o no.
+                    foreach ($matches as $match) {
+                        $match_date_str = substr($match['fecha'], 0, 10);
+                        $torneo = empty($match['torneo']) ? 'Otros' : $match['torneo'];
+
+                        // Formatear la fecha para Todos los partidos
+                        $fecha_db = str_replace('/', '-', $match['fecha']);
+                        $timestamp = strtotime($fecha_db);
+                        $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
+
+                        // Si el partido es hoy, lo guardamos agrupado por torneo
                         if ($match_date_str === $today_str) {
-                            $matches_today[] = $match;
+                            if (!isset($today_grouped[$torneo])) {
+                                $today_grouped[$torneo] = [];
+                            }
+                            $today_grouped[$torneo][] = $match;
                         } elseif ($match['estado'] === 'finalizado') {
-                            $matches_completed[] = $match;
+                            if (!isset($completed_grouped[$torneo])) {
+                                $completed_grouped[$torneo] = [];
+                            }
+                            if (!isset($completed_grouped[$torneo][$date_formatted])) {
+                                $completed_grouped[$torneo][$date_formatted] = [];
+                            }
+                            if (count($completed_grouped[$torneo][$date_formatted]) < 15) {
+                                $completed_grouped[$torneo][$date_formatted][] = $match;
+                            }
                         }
                     }
 
-                    usort($matches_today, function ($a, $b) {
-                        $hora_a = !empty($a['hora']) ? $a['hora'] : '23:59:59';
-                        $hora_b = !empty($b['hora']) ? $b['hora'] : '23:59:59';
-                        return strcmp($hora_a, $hora_b);
-                    });
+                    // Ordenar Partidos de hoy por hora dentro de su grupo
+                    foreach ($today_grouped as $t => &$t_matches) {
+                        usort($t_matches, function ($a, $b) {
+                            $hora_a = !empty($a['hora']) ? $a['hora'] : '23:59:59';
+                            $hora_b = !empty($b['hora']) ? $b['hora'] : '23:59:59';
+                            return strcmp($hora_a, $hora_b);
+                        });
+                    }
 
-                    // Limitar los finalizados a los 20 más recientes
-                    $matches_completed = array_slice($matches_completed, 0, 20);
+                    $country_codes = [
+                        'chile' => 'CHI',
+                        'argentina' => 'ARG',
+                        'brasil' => 'BRA',
+                        'colombia' => 'COL',
+                        'ecuador' => 'ECU',
+                        'bolivia' => 'BOL',
+                        'perú' => 'PER',
+                        'peru' => 'PER',
+                        'paraguay' => 'PAR',
+                        'uruguay' => 'URU',
+                        'venezuela' => 'VEN'
+                    ];
+
                 } catch (PDOException $e) {
-                    $matches_error = $e->getMessage();
                 }
                 ?>
 
-                <?php if (!empty($matches_today)): ?>
-                    <section class="latest-matches-section u-mb-4">
-                        <h2 class="section-category-title">Partidos de hoy</h2>
-                        <div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
-                            <div class="widget-content">
-                                <div class="match-cards-list">
-                                    <?php
-                                    $country_codes = [
-                                        'chile' => 'CHI',
-                                        'argentina' => 'ARG',
-                                        'brasil' => 'BRA',
-                                        'colombia' => 'COL',
-                                        'ecuador' => 'ECU',
-                                        'bolivia' => 'BOL',
-                                        'perú' => 'PER',
-                                        'peru' => 'PER',
-                                        'paraguay' => 'PAR',
-                                        'uruguay' => 'URU',
-                                        'venezuela' => 'VEN'
-                                    ];
-                                    foreach ($matches_today as $match):
-                                        // Normalizar fecha para strtotime
-                                        $fecha_db = str_replace('/', '-', $match['fecha']);
-                                        $timestamp = strtotime($fecha_db);
-                                        $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
-                                        $time_formatted = !empty($match['hora']) ? date('H:i', strtotime($match['hora'])) : $date_formatted;
+                <!-- Partidos de Hoy -->
+                <?php if (!empty($today_grouped)): ?>
+                    <section class="intl-matches-section">
+                        <h2 class="section-category-title">Partidos de Hoy</h2>
+                        <?php foreach ($today_grouped as $torneo => $torneo_matches): ?>
+                            <h3 class="intl-torneo-title"><?php echo esc_html($torneo); ?></h3>
+                            <div class="intl-list-container">
+                                <?php foreach ($torneo_matches as $match):
+                                    $time_formatted = !empty($match['hora']) ? date('H:i', strtotime($match['hora'])) : '';
+                                    $p_l = strtolower(trim($match['pais_local']));
+                                    $p_code_l = (!empty($p_l)) ? (isset($country_codes[$p_l]) ? $country_codes[$p_l] : substr(strtoupper($p_l), 0, 3)) : '';
+                                    $p_v = strtolower(trim($match['pais_visitante']));
+                                    $p_code_v = (!empty($p_v)) ? (isset($country_codes[$p_v]) ? $country_codes[$p_v] : substr(strtoupper($p_v), 0, 3)) : '';
+                                    ?>
+                                    <div class="intl-match-box">
+                                        <div class="intl-team-row">
+                                            <span><?php echo esc_html($match['local']); ?><?php if ($p_code_l): ?> <span
+                                                        class="intl-country">(<?php echo esc_html($p_code_l); ?>)</span><?php endif; ?></span>
+                                            <span class="intl-time"><?php echo esc_html($time_formatted); ?></span>
+                                        </div>
+                                        <div class="intl-team-row" style="margin-top: 2px;">
+                                            <span><?php echo esc_html($match['visitante']); ?><?php if ($p_code_v): ?> <span
+                                                        class="intl-country">(<?php echo esc_html($p_code_v); ?>)</span><?php endif; ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </section>
+                <?php endif; ?>
+
+                <!-- Todos los Partidos -->
+                <?php if (!empty($completed_grouped)): ?>
+                    <section class="intl-matches-section">
+                        <h2 class="section-category-title">Todos los partidos</h2>
+                        <?php foreach ($completed_grouped as $torneo => $dates): ?>
+                            <h3 class="intl-torneo-title"><?php echo esc_html($torneo); ?></h3>
+                            <?php foreach ($dates as $date => $date_matches): ?>
+                                <div class="intl-list-container" style="margin-bottom: 2rem;">
+                                    <div class="intl-date-header"><?php echo esc_html($date); ?></div>
+                                    <?php foreach ($date_matches as $match):
+                                        $p_l = strtolower(trim($match['pais_local']));
+                                        $p_code_l = (!empty($p_l)) ? (isset($country_codes[$p_l]) ? $country_codes[$p_l] : substr(strtoupper($p_l), 0, 3)) : '';
+                                        $p_v = strtolower(trim($match['pais_visitante']));
+                                        $p_code_v = (!empty($p_v)) ? (isset($country_codes[$p_v]) ? $country_codes[$p_v] : substr(strtoupper($p_v), 0, 3)) : '';
                                         ?>
-                                        <div class="match-card">
-                                            <div class="match-card-meta">
-                                                <div class="match-card-date"><?php echo esc_html($time_formatted); ?></div>
-                                                <div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?>
-                                                </div>
+                                        <div class="intl-match-box-completed">
+                                            <div class="intl-team-row">
+                                                <span><?php echo esc_html($match['local']); ?><?php if ($p_code_l): ?> <span
+                                                            class="intl-country">(<?php echo esc_html($p_code_l); ?>)</span><?php endif; ?></span>
+                                                <span class="intl-score"><?php echo esc_html($match['goles_local']); ?></span>
                                             </div>
-                                            <div class="match-card-teams">
-                                                <div class="match-card-team local">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['local']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['local']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
-                                                        <?php
-                                                        $p_l = strtolower(trim($match['pais_local']));
-                                                        if (!empty($p_l)):
-                                                            $p_code = isset($country_codes[$p_l]) ? $country_codes[$p_l] : substr(strtoupper($p_l), 0, 3);
-                                                            ?>
-                                                            <span class="team-country"
-                                                                style="display:block; font-size:0.75rem; color:var(--text-muted); line-height:1; font-weight:700; margin-top:2px;"><?php echo esc_html($p_code); ?></span>
-                                                        <?php endif; ?>
-                                                    </span>
-                                                </div>
-                                                <div class="match-card-team visitor">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['visitante']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
-                                                        <?php
-                                                        $p_v = strtolower(trim($match['pais_visitante']));
-                                                        if (!empty($p_v)):
-                                                            $p_code_v = isset($country_codes[$p_v]) ? $country_codes[$p_v] : substr(strtoupper($p_v), 0, 3);
-                                                            ?>
-                                                            <span class="team-country"
-                                                                style="display:block; font-size:0.75rem; color:var(--text-muted); line-height:1; font-weight:700; margin-top:2px;"><?php echo esc_html($p_code_v); ?></span>
-                                                        <?php endif; ?>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="match-card-result">
-                                                <div class="score-row">
-                                                    <?php echo ($match['goles_local'] !== '' && $match['goles_local'] !== null) ? esc_html($match['goles_local']) : '-'; ?>
-                                                </div>
-                                                <div class="score-row">
-                                                    <?php echo ($match['goles_visitante'] !== '' && $match['goles_visitante'] !== null) ? esc_html($match['goles_visitante']) : '-'; ?>
-                                                </div>
+                                            <div class="intl-team-row" style="margin-top: 2px;">
+                                                <span><?php echo esc_html($match['visitante']); ?><?php if ($p_code_v): ?> <span
+                                                            class="intl-country">(<?php echo esc_html($p_code_v); ?>)</span><?php endif; ?></span>
+                                                <span class="intl-score"><?php echo esc_html($match['goles_visitante']); ?></span>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
-                            </div>
-                        </div>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
                     </section>
                 <?php endif; ?>
-
-                <?php if (!empty($matches_completed)): ?>
-                    <section class="latest-matches-section u-mb-4">
-                        <h2 class="section-category-title">Todos los Partidos</h2>
-                        <div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
-                            <div class="widget-content">
-                                <div class="match-cards-list">
-                                    <?php foreach ($matches_completed as $match):
-                                        // Normalizar fecha para strtotime
-                                        $fecha_db = str_replace('/', '-', $match['fecha']);
-                                        $timestamp = strtotime($fecha_db);
-                                        $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
-                                        ?>
-                                        <div class="match-card">
-                                            <div class="match-card-meta">
-                                                <div class="match-card-date"><?php echo $date_formatted; ?></div>
-                                                <div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?>
-                                                </div>
-                                            </div>
-                                            <div class="match-card-teams">
-                                                <div class="match-card-team local">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['local']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['local']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
-                                                    </span>
-                                                </div>
-                                                <div class="match-card-team visitor">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['visitante']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="match-card-result">
-                                                <div class="score-row"><?php echo $match['goles_local']; ?></div>
-                                                <div class="score-row"><?php echo $match['goles_visitante']; ?></div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                <?php endif; ?>
-
-                <?php
-                // Secciones de categorías eliminadas por petición del usuario
-                ?>
             </div>
 
             <!-- SIDEBAR COLUMN -->
