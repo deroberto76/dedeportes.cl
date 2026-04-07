@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.97');
+	define('DEDEPORTES_VERSION', '1.98');
 }
 
 /**
@@ -410,3 +410,161 @@ function dedeportes_customize_register($wp_customize)
 	)));
 }
 add_action('customize_register', 'dedeportes_customize_register');
+
+/**
+ * Shortcode: Top 10 Partidos con más goles
+ * Uso: [top_partidos_goles]
+ */
+function dedeportes_top_partidos_goles_shortcode($atts)
+{
+	// Configuración base de datos (según script check_db.php)
+	$host = 'localhost';
+	$dbname = 'pjdmenag_futbol';
+	$user = 'pjdmenag_futbol';
+	$pass = 'n[[cY^7gvog~';
+
+	try {
+		$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	} catch (PDOException $e) {
+		return "<!-- Error de conexión a la BD de fútbol: " . esc_html($e->getMessage()) . " -->";
+	}
+
+	$sql = "SELECT *, (goles_equipo + goles_rival) AS total_goles FROM partidos WHERE condicion = 'Local' AND estado = 'finalizado' AND equipo IN ('Colo Colo', 'Deportes Limache', 'Universidad Católica', 'Universidad de Chile', 'Ñublense', 'O''Higgins', 'Huachipato', 'Coquimbo Unido', 'Universidad de Concepción', 'Audax Italiano', 'Unión La Calera', 'Deportes La Serena', 'Everton', 'Palestino', 'Cobresal', 'Deportes Concepción') ORDER BY total_goles DESC LIMIT 10";
+
+	try {
+		$stmt = $pdo->query($sql);
+		$matches = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	} catch (PDOException $e) {
+		return "<!-- Error en la consulta SQL: " . esc_html($e->getMessage()) . " -->";
+	}
+
+	if (empty($matches)) {
+		return "<p>No hay partidos para mostrar en esta sección.</p>";
+	}
+
+	ob_start();
+	?>
+	<style>
+		.top-goles-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 1.2rem;
+			margin: 2rem 0;
+		}
+
+		.top-goles-card {
+			background-color: #ffffff;
+			border-left: 5px solid #0056b3;
+			/* Borde azul a la izquierda */
+			border-radius: 4px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+			/* Sombra suave para contenedor blanco */
+			padding: 1.2rem 1.5rem;
+			font-family: 'Inter', sans-serif;
+		}
+
+		.top-goles-header {
+			font-size: 0.75rem;
+			color: #64748b;
+			text-transform: uppercase;
+			font-weight: 600;
+			letter-spacing: 0.05em;
+			margin-bottom: 0.8rem;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.top-goles-body {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 1rem;
+		}
+
+		.top-goles-team {
+			flex: 1;
+			font-weight: 700;
+			font-size: 1.1rem;
+			color: #0f172a;
+		}
+
+		.top-goles-team.local {
+			text-align: right;
+			padding-right: 1rem;
+		}
+
+		.top-goles-team.visita {
+			text-align: left;
+			padding-left: 1rem;
+		}
+
+		.top-goles-score {
+			background-color: #0f172a;
+			/* Resultado resaltado en negro */
+			color: #ffffff;
+			font-size: 1.25rem;
+			font-weight: 800;
+			padding: 0.4rem 1rem;
+			border-radius: 4px;
+			min-width: 70px;
+			text-align: center;
+			letter-spacing: 0.1em;
+		}
+
+		.top-goles-footer {
+			text-align: center;
+		}
+
+		.top-goles-tag {
+			background-color: #e2e8f0;
+			color: #334155;
+			font-size: 0.75rem;
+			font-weight: 700;
+			padding: 0.4rem 0.8rem;
+			border-radius: 20px;
+			/* Etiqueta redondeada abajo */
+			display: inline-block;
+		}
+
+		@media (max-width: 600px) {
+			.top-goles-team {
+				font-size: 0.95rem;
+			}
+
+			.top-goles-score {
+				font-size: 1.1rem;
+				padding: 0.3rem 0.8rem;
+				min-width: 60px;
+			}
+		}
+	</style>
+	<div class="top-goles-wrapper">
+		<?php foreach ($matches as $match):
+			$fecha = !empty($match['fecha']) ? date('d/m/Y', strtotime($match['fecha'])) : '';
+			$torneo = !empty($match['torneo']) ? $match['torneo'] : 'Torneo';
+			$goles_local = isset($match['goles_equipo']) ? $match['goles_equipo'] : 0;
+			$goles_visita = isset($match['goles_rival']) ? $match['goles_rival'] : 0;
+			$total_goles = isset($match['total_goles']) ? $match['total_goles'] : ($goles_local + $goles_visita);
+			?>
+			<div class="top-goles-card">
+				<div class="top-goles-header">
+					<span class="top-goles-tournament"><?php echo esc_html($torneo); ?></span>
+					<span class="top-goles-date"><?php echo esc_html($fecha); ?></span>
+				</div>
+				<div class="top-goles-body">
+					<div class="top-goles-team local"><?php echo esc_html($match['equipo']); ?></div>
+					<div class="top-goles-score"><?php echo esc_html($goles_local . ' - ' . $goles_visita); ?></div>
+					<div class="top-goles-team visita"><?php echo esc_html($match['rival']); ?></div>
+				</div>
+				<div class="top-goles-footer">
+					<span class="top-goles-tag"><?php echo esc_html($total_goles); ?> GOLES EN TOTAL</span>
+				</div>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	<?php
+	$output = ob_get_clean();
+	return $output;
+}
+add_shortcode('top_partidos_goles', 'dedeportes_top_partidos_goles_shortcode');
