@@ -207,44 +207,11 @@ get_header();
                     .intl-match-box-completed {
                         border-bottom: 1px solid #000;
                         padding: 0.4rem 0.6rem;
-                    }
-
-                    .intl-match-box:last-child,
-                    .intl-match-box-completed:last-child {
-                        border-bottom: none;
-                    }
-
-                    .intl-team-row {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        font-size: 0.9rem;
-                        line-height: 1.3;
-                        color: #000;
-                    }
-
-                    .intl-country {
-                        color: var(--primary);
-                        font-size: 0.8rem;
-                        font-weight: normal;
-                        text-decoration: underline;
-                        margin-left: 2px;
-                    }
-
-                    .intl-time,
-                    .intl-score {
-                        font-weight: 400;
-                        color: #000;
-                    }
-                </style>
-
-                <!-- Partidos de Hoy -->
-                <?php if (!empty($today_grouped)): ?>
-                    <section class="intl-matches-section">
-                        <h2 class="section-category-title">Partidos de Hoy</h2>
-                        <?php foreach ($today_grouped as $torneo => $torneo_matches): ?>
-                            <h3 class="intl-torneo-title"><?php echo esc_html($torneo); ?></h3>
-                            <div class="intl-list-container">
+                        < !-- Partidos de Hoy -->
+                        <?php if (!empty($today_grouped)): ?>
+                            <section class="intl-matches-section u-mb-4"><h2 class="section-category-title">Partidos de Hoy</h2>
+                            <?php foreach ($today_grouped as $torneo => $torneo_matches): ?>
+                                <h3 class="intl-torneo-title" style="font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem 0; color: var(--primary);"><?php echo esc_html($torneo); ?></h3><div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 1.5rem;"><div class="widget-content"><div class="match-cards-list">
                                 <?php foreach ($torneo_matches as $match):
                                     $time_formatted = !empty($match['hora']) ? date('H:i', strtotime($match['hora'])) : '';
                                     $p_l = strtolower(trim($match['pais_local']));
@@ -252,68 +219,40 @@ get_header();
                                     $p_v = strtolower(trim($match['pais_visitante']));
                                     $p_code_v = (!empty($p_v)) ? (isset($country_codes[$p_v]) ? $country_codes[$p_v] : substr(strtoupper($p_v), 0, 3)) : '';
                                     ?>
-                                    <div class="intl-match-box">
-                                        <div class="intl-team-row">
-                                            <span><?php echo esc_html($match['local']); ?><?php if ($p_code_l): ?> <span
-                                                        class="intl-country">(<?php echo esc_html($p_code_l); ?>)</span><?php endif; ?></span>
-                                            <span class="intl-time"><?php echo esc_html($time_formatted); ?></span>
-                                        </div>
-                                        <div class="intl-team-row" style="margin-top: 2px;">
-                                            <span><?php echo esc_html($match['visitante']); ?><?php if ($p_code_v): ?> <span
-                                                        class="intl-country">(<?php echo esc_html($p_code_v); ?>)</span><?php endif; ?></span>
-                                        </div>
-                                    </div>
+                                    <div class="match-card"><div class="match-card-meta"><div class="match-card-date"><?php echo esc_html($time_formatted); ?></div><div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?></div></div><div class="match-card-teams"><div class="match-card-team local"><img src="<?php echo dedeportes_get_team_shield($match['local']); ?>" class="team-shield" alt="" onerror="this.style.display='none'"><span class="team-name"><span class="team-name-full"><?php echo esc_html($match['local']); ?><?php if ($p_code_l): ?> <small style="opacity: 0.7;">(<?php echo esc_html($p_code_l); ?>)</small><?php endif; ?></span><span class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?><?php if ($p_code_l): ?> (<?php echo esc_html($p_code_l); ?>)<?php endif; ?></span></span></div><div class="match-card-team visitor"><img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>" class="team-shield" alt="" onerror="this.style.display='none'"><span class="team-name"><span class="team-name-full"><?php echo esc_html($match['visitante']); ?><?php if ($p_code_v): ?> <small style="opacity: 0.7;">(<?php echo esc_html($p_code_v); ?>)</small><?php endif; ?></span><span class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?><?php if ($p_code_v): ?> (<?php echo esc_html($p_code_v); ?>)<?php endif; ?></span></span></div></div><div class="match-card-result"><div class="score-row"><?php echo ($match['goles_local'] !== '' && $match['goles_local'] !== null) ? esc_html($match['goles_local']) : '-'; ?></div><div class="score-row"><?php echo ($match['goles_visitante'] !== '' && $match['goles_visitante'] !== null) ? esc_html($match['goles_visitante']) : '-'; ?></div></div></div>
                                 <?php endforeach; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </section>
-                <?php endif; ?>
+                                </div></div></div>
+                            <?php endforeach; ?>
+                            </section>
+                        <?php endif; ?>
 
-                <!-- Todos los Partidos -->
-                <?php if (!empty($completed_grouped)): ?>
-                    <section class="intl-matches-section">
-                        <h2 class="section-category-title">Todos los partidos</h2>
-                        <?php foreach ($completed_grouped as $torneo => $dates): ?>
-                            <h3 class="intl-torneo-title"><?php echo esc_html($torneo); ?></h3>
-                            <?php foreach ($dates as $date => $date_matches): ?>
-                                <div class="intl-list-container" style="margin-bottom: 2rem;">
-                                    <div class="intl-date-header"><?php echo esc_html($date); ?></div>
+                        < !-- Todos los Partidos -->
+                        <?php if (!empty($completed_grouped)): ?>
+                            <section class="intl-matches-section u-mb-4"><h2 class="section-category-title">Todos los partidos</h2>
+                            <?php foreach ($completed_grouped as $torneo => $dates): ?>
+                                <h3 class="intl-torneo-title" style="font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem 0; color: var(--primary);"><?php echo esc_html($torneo); ?></h3>
+                                <?php foreach ($dates as $date => $date_matches): ?>
+                                    <h4 class="intl-date-subtitle" style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; margin: 1rem 0 0.5rem 0.5rem; opacity: 0.8;"><?php echo esc_html($date); ?></h4><div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 1.5rem;"><div class="widget-content"><div class="match-cards-list">
                                     <?php foreach ($date_matches as $match):
                                         $p_l = strtolower(trim($match['pais_local']));
                                         $p_code_l = (!empty($p_l)) ? (isset($country_codes[$p_l]) ? $country_codes[$p_l] : substr(strtoupper($p_l), 0, 3)) : '';
                                         $p_v = strtolower(trim($match['pais_visitante']));
                                         $p_code_v = (!empty($p_v)) ? (isset($country_codes[$p_v]) ? $country_codes[$p_v] : substr(strtoupper($p_v), 0, 3)) : '';
                                         ?>
-                                        <div class="intl-match-box-completed">
-                                            <div class="intl-team-row">
-                                                <span><?php echo esc_html($match['local']); ?><?php if ($p_code_l): ?> <span
-                                                            class="intl-country">(<?php echo esc_html($p_code_l); ?>)</span><?php endif; ?></span>
-                                                <span class="intl-score"><?php echo esc_html($match['goles_local']); ?></span>
-                                            </div>
-                                            <div class="intl-team-row" style="margin-top: 2px;">
-                                                <span><?php echo esc_html($match['visitante']); ?><?php if ($p_code_v): ?> <span
-                                                            class="intl-country">(<?php echo esc_html($p_code_v); ?>)</span><?php endif; ?></span>
-                                                <span class="intl-score"><?php echo esc_html($match['goles_visitante']); ?></span>
-                                            </div>
-                                        </div>
+                                        <div class="match-card"><div class="match-card-meta"><div class="match-card-date"><?php echo esc_html($date); ?></div><div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?></div></div><div class="match-card-teams"><div class="match-card-team local"><img src="<?php echo dedeportes_get_team_shield($match['local']); ?>" class="team-shield" alt="" onerror="this.style.display='none'"><span class="team-name"><span class="team-name-full"><?php echo esc_html($match['local']); ?><?php if ($p_code_l): ?> <small style="opacity: 0.7;">(<?php echo esc_html($p_code_l); ?>)</small><?php endif; ?></span><span class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?><?php if ($p_code_l): ?> (<?php echo esc_html($p_code_l); ?>)<?php endif; ?></span></span></div><div class="match-card-team visitor"><img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>" class="team-shield" alt="" onerror="this.style.display='none'"><span class="team-name"><span class="team-name-full"><?php echo esc_html($match['visitante']); ?><?php if ($p_code_v): ?> <small style="opacity: 0.7;">(<?php echo esc_html($p_code_v); ?>)</small><?php endif; ?></span><span class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?><?php if ($p_code_v): ?> (<?php echo esc_html($p_code_v); ?>)<?php endif; ?></span></span></div></div><div class="match-card-result"><div class="score-row"><?php echo esc_html($match['goles_local']); ?></div><div class="score-row"><?php echo esc_html($match['goles_visitante']); ?></div></div></div>
                                     <?php endforeach; ?>
-                                </div>
+                                    </div></div></div>
+                                <?php endforeach; ?>
                             <?php endforeach; ?>
-                        <?php endforeach; ?>
-                    </section>
-                <?php endif; ?>
-            </div>
-
-            <!-- SIDEBAR COLUMN -->
-            <aside class="layout-sidebar">
-
-                <!-- Mejores Rendimientos Internacionales -->
-                <?php
-                $standings = [];
-                try {
-                    $pdo_perf = new PDO("mysql:host=localhost;dbname=pjdmenag_futbol;charset=utf8", "pjdmenag_futbol", "n[[cY^7gvog~");
-                    $pdo_perf->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $sql_perf = "SELECT 
+                            </section>
+                        <?php endif; ?>
+                        </div>< !-- SIDEBAR COLUMN --><aside class="layout-sidebar">< !-- Mejores Rendimientos Internacionales -->
+                        <?php
+                        $standings = [];
+                        try {
+                            $pdo_perf = new PDO("mysql:host=localhost;dbname=pjdmenag_futbol;charset=utf8", "pjdmenag_futbol", "n[[cY^7gvog~");
+                            $pdo_perf->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                            $sql_perf = "SELECT 
                                 equipo AS Equipo,
                                 COUNT(*) AS PJ,
                                 SUM(CASE WHEN goles_equipo > goles_rival THEN 3 WHEN goles_equipo = goles_rival THEN 1 ELSE 0 END) AS Pts,
@@ -323,78 +262,38 @@ get_header();
                             GROUP BY equipo
                             ORDER BY Rendimiento DESC, Pts DESC
                             LIMIT 10";
-                    $stmt_perf = $pdo_perf->query($sql_perf);
-                    $standings = $stmt_perf->fetchAll(PDO::FETCH_ASSOC);
-                } catch (PDOException $e) {
-                }
-                ?>
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Mejores Rendimientos</h3>
-                    <div class="widget-content">
+                            $stmt_perf = $pdo_perf->query($sql_perf);
+                            $standings = $stmt_perf->fetchAll(PDO::FETCH_ASSOC);
+                        } catch (PDOException $e) {
+                        }
+                        ?>
+                        <div class="sidebar-widget"><h3 class="widget-title">Mejores Rendimientos</h3><div class="widget-content">
                         <?php if (!empty($standings)): ?>
-                            <table class="ranking-table" style="width: 100%; font-size: 0.9rem;">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left;">Equipo</th>
-                                        <th style="text-align: center;">PJ</th>
-                                        <th style="text-align: right;">% Rend</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($standings as $row): ?>
-                                        <tr>
-                                            <td style="font-weight: 600;"><?php echo esc_html($row['Equipo']); ?></td>
-                                            <td style="text-align: center; opacity: 0.7;"><?php echo $row['PJ']; ?></td>
-                                            <td style="text-align: right; font-weight: 700; color: var(--primary);">
-                                                <?php echo $row['Rendimiento']; ?>%
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                            <p style="font-size: 0.7rem; margin-top: 1rem; opacity: 0.6; text-align: center;">
-                                * Calculado sobre total de partidos jugados.
-                            </p>
+                            <table class="ranking-table" style="width: 100%; font-size: 0.9rem;"><thead><tr><th style="text-align: left;">Equipo</th><th style="text-align: center;">PJ</th><th style="text-align: right;">% Rend</th></tr></thead><tbody>
+                            <?php foreach ($standings as $row): ?>
+                                <tr><td style="font-weight: 600;"><?php echo esc_html($row['Equipo']); ?></td><td style="text-align: center; opacity: 0.7;"><?php echo $row['PJ']; ?></td><td style="text-align: right; font-weight: 700; color: var(--primary);">
+                                <?php echo $row['Rendimiento']; ?>
+                                % </td></tr>
+                            <?php endforeach; ?>
+                            </tbody></table><p style="font-size: 0.7rem; margin-top: 1rem; opacity: 0.6; text-align: center;">* Calculado sobre total de partidos jugados. </p>
                         <?php else: ?>
                             <p class="text-muted">Sin datos.</p>
                         <?php endif; ?>
-                    </div>
-                </div>
-
-
-                <!-- Widget: Fútbol -->
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Fútbol</h3>
-                    <div class="widget-content">
-                        <?php
-                        $query_futbol = new WP_Query(array('category_name' => 'futbol', 'posts_per_page' => 4));
-                        if ($query_futbol->have_posts()):
-                            while ($query_futbol->have_posts()):
-                                $query_futbol->the_post();
-                                ?>
-                                <div class="mini-post">
-                                    <a href="<?php the_permalink(); ?>" class="mini-post-link">
-                                        <span class="mini-post-title"><?php the_title(); ?></span>
-                                        <span class="mini-post-date"><?php echo get_the_date('d M'); ?></span>
-                                    </a>
-                                </div>
-                                <?php
-                            endwhile;
-                            wp_reset_postdata();
-                        else:
-                            echo '<p class="text-muted">Sin noticias recientes.</p>';
-                        endif;
-                        ?>
-                    </div>
-                </div>
-
-
-
-            </aside>
-
-        </div> <!-- .layout-grid -->
-    </div>
-</main><!-- #main -->
-
-<?php
-get_footer();
+                        </div></div>< !-- Widget: Fútbol --> <div class="sidebar-widget" > <h3 class="widget-title" >Fútbol</h3> <div class="widget-content" >
+                            <?php
+                            $query_futbol = new WP_Query(array('category_name' => 'futbol', 'posts_per_page' => 4));
+                            if ($query_futbol->have_posts()):
+                                while ($query_futbol->have_posts()):
+                                    $query_futbol->the_post();
+                                    ?>
+                                    <div class="mini-post" > <a href="<?php the_permalink(); ?>" class="mini-post-link" > <span class="mini-post-title" ><?php the_title(); ?></span> <span class="mini-post-date" ><?php echo get_the_date('d M'); ?></span> </a> </div>
+                                    <?php
+                                endwhile;
+                                wp_reset_postdata();
+                            else:
+                                echo '<p class="text-muted">Sin noticias recientes.</p>';
+                            endif;
+                            ?>
+                            </div> </div> </aside> </div> < !-- .layout-grid --> </div> </main>< !-- #main -->
+                            <?php
+                            get_footer();
