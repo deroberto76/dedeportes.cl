@@ -170,6 +170,74 @@ get_header();
                 }
                 ?>
 
+                <style>
+                    /* Bypass WP Cache */
+                    .intl-matches-section {
+                        margin-bottom: 2rem;
+                    }
+
+                    .intl-matches-section h2.section-category-title {
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                        margin-bottom: 0.5rem;
+                        color: #000;
+                    }
+
+                    .intl-torneo-title {
+                        font-size: 1.05rem;
+                        font-weight: 400;
+                        margin: 1.5rem 0 0.5rem 0;
+                        color: #000;
+                    }
+
+                    .intl-list-container {
+                        border: 1px solid #000;
+                        background: #fff;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .intl-date-header {
+                        border-bottom: 1px solid #000;
+                        padding: 0.2rem 0.4rem;
+                        font-size: 0.9rem;
+                        color: #000;
+                    }
+
+                    .intl-match-box,
+                    .intl-match-box-completed {
+                        border-bottom: 1px solid #000;
+                        padding: 0.4rem 0.6rem;
+                    }
+
+                    .intl-match-box:last-child,
+                    .intl-match-box-completed:last-child {
+                        border-bottom: none;
+                    }
+
+                    .intl-team-row {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        font-size: 0.9rem;
+                        line-height: 1.3;
+                        color: #000;
+                    }
+
+                    .intl-country {
+                        color: var(--primary);
+                        font-size: 0.8rem;
+                        font-weight: normal;
+                        text-decoration: underline;
+                        margin-left: 2px;
+                    }
+
+                    .intl-time,
+                    .intl-score {
+                        font-weight: 400;
+                        color: #000;
+                    }
+                </style>
+
                 <!-- Partidos de Hoy -->
                 <?php if (!empty($today_grouped)): ?>
                     <section class="intl-matches-section">
