@@ -1,6 +1,6 @@
 <?php
 /**
- * The main template file
+ * Template Name: Fútbol Internacional
  *
  * @package Dedeportes_Modern
  */
@@ -15,6 +15,9 @@ get_header();
 
             <!-- MAIN CONTENT COLUMN -->
             <div class="layout-main">
+                <header class="page-header" style="margin-bottom: 2rem;">
+                    <h1 class="page-title" style="font-size: 2rem; font-weight: 700;">Fútbol Internacional</h1>
+                </header>
                 <?php
                 // --- SECCIÓN: ÚLTIMOS PARTIDOS (Desde Base de Datos) ---
                 $host = 'localhost';
@@ -24,8 +27,8 @@ get_header();
 
                 try {
                     $pdo_matches = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-                    // Buscamos una cantidad mayor de registros.
-                    $sql_list = "SELECT * FROM partidos ORDER BY id DESC LIMIT 300";
+                    // Buscamos partidos de torneos internacionales.
+                    $sql_list = "SELECT * FROM partidos WHERE torneo IN ('Copa Libertadores', 'Copa Sudamericana') ORDER BY id DESC LIMIT 300";
                     $stmt_list = $pdo_matches->query($sql_list);
                     $raw_data = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
 
@@ -107,38 +110,13 @@ get_header();
                     // Usar current_time para obtener la fecha de hoy según la zona horaria ajustada en WordPress
                     $today_str = current_time('Y-m-d');
 
-                    $target_teams = [
-                        'Colo Colo',
-                        'Deportes Limache',
-                        'Universidad Católica',
-                        'Universidad de Chile',
-                        'Ñublense',
-                        "O'Higgins",
-                        'Huachipato',
-                        'Coquimbo Unido',
-                        'Universidad de Concepción',
-                        'Audax Italiano',
-                        'Unión La Calera',
-                        'Deportes La Serena',
-                        'Everton',
-                        'Palestino',
-                        'Cobresal',
-                        'Deportes Concepción'
-                    ];
-                    $target_teams_norm = array_map(function ($t) {
-                        return mb_strtolower(trim($t), 'UTF-8'); }, $target_teams);
-
                     foreach ($matches as $match) {
                         // Extraer solo Y-m-d de la DB por si viene con horas (ej. 2026-03-31 15:30:00)
                         $match_date_str = substr($match['fecha'], 0, 10);
 
                         // Si el partido es hoy, lo agregamos a 'Partidos de hoy' sin importar si ya terminó o no.
                         if ($match_date_str === $today_str) {
-                            $local_norm = mb_strtolower(trim($match['local']), 'UTF-8');
-                            $visit_norm = mb_strtolower(trim($match['visitante']), 'UTF-8');
-                            if (in_array($local_norm, $target_teams_norm) || in_array($visit_norm, $target_teams_norm)) {
-                                $matches_today[] = $match;
-                            }
+                            $matches_today[] = $match;
                         } elseif ($match['estado'] === 'finalizado') {
                             $matches_completed[] = $match;
                         }
@@ -268,9 +246,58 @@ get_header();
             <!-- SIDEBAR COLUMN -->
             <aside class="layout-sidebar">
 
-                <?php if (is_active_sidebar('sidebar-home')): ?>
-                    <?php dynamic_sidebar('sidebar-home'); ?>
-                <?php endif; ?>
+                <!-- Mejores Rendimientos Internacionales -->
+                <?php
+                $standings = [];
+                try {
+                    $pdo_perf = new PDO("mysql:host=localhost;dbname=pjdmenag_futbol;charset=utf8", "pjdmenag_futbol", "n[[cY^7gvog~");
+                    $pdo_perf->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $sql_perf = "SELECT 
+                                equipo AS Equipo,
+                                COUNT(*) AS PJ,
+                                SUM(CASE WHEN goles_equipo > goles_rival THEN 3 WHEN goles_equipo = goles_rival THEN 1 ELSE 0 END) AS Pts,
+                                ROUND((SUM(CASE WHEN goles_equipo > goles_rival THEN 3 WHEN goles_equipo = goles_rival THEN 1 ELSE 0 END) / (COUNT(*) * 3)) * 100, 1) AS Rendimiento
+                            FROM partidos
+                            WHERE estado = 'finalizado' AND torneo IN ('Copa Libertadores', 'Copa Sudamericana')
+                            GROUP BY equipo
+                            ORDER BY Rendimiento DESC, Pts DESC
+                            LIMIT 10";
+                    $stmt_perf = $pdo_perf->query($sql_perf);
+                    $standings = $stmt_perf->fetchAll(PDO::FETCH_ASSOC);
+                } catch (PDOException $e) {
+                }
+                ?>
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Mejores Rendimientos</h3>
+                    <div class="widget-content">
+                        <?php if (!empty($standings)): ?>
+                            <table class="ranking-table" style="width: 100%; font-size: 0.9rem;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Equipo</th>
+                                        <th style="text-align: center;">PJ</th>
+                                        <th style="text-align: right;">% Rend</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($standings as $row): ?>
+                                        <tr>
+                                            <td style="font-weight: 600;"><?php echo esc_html($row['Equipo']); ?></td>
+                                            <td style="text-align: center; opacity: 0.7;"><?php echo $row['PJ']; ?></td>
+                                            <td style="text-align: right; font-weight: 700; color: var(--primary);">
+                                                <?php echo $row['Rendimiento']; ?>%</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                            <p style="font-size: 0.7rem; margin-top: 1rem; opacity: 0.6; text-align: center;">
+                                * Calculado sobre total de partidos jugados.
+                            </p>
+                        <?php else: ?>
+                            <p class="text-muted">Sin datos.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
 
                 <!-- Widget: Fútbol -->
