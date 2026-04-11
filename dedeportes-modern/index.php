@@ -126,7 +126,8 @@ get_header();
                         'Deportes Concepción'
                     ];
                     $target_teams_norm = array_map(function ($t) {
-                        return mb_strtolower(trim($t), 'UTF-8'); }, $target_teams);
+                        return mb_strtolower(trim($t), 'UTF-8');
+                    }, $target_teams);
 
                     foreach ($matches as $match) {
                         // Extraer solo Y-m-d de la DB por si viene con horas (ej. 2026-03-31 15:30:00)
@@ -140,7 +141,11 @@ get_header();
                                 $matches_today[] = $match;
                             }
                         } elseif ($match['estado'] === 'finalizado') {
-                            $matches_completed[] = $match;
+                            $local_norm = mb_strtolower(trim($match['local']), 'UTF-8');
+                            $visit_norm = mb_strtolower(trim($match['visitante']), 'UTF-8');
+                            if (in_array($local_norm, $target_teams_norm) || in_array($visit_norm, $target_teams_norm)) {
+                                $matches_completed[] = $match;
+                            }
                         }
                     }
 
@@ -163,6 +168,9 @@ get_header();
                                         $timestamp = strtotime($fecha_db);
                                         $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
                                         $time_formatted = !empty($match['hora']) ? date('H:i', strtotime($match['hora'])) : $date_formatted;
+                                        if ($match['estado'] === 'finalizado') {
+                                            $time_formatted = 'Final';
+                                        }
                                         ?>
                                         <div class="match-card">
                                             <div class="match-card-meta">

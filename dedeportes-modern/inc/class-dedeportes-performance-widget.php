@@ -53,11 +53,28 @@ class Dedeportes_Performance_Widget extends WP_Widget
                     FROM partidos
                     WHERE estado = 'finalizado'";
 
-            // Add dynamic IN clause if teams are selected
-            if (!empty($selected_teams)) {
-                $placeholders = str_repeat('?,', count($selected_teams) - 1) . '?';
-                $sql .= " AND equipo IN ($placeholders)";
-            }
+            // Filter by the 16 target teams as requested for this deployment
+            $target_teams = [
+                'Colo Colo',
+                'Deportes Limache',
+                'Universidad Católica',
+                'Universidad de Chile',
+                'Ñublense',
+                "O'Higgins",
+                'Huachipato',
+                'Coquimbo Unido',
+                'Universidad de Concepción',
+                'Audax Italiano',
+                'Unión La Calera',
+                'Deportes La Serena',
+                'Everton',
+                'Palestino',
+                'Cobresal',
+                'Deportes Concepción'
+            ];
+
+            $placeholders = str_repeat('?,', count($target_teams) - 1) . '?';
+            $sql .= " AND equipo IN ($placeholders)";
 
             $sql .= " GROUP BY equipo
                       ORDER BY Rendimiento DESC, Pts DESC
@@ -65,12 +82,7 @@ class Dedeportes_Performance_Widget extends WP_Widget
 
             $stmt = $pdo->prepare($sql);
 
-            // Execute with team array if not empty
-            if (!empty($selected_teams)) {
-                $stmt->execute($selected_teams);
-            } else {
-                $stmt->execute();
-            }
+            $stmt->execute($target_teams);
 
             $standings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

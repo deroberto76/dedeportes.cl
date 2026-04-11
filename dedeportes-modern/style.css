@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 2.06
+Version: 2.10
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -1283,77 +1283,4 @@ textarea:focus {
         width: 18px;
         height: 18px;
     }
-}
-
-/* International Specific Layout */
-.intl-matches-section {
-    margin-bottom: 2rem;
-}
-
-.intl-matches-section h2.section-category-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: var(--text-main);
-}
-
-.intl-torneo-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 1.5rem 0 1rem 0;
-    color: var(--primary);
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 0.5rem;
-}
-
-.intl-list-container {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-}
-
-.intl-date-header {
-    background: var(--secondary);
-    color: #fff;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.intl-match-box,
-.intl-match-box-completed {
-    border-bottom: 1px solid var(--border);
-    padding: 0.8rem 1rem;
-}
-
-.intl-match-box:last-child,
-.intl-match-box-completed:last-child {
-    border-bottom: none;
-}
-
-.intl-team-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: var(--text-main);
-    font-weight: 500;
-}
-
-.intl-country {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    font-weight: normal;
-}
-
-.intl-time,
-.intl-score {
-    font-weight: 600;
-    color: var(--primary);
 }
