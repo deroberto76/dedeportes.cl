@@ -1,7 +1,7 @@
 <?php
 /**
- * Template Name: Plantilla Copa Libertadores
- * Description: Page template for Copa Libertadores layout. Matches slug "copa-libertadores".
+ * Template Name: Plantilla Copa Sudamericana
+ * Description: Page template for Copa Sudamericana layout. Matches slug "copa-sudamericana".
  *
  * @package Dedeportes_Modern
  */
@@ -38,7 +38,7 @@ try {
                     ELSE 0 
                 END) AS Pts
             FROM partidos
-            WHERE torneo = 'Copa Libertadores' 
+            WHERE torneo = 'Copa Sudamericana' 
               AND TRIM(grupo) = :grupo 
               AND (estado != 'por jugar' OR estado IS NULL)
             GROUP BY equipo
@@ -62,11 +62,11 @@ if (get_query_var('page')) {
 }
 
 $args_news = array(
-    'category_name' => 'copa-libertadores',
+    'category_name' => 'copa-sudamericana',
     'posts_per_page' => 8,
     'paged' => $paged
 );
-$libertadores_query = new WP_Query($args_news);
+$sudamericana_query = new WP_Query($args_news);
 ?>
 
 <main id="primary" class="site-main">
@@ -74,7 +74,7 @@ $libertadores_query = new WP_Query($args_news);
 
         <!-- Header de la Página -->
         <header class="page-header" style="margin-bottom: 3rem; text-align: center;">
-            <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Copa CONMEBOL Libertadores</h1>
+            <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Copa CONMEBOL Sudamericana</h1>
             <p class="text-muted">Tablas de posiciones y noticias actualizadas.</p>
         </header>
 
@@ -100,7 +100,8 @@ $libertadores_query = new WP_Query($args_news);
                                     style="padding: 0; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); border-radius: 8px; background-color: var(--card-bg);">
                                     <h2
                                         style="padding: 1rem 1.5rem; background: var(--surface); margin: 0; font-size: 1.25rem; border-bottom: 1px solid var(--border); color: var(--primary);">
-                                        Grupo <?php echo $g; ?>
+                                        Grupo
+                                        <?php echo $g; ?>
                                     </h2>
                                     <div class="widget-content">
                                         <table class="ranking-table" style="width: 100%; margin-bottom: 0;">
@@ -127,26 +128,39 @@ $libertadores_query = new WP_Query($args_news);
                                                 <?php
                                                 $pos = 1;
                                                 foreach ($standings_por_grupo[$g] as $row):
-                                                    // Highlighting: 1-2 Blue, 3 Red
+                                                    // Highlighting: 1 Blue, 2 Celeste
                                                     $highlight = 'style="border-left: 4px solid transparent;"';
-                                                    if ($pos <= 2)
+                                                    if ($pos == 1)
                                                         $highlight = 'style="border-left: 4px solid #2563eb;"';
-                                                    else if ($pos == 3)
-                                                        $highlight = 'style="border-left: 4px solid #ef4444;"';
+                                                    else if ($pos == 2)
+                                                        $highlight = 'style="border-left: 4px solid #38bdf8;"';
                                                     ?>
                                                     <tr <?php echo $highlight; ?>>
-                                                        <td style="text-align: center; font-weight: 700;"><?php echo $pos++; ?></td>
-                                                        <td style="font-weight: 600;"><?php echo esc_html($row['Equipo']); ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PJ']; ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PG']; ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PE']; ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PP']; ?></td>
+                                                        <td style="text-align: center; font-weight: 700;">
+                                                            <?php echo $pos++; ?>
+                                                        </td>
+                                                        <td style="font-weight: 600;">
+                                                            <?php echo esc_html($row['Equipo']); ?>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <?php echo $row['PJ']; ?>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <?php echo $row['PG']; ?>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <?php echo $row['PE']; ?>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <?php echo $row['PP']; ?>
+                                                        </td>
                                                         <td
                                                             style="text-align: center; font-weight: 600; color: <?php echo ($row['Dif'] >= 0) ? '#16a34a' : '#dc2626'; ?>;">
                                                             <?php echo ($row['Dif'] > 0) ? '+' . $row['Dif'] : $row['Dif']; ?>
                                                         </td>
                                                         <td style="text-align: center; font-weight: 800; background: var(--surface);">
-                                                            <?php echo $row['Pts']; ?></td>
+                                                            <?php echo $row['Pts']; ?>
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -164,8 +178,8 @@ $libertadores_query = new WP_Query($args_news);
                                 style="display:inline-block; width:12px; height:12px; background:#2563eb; margin-right:5px;"></span>
                             Clasificados a Octavos de Final
                             <span
-                                style="display:inline-block; width:12px; height:12px; background:#ef4444; margin-left:15px; margin-right:5px;"></span>
-                            Play-offs Copa Sudamericana
+                                style="display:inline-block; width:12px; height:12px; background:#38bdf8; margin-left:15px; margin-right:5px;"></span>
+                            Play-offs Octavos de Final
                         </p>
                     </div>
 
@@ -176,22 +190,26 @@ $libertadores_query = new WP_Query($args_news);
                     <h2 class="section-category-title"
                         style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 2rem;">Últimas
                         Noticias</h2>
-                    <?php if ($libertadores_query->have_posts()): ?>
+                    <?php if ($sudamericana_query->have_posts()): ?>
                         <div class="posts-list"
                             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
-                            <?php while ($libertadores_query->have_posts()):
-                                $libertadores_query->the_post(); ?>
-                                <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item'); ?>
-                                    style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;">
+                            <?php while ($sudamericana_query->have_posts()):
+                                $sudamericana_query->the_post(); ?>
+                                <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item'); ?> style="background:
+                            var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+                            display: flex; flex-direction: column;">
                                     <?php if (has_post_thumbnail()): ?>
                                         <div class="post-thumbnail" style="height: 180px; overflow: hidden;">
-                                            <a
-                                                href="<?php the_permalink(); ?>"><?php the_post_thumbnail('medium_large', ['style' => 'width:100%; height:100%; object-fit:cover;']); ?></a>
+                                            <a href="<?php the_permalink(); ?>">
+                                                <?php the_post_thumbnail('medium_large', ['style' => 'width:100%; height:100%; object-fit:cover;']); ?>
+                                            </a>
                                         </div>
                                     <?php endif; ?>
                                     <div class="post-content" style="padding: 1.5rem; flex-grow: 1;">
                                         <h3 class="post-title" style="margin-top: 0; font-size: 1.1rem;">
-                                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                            <a href="<?php the_permalink(); ?>">
+                                                <?php the_title(); ?>
+                                            </a>
                                         </h3>
                                         <div class="post-excerpt" style="font-size: 0.9rem; opacity: 0.8;">
                                             <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
@@ -205,8 +223,8 @@ $libertadores_query = new WP_Query($args_news);
                         <div class="load-more-container" style="margin-top: 3rem; text-align: center;">
                             <?php
                             $temp_query = $wp_query;
-                            $wp_query = $libertadores_query;
-                            $next_link = get_next_posts_link('Ver más noticias', $libertadores_query->max_num_pages);
+                            $wp_query = $sudamericana_query;
+                            $next_link = get_next_posts_link('Ver más noticias', $sudamericana_query->max_num_pages);
                             if ($next_link) {
                                 echo str_replace('<a', '<a class="btn btn-large"', $next_link);
                             }
@@ -282,8 +300,8 @@ $libertadores_query = new WP_Query($args_news);
                         row.cells[0].textContent = idx + 1;
                         const pos = idx + 1;
                         let color = 'transparent';
-                        if (pos <= 2) color = '#2563eb';
-                        else if (pos == 3) color = '#ef4444';
+                        if (pos == 1) color = '#2563eb';
+                        else if (pos == 2) color = '#38bdf8';
                         row.style.borderLeft = '4px solid ' + color;
                     });
                 });
