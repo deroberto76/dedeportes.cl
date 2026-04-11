@@ -54,28 +54,16 @@ try {
 } catch (PDOException $e) {
     $db_error = $e->getMessage();
 }
-
-// Setup Custom Pagination for News
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-if (get_query_var('page')) {
-    $paged = get_query_var('page');
-}
-
-$args_news = array(
-    'category_name' => 'copa-libertadores',
-    'posts_per_page' => 8,
-    'paged' => $paged
-);
-$libertadores_query = new WP_Query($args_news);
 ?>
 
 <main id="primary" class="site-main">
-    <div class="container" style="padding-top: 2rem;">
+    <div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
 
         <!-- Header de la Página -->
-        <header class="page-header" style="margin-bottom: 3rem; text-align: center;">
-            <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Copa CONMEBOL Libertadores</h1>
-            <p class="text-muted">Tablas de posiciones y noticias actualizadas.</p>
+        <header class="page-header" style="margin-bottom: 4rem; text-align: center;">
+            <h1 class="page-title" style="font-size: 3rem; margin-bottom: 0.75rem; font-weight: 800; color: #0f172a;">
+                Tabla de Posiciones Copa Libertadores</h1>
+            <p class="text-muted" style="font-size: 1.15rem;">Estadísticas actualizadas.</p>
         </header>
 
         <div class="layout-grid" style="grid-template-columns: 1fr;">
@@ -93,34 +81,40 @@ $libertadores_query = new WP_Query($args_news);
 
                     <!-- Tablas por Grupo -->
                     <div class="standings-container"
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                        style="display: flex; flex-direction: column; gap: 3rem; margin-bottom: 3rem;">
                         <?php foreach ($grupos as $g): ?>
                             <?php if (!empty($standings_por_grupo[$g])): ?>
                                 <div class="sidebar-widget"
-                                    style="padding: 0; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); border-radius: 8px; background-color: var(--card-bg);">
+                                    style="padding: 0; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); border-radius: 12px; background-color: var(--card-bg);">
                                     <h2
-                                        style="padding: 1rem 1.5rem; background: var(--surface); margin: 0; font-size: 1.25rem; border-bottom: 1px solid var(--border); color: var(--primary);">
+                                        style="padding: 1.25rem 2rem; background: var(--surface); margin: 0; font-size: 1.5rem; border-bottom: 1px solid var(--border); color: #2563eb; font-weight: 700;">
                                         Grupo <?php echo $g; ?>
                                     </h2>
                                     <div class="widget-content">
-                                        <table class="ranking-table" style="width: 100%; margin-bottom: 0;">
+                                        <table class="ranking-table"
+                                            style="width: 100%; margin-bottom: 0; border-collapse: collapse;">
                                             <thead>
-                                                <tr>
-                                                    <th style="padding: 0.75rem; text-align: center;" class="sortable" data-col="0">
-                                                        Pos</th>
-                                                    <th style="padding: 0.75rem;" class="sortable" data-col="1">Equipo</th>
-                                                    <th style="padding: 0.75rem; text-align: center;" class="sortable" data-col="2">
-                                                        PJ</th>
-                                                    <th style="padding: 0.75rem; text-align: center;" class="sortable" data-col="3">
-                                                        G</th>
-                                                    <th style="padding: 0.75rem; text-align: center;" class="sortable" data-col="4">
-                                                        E</th>
-                                                    <th style="padding: 0.75rem; text-align: center;" class="sortable" data-col="5">
-                                                        P</th>
-                                                    <th style="padding: 0.75rem; text-align: center;" class="sortable" data-col="8">
-                                                        Dif</th>
-                                                    <th style="padding: 0.75rem; text-align: center; background: var(--surface);"
-                                                        class="sortable" data-col="9">Pts</th>
+                                                <tr style="border-bottom: 1px solid var(--border);">
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="0">POS &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: left; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="1">EQUIPO &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="2">PJ &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="3">G &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="4">E &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="5">P &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="6">GF &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="7">GC &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 0.75rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800;"
+                                                        class="sortable" data-col="8">DIF &#x21D5;</th>
+                                                    <th style="padding: 1.25rem 1.5rem; text-align: center; color: #f59e0b; font-size: 0.85rem; font-weight: 800; background: var(--surface);"
+                                                        class="sortable" data-col="9">PTS &#x21D5;</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -128,24 +122,31 @@ $libertadores_query = new WP_Query($args_news);
                                                 $pos = 1;
                                                 foreach ($standings_por_grupo[$g] as $row):
                                                     // Highlighting: 1-2 Blue, 3 Red
-                                                    $highlight = 'style="border-left: 4px solid transparent;"';
+                                                    $highlight_color = 'transparent';
                                                     if ($pos <= 2)
-                                                        $highlight = 'style="border-left: 4px solid #2563eb;"';
+                                                        $highlight_color = '#2563eb';
                                                     else if ($pos == 3)
-                                                        $highlight = 'style="border-left: 4px solid #ef4444;"';
+                                                        $highlight_color = '#ef4444';
                                                     ?>
-                                                    <tr <?php echo $highlight; ?>>
-                                                        <td style="text-align: center; font-weight: 700;"><?php echo $pos++; ?></td>
-                                                        <td style="font-weight: 600;"><?php echo esc_html($row['Equipo']); ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PJ']; ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PG']; ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PE']; ?></td>
-                                                        <td style="text-align: center;"><?php echo $row['PP']; ?></td>
+                                                    <tr
+                                                        style="border-bottom: 1px solid var(--border); border-left: 4px solid <?php echo $highlight_color; ?>;">
                                                         <td
-                                                            style="text-align: center; font-weight: 600; color: <?php echo ($row['Dif'] >= 0) ? '#16a34a' : '#dc2626'; ?>;">
+                                                            style="padding: 1rem; text-align: center; font-weight: 700; color: #0f172a;">
+                                                            <?php echo $pos++; ?></td>
+                                                        <td style="padding: 1rem; font-weight: 600; color: #1e293b;">
+                                                            <?php echo esc_html($row['Equipo']); ?></td>
+                                                        <td style="padding: 1rem; text-align: center;"><?php echo $row['PJ']; ?></td>
+                                                        <td style="padding: 1rem; text-align: center;"><?php echo $row['PG']; ?></td>
+                                                        <td style="padding: 1rem; text-align: center;"><?php echo $row['PE']; ?></td>
+                                                        <td style="padding: 1rem; text-align: center;"><?php echo $row['PP']; ?></td>
+                                                        <td style="padding: 1rem; text-align: center;"><?php echo $row['GF']; ?></td>
+                                                        <td style="padding: 1rem; text-align: center;"><?php echo $row['GC']; ?></td>
+                                                        <td
+                                                            style="padding: 1rem; text-align: center; font-weight: 700; color: <?php echo ($row['Dif'] > 0) ? '#16a34a' : (($row['Dif'] < 0) ? '#dc2626' : '#64748b'); ?>;">
                                                             <?php echo ($row['Dif'] > 0) ? '+' . $row['Dif'] : $row['Dif']; ?>
                                                         </td>
-                                                        <td style="text-align: center; font-weight: 800; background: var(--surface);">
+                                                        <td
+                                                            style="padding: 1rem 1.5rem; text-align: center; font-weight: 800; background: var(--surface); color: #0f172a;">
                                                             <?php echo $row['Pts']; ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -158,66 +159,18 @@ $libertadores_query = new WP_Query($args_news);
                     </div>
 
                     <div
-                        style="margin-bottom: 4rem; font-size: 0.95rem; color: var(--text-main); text-align: left; background: var(--surface); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
-                        <p style="margin-bottom: 0;">
+                        style="margin-top: 2rem; font-size: 1rem; color: #334155; text-align: center; background: #f1f5f9; padding: 1.5rem; border-radius: 12px; border-left: 5px solid #2563eb;">
+                        <p style="margin: 0; font-weight: 600;">
                             <span
-                                style="display:inline-block; width:12px; height:12px; background:#2563eb; margin-right:5px;"></span>
+                                style="display:inline-block; width:12px; height:12px; background:#2563eb; border-radius: 2px; margin-right:5px;"></span>
                             Clasificados a Octavos de Final
                             <span
-                                style="display:inline-block; width:12px; height:12px; background:#ef4444; margin-left:15px; margin-right:5px;"></span>
+                                style="display:inline-block; width:12px; height:12px; background:#ef4444; border-radius: 2px; margin-left:20px; margin-right:5px;"></span>
                             Play-offs Copa Sudamericana
                         </p>
                     </div>
 
                 <?php endif; ?>
-
-                <!-- SECCIÓN NOTICIAS -->
-                <section class="news-section">
-                    <h2 class="section-category-title"
-                        style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 2rem;">Últimas
-                        Noticias</h2>
-                    <?php if ($libertadores_query->have_posts()): ?>
-                        <div class="posts-list"
-                            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
-                            <?php while ($libertadores_query->have_posts()):
-                                $libertadores_query->the_post(); ?>
-                                <article id="post-<?php the_ID(); ?>" <?php post_class('post-list-item'); ?>
-                                    style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;">
-                                    <?php if (has_post_thumbnail()): ?>
-                                        <div class="post-thumbnail" style="height: 180px; overflow: hidden;">
-                                            <a
-                                                href="<?php the_permalink(); ?>"><?php the_post_thumbnail('medium_large', ['style' => 'width:100%; height:100%; object-fit:cover;']); ?></a>
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class="post-content" style="padding: 1.5rem; flex-grow: 1;">
-                                        <h3 class="post-title" style="margin-top: 0; font-size: 1.1rem;">
-                                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                        </h3>
-                                        <div class="post-excerpt" style="font-size: 0.9rem; opacity: 0.8;">
-                                            <?php echo wp_trim_words(get_the_excerpt(), 20); ?>
-                                        </div>
-                                    </div>
-                                </article>
-                            <?php endwhile; ?>
-                        </div>
-
-                        <!-- Paginación -->
-                        <div class="load-more-container" style="margin-top: 3rem; text-align: center;">
-                            <?php
-                            $temp_query = $wp_query;
-                            $wp_query = $libertadores_query;
-                            $next_link = get_next_posts_link('Ver más noticias', $libertadores_query->max_num_pages);
-                            if ($next_link) {
-                                echo str_replace('<a', '<a class="btn btn-large"', $next_link);
-                            }
-                            $wp_query = $temp_query;
-                            wp_reset_postdata();
-                            ?>
-                        </div>
-                    <?php else: ?>
-                        <p>No se encontraron noticias en esta categoría.</p>
-                    <?php endif; ?>
-                </section>
 
             </div>
 
@@ -226,15 +179,16 @@ $libertadores_query = new WP_Query($args_news);
 </main>
 
 <style>
-    @media (max-width: 600px) {
-        .standings-container {
-            grid-template-columns: 1fr !important;
-        }
+    @media (max-width: 800px) {
 
         .ranking-table th,
         .ranking-table td {
-            padding: 0.5rem !important;
-            font-size: 0.8rem;
+            padding: 0.75rem 0.5rem !important;
+            font-size: 0.8rem !important;
+        }
+
+        .page-title {
+            font-size: 2rem !important;
         }
     }
 
@@ -244,7 +198,7 @@ $libertadores_query = new WP_Query($args_news);
     }
 
     .sortable:hover {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: rgba(0, 0, 0, 0.03);
     }
 </style>
 
