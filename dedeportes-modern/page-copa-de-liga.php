@@ -39,7 +39,7 @@ try {
                 END) AS Pts
             FROM partidos
             WHERE torneo LIKE '%Copa de Liga%' 
-              AND TRIM(grupo) LIKE CONCAT('%', :grupo, '%') 
+              AND (TRIM(grupo) = :grupo OR TRIM(grupo) LIKE CONCAT('% ', :grupo))
               AND (estado != 'por jugar' OR estado IS NULL)
             GROUP BY equipo
             ORDER BY Pts DESC, Dif DESC, GF DESC";
