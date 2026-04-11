@@ -38,8 +38,8 @@ try {
                     ELSE 0 
                 END) AS Pts
             FROM partidos
-            WHERE torneo = 'Copa Libertadores' 
-              AND TRIM(grupo) = :grupo 
+            WHERE torneo LIKE '%Copa Libertadores%' 
+              AND TRIM(grupo) LIKE CONCAT('%', :grupo, '%') 
               AND (estado != 'por jugar' OR estado IS NULL)
             GROUP BY equipo
             ORDER BY Pts DESC, Dif DESC, GF DESC";
@@ -132,9 +132,11 @@ try {
                                                         style="border-bottom: 1px solid var(--border); border-left: 4px solid <?php echo $highlight_color; ?>;">
                                                         <td
                                                             style="padding: 1rem; text-align: center; font-weight: 700; color: #0f172a;">
-                                                            <?php echo $pos++; ?></td>
+                                                            <?php echo $pos++; ?>
+                                                        </td>
                                                         <td style="padding: 1rem; font-weight: 600; color: #1e293b;">
-                                                            <?php echo esc_html($row['Equipo']); ?></td>
+                                                            <?php echo esc_html($row['Equipo']); ?>
+                                                        </td>
                                                         <td style="padding: 1rem; text-align: center;"><?php echo $row['PJ']; ?></td>
                                                         <td style="padding: 1rem; text-align: center;"><?php echo $row['PG']; ?></td>
                                                         <td style="padding: 1rem; text-align: center;"><?php echo $row['PE']; ?></td>
@@ -147,7 +149,8 @@ try {
                                                         </td>
                                                         <td
                                                             style="padding: 1rem 1.5rem; text-align: center; font-weight: 800; background: var(--surface); color: #0f172a;">
-                                                            <?php echo $row['Pts']; ?></td>
+                                                            <?php echo $row['Pts']; ?>
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
