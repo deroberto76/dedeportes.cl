@@ -40,14 +40,16 @@ try {
             FROM partidos
             WHERE torneo LIKE '%Copa Libertadores%' 
               AND TRIM(grupo) LIKE CONCAT('%', :grupo, '%') 
+              AND fecha LIKE :year
               AND (estado != 'por jugar' OR estado IS NULL)
             GROUP BY equipo
             ORDER BY Pts DESC, Dif DESC, GF DESC";
 
     $stmt = $pdo->prepare($sql);
 
+    $current_year = date('Y') . '%';
     foreach ($grupos as $g) {
-        $stmt->execute(['grupo' => $g]);
+        $stmt->execute(['grupo' => $g, 'year' => $current_year]);
         $standings_por_grupo[$g] = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
