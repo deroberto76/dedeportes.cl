@@ -4,7 +4,7 @@ Theme URI: https://dedeportes.cl
 Author: Antigravity AI
 Author URI: https://google.com
 Description: Un tema moderno, premium y de alto rendimiento para noticias deportivas.
-Version: 2.14
+Version: 2.15
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: dedeportes-modern
@@ -1167,13 +1167,16 @@ textarea:focus {
 }
 
 .match-card {
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.2s;
+}
+
+.match-card-desktop-only {
     display: grid;
     grid-template-columns: 100px 1fr 60px;
     align-items: center;
     padding: 1.25rem 1rem;
-    border-bottom: 1px solid var(--border);
     gap: 1.5rem;
-    transition: background-color 0.2s;
 }
 
 .match-card:hover {
@@ -1247,40 +1250,76 @@ textarea:focus {
     display: inline-block;
 }
 
-/* Mobile Adjustments for Match Cards */
+/* Mobile Adjustments for Match Cards - v2.15 */
 @media (max-width: 768px) {
-    .match-card {
-        grid-template-columns: 85px 1fr 45px;
-        gap: 0.75rem;
-        padding: 1rem 0.75rem;
-    }
-
-    .match-card-date {
-        font-size: 0.85rem;
-    }
-
-    .match-card-tournament {
-        font-size: 0.75rem;
-    }
-
-    .match-card-team .team-name {
-        font-size: 0.95rem;
-    }
-
-    .team-name-full {
+    .match-card-desktop-only {
         display: none;
     }
 
-    .team-name-short {
-        display: inline;
+    .match-card-mobile-only {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 1rem 0.75rem;
     }
 
-    .match-card-result .score-row {
-        font-size: 1.05rem;
+    .m-match-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .m-match-header {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        letter-spacing: 0.02em;
+        opacity: 0.8;
+    }
+
+    .m-match-team-row {
+        gap: 1rem;
+    }
+
+    .m-match-team {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+    }
+
+    .m-team-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text-main);
+    }
+
+    .m-team-country {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: var(--text-muted);
+        background: var(--surface);
+        padding: 1px 4px;
+        border-radius: 3px;
+        margin-left: 2px;
+    }
+
+    .m-match-score {
+        font-weight: 800;
+        font-size: 1.1rem;
+        min-width: 25px;
+        text-align: right;
+        color: var(--primary);
     }
 
     .team-shield {
         width: 18px;
         height: 18px;
     }
+}
+
+.match-card-mobile-only {
+    display: none;
 }

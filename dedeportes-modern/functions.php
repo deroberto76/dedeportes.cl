@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '1.98');
+	define('DEDEPORTES_VERSION', '2.15');
 }
 
 /**
@@ -568,3 +568,140 @@ function dedeportes_top_partidos_goles_shortcode($atts)
 	return $output;
 }
 add_shortcode('top_partidos_goles', 'dedeportes_top_partidos_goles_shortcode');
+
+/**
+ * Helper: Obtener código de país (Normalizado)
+ * Excluye CHI por petición del usuario.
+ */
+function dedeportes_get_country_code($country_name)
+{
+	if (empty($country_name))
+		return '';
+	$country_name = mb_strtolower(trim($country_name), 'UTF-8');
+	if (in_array($country_name, ['chile', 'chi']))
+		return '';
+
+	$codes = [
+		'argentina' => 'ARG',
+		'brasil' => 'BRA',
+		'colombia' => 'COL',
+		'ecuador' => 'ECU',
+		'bolivia' => 'BOL',
+		'peru' => 'PER',
+		'perú' => 'PER',
+		'paraguay' => 'PAR',
+		'uruguay' => 'URU',
+		'venezuela' => 'VEN'
+	];
+
+	if (isset($codes[$country_name]))
+		return $codes[$country_name];
+
+	// Fallback: primeros 3 caracteres en mayúscula
+	return mb_strtoupper(mb_substr($country_name, 0, 3, 'UTF-8'), 'UTF-8');
+}
+
+/**
+ * Helper: Renderizar Card de Partido (Horizontal Desktop / 3 Líneas Móvil)
+ * @param array $match Datos del partido
+ * @param bool $show_date Si es true muestra fecha, si es false muestra hora/estado
+ */
+function dedeportes_render_match_card($match, $show_date = false)
+{
+	// Normalizar fecha y hora
+	$fecha_db = str_replace('/', '-', $match['fecha']);
+	$timestamp = strtotime($fecha_db);
+	$date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
+	$time_formatted = !empty($match['hora']) ? date('H:i', strtotime($match['hora'])) : $date_formatted;
+
+	if ($match['estado'] === 'finalizado') {
+		$time_formatted = 'Final';
+	}
+
+	$meta_text = $show_date ? $date_formatted : $time_formatted;
+
+	// Goles / Estado
+	$goles_l = ($match['goles_local'] !== '' && $match['goles_local'] !== null) ? $match['goles_local'] : '-';
+	$goles_v = ($match['goles_visitante'] !== '' && $match['goles_visitante'] !== null) ? $match['goles_visitante'] : '-';
+
+	// Países
+	$pais_l = dedeportes_get_country_code(isset($match['pais_local']) ? $match['pais_local'] : '');
+	$pais_v = dedeportes_get_country_code(isset($match['pais_visitante']) ? $match['pais_visitante'] : '');
+
+	?>
+	<div class="match-card">
+		<!-- Layout Desktop (Original) -->
+		<div class="match-card-desktop-only">
+			<div class="match-card-meta">
+				<div class="match-card-date"><?php echo esc_html($meta_text); ?></div>
+				<div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?></div>
+			</div>
+			<div class="match-card-teams">
+				<div class="match-card-team local">
+					<img src="<?php echo dedeportes_get_team_shield($match['local']); ?>" class="team-shield" alt=""
+						onerror="this.style.display='none'">
+					<span class="team-name">
+						<span class="team-name-full"><?php echo esc_html($match['local']); ?></span>
+						<span
+							class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
+						<?php if (!empty($pais_l)): ?>
+							<span class="team-country"><?php echo esc_html($pais_l); ?></span>
+						<?php endif; ?>
+					</span>
+				</div>
+				<div class="match-card-team visitor">
+					<img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>" class="team-shield" alt=""
+						onerror="this.style.display='none'">
+					<span class="team-name">
+						<span class="team-name-full"><?php echo esc_html($match['visitante']); ?></span>
+						<span
+							class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
+						<?php if (!empty($pais_v)): ?>
+							<span class="team-country"><?php echo esc_html($pais_v); ?></span>
+						<?php endif; ?>
+					</span>
+				</div>
+			</div>
+			<div class="match-card-result">
+				<div class="score-row"><?php echo esc_html($goles_l); ?></div>
+				<div class="score-row"><?php echo esc_html($goles_v); ?></div>
+			</div>
+		</div>
+
+		<!-- Layout Mobile (3 Líneas) -->
+		<div class="match-card-mobile-only">
+			<!-- Línea 1: Torneo y Hora/Fecha -->
+			<div class="m-match-line m-match-header">
+				<span class="m-match-tournament"><?php echo esc_html($match['torneo']); ?></span>
+				<span class="m-match-meta"><?php echo esc_html($meta_text); ?></span>
+			</div>
+			<!-- Línea 2: Local + País + Goles -->
+			<div class="m-match-line m-match-team-row">
+				<div class="m-match-team">
+					<img src="<?php echo dedeportes_get_team_shield($match['local']); ?>" class="team-shield" alt=""
+						onerror="this.style.display='none'">
+					<span
+						class="m-team-name"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
+					<?php if (!empty($pais_l)): ?>
+						<span class="m-team-country"><?php echo esc_html($pais_l); ?></span>
+					<?php endif; ?>
+				</div>
+				<div class="m-match-score"><?php echo esc_html($goles_l); ?></div>
+			</div>
+			<!-- Línea 3: Visita + País + Goles -->
+			<div class="m-match-line m-match-team-row">
+				<div class="m-match-team">
+					<img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>" class="team-shield" alt=""
+						onerror="this.style.display='none'">
+					<span
+						class="m-team-name"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
+					<?php if (!empty($pais_v)): ?>
+						<span class="m-team-country"><?php echo esc_html($pais_v); ?></span>
+					<?php endif; ?>
+				</div>
+				<div class="m-match-score"><?php echo esc_html($goles_v); ?></div>
+			</div>
+		</div>
+	</div>
+	<?php
+}

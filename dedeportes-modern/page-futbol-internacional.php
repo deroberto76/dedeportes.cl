@@ -167,59 +167,7 @@ get_header();
                                             $time_formatted = 'Final';
                                         }
                                         ?>
-                                        <div class="match-card">
-                                            <div class="match-card-meta">
-                                                <div class="match-card-date"><?php echo esc_html($time_formatted); ?></div>
-                                                <div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?>
-                                                </div>
-                                            </div>
-                                            <div class="match-card-teams">
-                                                <div class="match-card-team local">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['local']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['local']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
-                                                        <?php
-                                                        $p_l = strtolower(trim($match['pais_local']));
-                                                        if (!empty($p_l)):
-                                                            $p_code = isset($country_codes[$p_l]) ? $country_codes[$p_l] : substr(strtoupper($p_l), 0, 3);
-                                                            ?>
-                                                            <span class="team-country"
-                                                                style="display:block; font-size:0.75rem; color:var(--text-muted); line-height:1; font-weight:700; margin-top:2px;"><?php echo esc_html($p_code); ?></span>
-                                                        <?php endif; ?>
-                                                    </span>
-                                                </div>
-                                                <div class="match-card-team visitor">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['visitante']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
-                                                        <?php
-                                                        $p_v = strtolower(trim($match['pais_visitante']));
-                                                        if (!empty($p_v)):
-                                                            $p_code_v = isset($country_codes[$p_v]) ? $country_codes[$p_v] : substr(strtoupper($p_v), 0, 3);
-                                                            ?>
-                                                            <span class="team-country"
-                                                                style="display:block; font-size:0.75rem; color:var(--text-muted); line-height:1; font-weight:700; margin-top:2px;"><?php echo esc_html($p_code_v); ?></span>
-                                                        <?php endif; ?>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="match-card-result">
-                                                <div class="score-row">
-                                                    <?php echo ($match['goles_local'] !== '' && $match['goles_local'] !== null) ? esc_html($match['goles_local']) : '-'; ?>
-                                                </div>
-                                                <div class="score-row">
-                                                    <?php echo ($match['goles_visitante'] !== '' && $match['goles_visitante'] !== null) ? esc_html($match['goles_visitante']) : '-'; ?>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php dedeportes_render_match_card($match); ?>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
@@ -239,39 +187,7 @@ get_header();
                                         $timestamp = strtotime($fecha_db);
                                         $date_formatted = $timestamp ? date_i18n('j \d\e F', $timestamp) : $match['fecha'];
                                         ?>
-                                        <div class="match-card">
-                                            <div class="match-card-meta">
-                                                <div class="match-card-date"><?php echo $date_formatted; ?></div>
-                                                <div class="match-card-tournament"><?php echo esc_html($match['torneo']); ?>
-                                                </div>
-                                            </div>
-                                            <div class="match-card-teams">
-                                                <div class="match-card-team local">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['local']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['local']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['local'])); ?></span>
-                                                    </span>
-                                                </div>
-                                                <div class="match-card-team visitor">
-                                                    <img src="<?php echo dedeportes_get_team_shield($match['visitante']); ?>"
-                                                        class="team-shield" alt="" onerror="this.style.display='none'">
-                                                    <span class="team-name">
-                                                        <span
-                                                            class="team-name-full"><?php echo esc_html($match['visitante']); ?></span>
-                                                        <span
-                                                            class="team-name-short"><?php echo esc_html(dedeportes_get_team_abbreviation($match['visitante'])); ?></span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="match-card-result">
-                                                <div class="score-row"><?php echo $match['goles_local']; ?></div>
-                                                <div class="score-row"><?php echo $match['goles_visitante']; ?></div>
-                                            </div>
-                                        </div>
+                                        <?php dedeportes_render_match_card($match, true); ?>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
