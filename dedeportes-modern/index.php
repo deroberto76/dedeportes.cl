@@ -151,6 +151,13 @@ get_header();
 
                     // Limitar los finalizados a los 20 más recientes
                     $matches_completed = array_slice($matches_completed, 0, 20);
+
+                    // Ordenar Partidos de Hoy cronológicamente por hora (ASC)
+                    usort($matches_today, function ($a, $b) {
+                        $time_a = !empty($a['hora']) ? $a['hora'] : '23:59';
+                        $time_b = !empty($b['hora']) ? $b['hora'] : '23:59';
+                        return strcmp($time_a, $time_b);
+                    });
                 } catch (PDOException $e) {
                     $matches_error = $e->getMessage();
                 }
@@ -182,7 +189,7 @@ get_header();
 
                 <?php if (!empty($matches_completed)): ?>
                     <section class="latest-matches-section u-mb-4">
-                        <h2 class="section-category-title">Todos los Partidos</h2>
+                        <h2 class="section-category-title">Últimos partidos</h2>
                         <div class="sidebar-widget" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
                             <div class="widget-content">
                                 <div class="match-cards-list">

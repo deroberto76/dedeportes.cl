@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '2.17');
+	define('DEDEPORTES_VERSION', '2.18');
 }
 
 /**
@@ -620,9 +620,14 @@ function dedeportes_render_match_card($match, $show_date = false)
 
 	$meta_text = $show_date ? $date_formatted : $time_formatted;
 
-	// Goles / Estado
-	$goles_l = ($match['goles_local'] !== '' && $match['goles_local'] !== null) ? $match['goles_local'] : '-';
-	$goles_v = ($match['goles_visitante'] !== '' && $match['goles_visitante'] !== null) ? $match['goles_visitante'] : '-';
+	// Goles / Estado (Show dash if not finished, per user request)
+	if ($match['estado'] === 'finalizado') {
+		$goles_l = ($match['goles_local'] !== '' && $match['goles_local'] !== null) ? $match['goles_local'] : '0';
+		$goles_v = ($match['goles_visitante'] !== '' && $match['goles_visitante'] !== null) ? $match['goles_visitante'] : '0';
+	} else {
+		$goles_l = '-';
+		$goles_v = '-';
+	}
 
 	// Países
 	$pais_l = dedeportes_get_country_code(isset($match['pais_local']) ? $match['pais_local'] : '');
