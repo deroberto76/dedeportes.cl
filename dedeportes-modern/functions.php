@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '2.18');
+	define('DEDEPORTES_VERSION', '2.19');
 }
 
 /**
@@ -710,3 +710,129 @@ function dedeportes_render_match_card($match, $show_date = false)
 	</div>
 	<?php
 }
+
+/**
+ * Shortcode: Mapa de Estadios con partidos HOY
+ * Uso: [dedeportes_mapa_estadios]
+ */
+function dedeportes_mapa_estadios_shortcode()
+{
+	// Configuración base de datos
+	$host = 'localhost';
+	$dbname = 'pjdmenag_futbol';
+	$user = 'pjdmenag_futbol';
+	$pass = 'n[[cY^7gvog~';
+
+	try {
+		$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	} catch (PDOException $e) {
+		return "<!-- Error de conexión a la BD: " . esc_html($e->getMessage()) . " -->";
+	}
+
+	// Consulta para obtener estadios con partidos HOY
+	$sql = "SELECT e.nombre, e.latitud, e.longitud, e.place_id, p.equipo, p.rival, p.hora 
+            FROM estadios e 
+            INNER JOIN partidos p ON e.id_estadio = p.id_estadio 
+            WHERE p.fecha = CURDATE()";
+
+	try {
+		$stmt = $pdo->query($sql);
+		$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	} catch (PDOException $e) {
+		return "<!-- Error en la consulta: " . esc_html($e->getMessage()) . " -->";
+	}
+
+	// Si no hay partidos hoy, mostrar mensaje amigable
+	if (empty($resultados)) {
+		return '<div class="map-no-matches" style="padding: 2rem; background: #f8fafc; border-radius: 10px; text-align: center; border: 1px solid #e2e8f0; font-family: \'Inter\', sans-serif;">
+                    <p style="margin:0; color: #64748b; font-weight: 500;">No hay partidos programados para hoy.</p>
+                </div>';
+	}
+
+	ob_start();
+	?>
+	<div id="mapa-estadios"
+		style="width: 100%; height: 500px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 2rem 0;">
+	</div>
+
+	<script>
+		function initMap() {
+			// Centrar el mapa en Chile inicialmente
+			const centroChile = {
+				lat: -33.45,
+				lng: -70.66
+			};
+			const map = new google.maps.Map(document.getElementById("mapa-estadios"), {
+				zoom: 6,
+				center: centroChile,
+				mapTypeControl: false,
+				streetViewControl: false,
+				fullscreenControl: true,
+				styles: [{
+					"featureType": "poi",
+					"stylers": [{
+						"visibility": "off"
+					}]
+				}]
+			});
+
+			const estadios = <?php echo json_encode($resultados); ?>;
+			const bounds = new google.maps.LatLngBounds();
+			const infowindow = new google.maps.InfoWindow();
+
+			estadios.forEach(estadio => {
+				const posicion = {
+					lat: parseFloat(estadio.latitud),
+					lng: parseFloat(estadio.longitud)
+				};
+
+				// Crear marcador
+				const marker = new google.maps.Marker({
+					position: posicion,
+					map: map,
+					title: estadio.nombre,
+					animation: google.maps.Animation.DROP
+				});
+
+				// Contenido del globo de información
+				const contentString = `
+					<div style="padding: 10px; font-family: 'Inter', sans-serif; min-width: 200px;">
+						<h3 style="margin: 0 0 8px 0; font-size: 16px; color: #0f172a; font-weight: 700;">${estadio.nombre}</h3>
+						<p style="margin: 4px 0; font-size: 14px; color: #1e293b;">
+							<strong>${estadio.equipo} vs ${estadio.rival}</strong>
+						</p>
+						<p style="margin: 4px 0 12px 0; font-size: 13px; color: #64748b;">
+							Hora: ${estadio.hora}
+						</p>
+						<a href="https://www.google.com/maps/dir/?api=1&destination_place_id=${estadio.place_id}" 
+						   target="_blank" 
+						   style="display: block; text-align: center; padding: 8px 12px; background: #0056b3; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; transition: background 0.3s;">
+						   📍 Cómo llegar (GPS)
+						</a>
+					</div>
+				`;
+
+				marker.addListener("click", () => {
+					infowindow.setContent(contentString);
+					infowindow.open(map, marker);
+				});
+
+				bounds.extend(posicion);
+			});
+
+			// Ajustar el mapa para que se vean todos los estadios del día
+			if (estadios.length > 1) {
+				map.fitBounds(bounds);
+			} else if (estadios.length === 1) {
+				map.setCenter(bounds.getCenter());
+				map.setZoom(15);
+			}
+		}
+	</script>
+	<!-- REEMPLAZA "TU_API_KEY" POR TU LLAVE DE GOOGLE MAPS ABAJO -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap" async defer></script>
+	<?php
+	return ob_get_clean();
+}
+add_shortcode('dedeportes_mapa_estadios', 'dedeportes_mapa_estadios_shortcode');
