@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '2.19');
+	define('DEDEPORTES_VERSION', '2.20');
 }
 
 /**
@@ -731,13 +731,15 @@ function dedeportes_mapa_estadios_shortcode()
 	}
 
 	// Consulta para obtener estadios con partidos HOY
+	$today = date('d/m/Y'); // Formato usado en tu BD según diag-dates.php
 	$sql = "SELECT e.nombre, e.latitud, e.longitud, e.place_id, p.equipo, p.rival, p.hora 
             FROM estadios e 
             INNER JOIN partidos p ON e.id_estadio = p.id_estadio 
-            WHERE p.fecha = CURDATE()";
+            WHERE p.fecha = :today";
 
 	try {
-		$stmt = $pdo->query($sql);
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute(['today' => $today]);
 		$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	} catch (PDOException $e) {
 		return "<!-- Error en la consulta: " . esc_html($e->getMessage()) . " -->";
@@ -836,3 +838,56 @@ function dedeportes_mapa_estadios_shortcode()
 	return ob_get_clean();
 }
 add_shortcode('dedeportes_mapa_estadios', 'dedeportes_mapa_estadios_shortcode');
+
+/**
+ * Shortcode de Debug: Probar conexión y resultados del mapa
+ * Uso: [dedeportes_debug_map]
+ */
+function dedeportes_debug_map_shortcode()
+{
+	$host = 'localhost';
+	$dbname = 'pjdmenag_futbol';
+	$user = 'pjdmenag_futbol';
+	$pass = 'n[[cY^7gvog~';
+
+	$today = date('d/m/Y');
+	$output = "<h3>Debug Mapa</h3>";
+	$output .= "Fecha actual PHP: " . $today . "<br>";
+
+	try {
+		$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+		$output .= "Conexión BD: EXITOSA<br>";
+
+		// Contar partidos hoy
+		$stmt = $pdo->prepare("SELECT COUNT(*) FROM partidos WHERE fecha = :today");
+		$stmt->execute(['today' => $today]);
+		$count_matches = $stmt->fetchColumn();
+		$output .= "Partidos encontrados para hoy ($today): " . $count_matches . "<br>";
+
+		// Ver estadios vinculados
+		$sql = "SELECT p.id_estadio, p.equipo, p.rival, e.nombre as estadio_nombre 
+                FROM partidos p 
+                LEFT JOIN estadios e ON p.id_estadio = e.id_estadio 
+                WHERE p.fecha = :today";
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute(['today' => $today]);
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		if (empty($rows)) {
+			$output .= "No se encontraron filas con el JOIN de estadios.<br>";
+		} else {
+			$output .= "Detalle de partidos hoy:<br><ul>";
+			foreach ($rows as $row) {
+				$estadio = $row['estadio_nombre'] ?: " <span style='color:red;'>ID Estadio {$row['id_estadio']} NO ENCONTRADO EN TABLA ESTADIOS</span>";
+				$output .= "<li>{$row['equipo']} vs {$row['rival']} | Estadio: $estadio</li>";
+			}
+			$output .= "</ul>";
+		}
+
+	} catch (PDOException $e) {
+		$output .= "Error DB: " . $e->getMessage();
+	}
+
+	return "<div style='background:#fff; padding:20px; border:2px solid red; color:#000;'>$output</div>";
+}
+add_shortcode('dedeportes_debug_map', 'dedeportes_debug_map_shortcode');
