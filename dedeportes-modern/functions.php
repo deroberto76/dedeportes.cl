@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '2.21');
+	define('DEDEPORTES_VERSION', '2.22');
 }
 
 /**
@@ -858,27 +858,39 @@ function dedeportes_debug_map_shortcode()
 		$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
 		$output .= "Conexión BD: EXITOSA<br>";
 
-		// Contar partidos hoy
-		$stmt = $pdo->prepare("SELECT COUNT(*) FROM partidos WHERE fecha = :today");
-		$stmt->execute(['today' => $today]);
-		$count_matches = $stmt->fetchColumn();
-		$output .= "Partidos encontrados para hoy ($today): " . $count_matches . "<br>";
+		// Mostrar 5 partidos recientes para ver el formato de fecha
+		$output .= "<h4>Muestra de 5 partidos recientes en BD:</h4><ul>";
+		$stmt_sample = $pdo->query("SELECT fecha, equipo, rival FROM partidos ORDER BY id DESC LIMIT 5");
+		while ($s = $stmt_sample->fetch(PDO::FETCH_ASSOC)) {
+			$output .= "<li>F: '{$s['fecha']}' | {$s['equipo']} vs {$s['rival']}</li>";
+		}
+		$output .= "</ul>";
 
-		// Ver estadios vinculados
+		// Probar con current_time de WordPress
+		$today_wp = current_time('d/m/Y');
+		$output .= "Fecha actual WordPress (current_time): " . $today_wp . "<br>";
+
+		// Contar partidos hoy con fecha WP
+		$stmt = $pdo->prepare("SELECT COUNT(*) FROM partidos WHERE fecha = :today");
+		$stmt->execute(['today' => $today_wp]);
+		$count_matches_wp = $stmt->fetchColumn();
+		$output .= "Partidos encontrados para hoy (con fecha WP): " . $count_matches_wp . "<br>";
+
+		// Ver estadios vinculados con fecha WP
 		$sql = "SELECT p.id_estadio, p.equipo, p.rival, e.nombre as estadio_nombre 
                 FROM partidos p 
                 LEFT JOIN estadios e ON p.id_estadio = e.id_estadio 
                 WHERE p.fecha = :today";
 		$stmt = $pdo->prepare($sql);
-		$stmt->execute(['today' => $today]);
+		$stmt->execute(['today' => $today_wp]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		if (empty($rows)) {
-			$output .= "No se encontraron filas con el JOIN de estadios.<br>";
+			$output .= "No se encontraron filas con el JOIN de estadios para la fecha WP.<br>";
 		} else {
-			$output .= "Detalle de partidos hoy:<br><ul>";
+			$output .= "Detalle de partidos hoy (WP):<br><ul>";
 			foreach ($rows as $row) {
-				$estadio = $row['estadio_nombre'] ?: " <span style='color:red;'>ID Estadio {$row['id_estadio']} NO ENCONTRADO EN TABLA ESTADIOS</span>";
+				$estadio = $row['estadio_nombre'] ?: " <span style='color:red;'>ID Estadio {$row['id_estadio']} NO ENCONTRADO</span>";
 				$output .= "<li>{$row['equipo']} vs {$row['rival']} | Estadio: $estadio</li>";
 			}
 			$output .= "</ul>";
