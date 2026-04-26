@@ -147,7 +147,79 @@ function render_top5_card($title, $data, $metric_key, $metric_label)
     echo '</div></div>';
 }
 
-function render_tournament_section($title, $stats, $show_pj = false)
+function is_chilean_team($team)
+{
+    $chilean_patterns = [
+        'Colo',
+        'U. de Chile',
+        'Católica',
+        'Iquique',
+        'O\'Higgins',
+        'Palestino',
+        'Everton',
+        'Cobreloa',
+        'Española',
+        'Coquimbo',
+        'Ñublense',
+        'Huachipato',
+        'Audax',
+        'Cobresal',
+        'La Calera',
+        'Copiapó',
+        'Concepción',
+        'La Serena',
+        'Limache',
+        'Wanderers',
+        'Rangers',
+        'Temuco',
+        'San Luis',
+        'Curicó',
+        'Magallanes'
+    ];
+    foreach ($chilean_patterns as $p) {
+        if (stripos($team, $p) !== false)
+            return true;
+    }
+    return false;
+}
+
+function render_performance_card($data)
+{
+    if (empty($data))
+        return;
+    echo '<div class="sidebar-widget top5-card" style="padding: 0; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-md); display: flex; flex-direction: column; background: var(--card-bg); border-radius: var(--radius-md);">';
+    echo '<h3 class="widget-title" style="margin: 0; padding: 1.25rem; background: var(--surface); border-bottom: 2px solid var(--primary); text-align: center; width: 100%; box-sizing: border-box; font-size: 1.15rem;">Mejores Rendimientos</h3>';
+    echo '<div class="widget-content" style="padding: 0.75rem 1.25rem; flex: 1;">';
+
+    // Header de la tabla
+    echo '<div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); margin-bottom: 0.5rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase;">';
+    echo '<span>EQUIPO</span>';
+    echo '<div style="display: flex; gap: 1.5rem;"><span>PJ</span><span>% REND</span></div>';
+    echo '</div>';
+
+    echo '<ul style="list-style: none; padding: 0; margin: 0;">';
+
+    foreach ($data as $team) {
+        echo '<li style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border);">';
+        echo '<div style="display: flex; align-items: center; gap: 0.75rem;">';
+        if (function_exists('dedeportes_get_team_shield')) {
+            echo '<img src="' . esc_url(dedeportes_get_team_shield($team['Equipo'])) . '" style="width: 28px; height: 28px; object-fit: contain;" alt="" onerror="this.style.display=\'none\'">';
+        }
+        echo '<span style="font-weight: 600; font-size: 0.95rem;">' . esc_html($team['Equipo']) . '</span>';
+        echo '</div>';
+
+        echo '<div style="display: flex; gap: 1.5rem; align-items: center;">';
+        echo '<span style="font-size: 0.9rem; color: var(--text-muted); width: 20px; text-align: center;">' . $team['PJ'] . '</span>';
+        echo '<span style="font-size: 1.1rem; font-weight: 800; color: var(--primary); text-align: right; min-width: 60px;">' . $team['Rend'] . '%</span>';
+        echo '</div>';
+        echo '</li>';
+    }
+
+    echo '</ul>';
+    echo '</div></div>';
+}
+
+function render_tournament_section($title, $stats, $is_general = false)
 {
     if (!$stats)
         return;
@@ -156,10 +228,20 @@ function render_tournament_section($title, $stats, $show_pj = false)
     echo '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">';
 
     render_top5_card('Equipo con Más Puntos', $stats['pts'], 'Pts', 'Pts');
-    if ($show_pj)
+    if ($is_general) {
         render_top5_card('Más Partidos Jugados', $stats['pj'], 'PJ', 'PJ');
+    }
     render_top5_card('Más Partidos Ganados', $stats['pg'], 'PG', 'G');
-    render_top5_card('Equipos con Mejor Rendimiento', $stats['rend'], 'Rend', '%');
+
+    if ($is_general) {
+        // Para la sección general, filtramos por chilenos y usamos el nuevo renderer
+        $chilean_rend = array_filter($stats['full'], 'is_chilean_team');
+        usort($chilean_rend, fn($a, $b) => $b['Rend'] <=> $a['Rend'] ?: $b['Pts'] <=> $a['Pts']);
+        render_performance_card(array_slice($chilean_rend, 0, 5));
+    } else {
+        render_top5_card('Equipos con Mejor Rendimiento', $stats['rend'], 'Rend', '%');
+    }
+
     render_top5_card('Más Goles a Favor', $stats['gf'], 'GF', 'Goles');
     render_top5_card('Menos Goles en Contra', $stats['gc'], 'GC', 'Goles');
     render_top5_card('Mejor Diferencia de Goles', $stats['dif'], 'Dif', 'Dif');
