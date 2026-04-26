@@ -6,7 +6,7 @@
  */
 
 if (!defined('DEDEPORTES_VERSION')) {
-	define('DEDEPORTES_VERSION', '2.25');
+	define('DEDEPORTES_VERSION', '2.26');
 }
 
 /**
